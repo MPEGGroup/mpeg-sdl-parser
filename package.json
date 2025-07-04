@@ -1,10 +1,10 @@
 {
-  "name": "@flowscripter/mpeg-sdl-parser",
+  "name": "@mpeggroup/mpeg-sdl-parser",
   "description": "ISO/IEC 14496-34 Syntactic Description Language (MPEG SDL) parser implemented in TypeScript",
-  "homepage": "https://github.com/flowscripter/mpeg-sdl-parser#readme",
+  "homepage": "https://github.com/mpeggroup/mpeg-sdl-parser#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flowscripter/mpeg-sdl-parser.git"
+    "url": "git+https://github.com/mpeggroup/mpeg-sdl-parser.git"
   },
   "scripts": {
     "generate": "node_modules/.bin/lezer-generator --typeScript --output src/lezer/parser ./grammar/sdl.lezer.grammar"
@@ -18,9 +18,10 @@
   ],
   "module": "index.ts",
   "type": "module",
-  "version": "1.2.9",
+  "version": "1.0.0",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
     "@types/bun": "^1.2.18"
