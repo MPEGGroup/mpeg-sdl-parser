@@ -3,27 +3,21 @@
 > ISO/IEC 14496-34 Syntactic Description Language (MPEG SDL) parser implemented
 > in TypeScript
 
-[![version](https://img.shields.io/github/v/release/flowscripter/mpeg-sdl-parser?sort=semver)](https://github.com/flowscripter/mpeg-sdl-parser/releases)
-[![build](https://img.shields.io/github/actions/workflow/status/flowscripter/mpeg-sdl-parser/release-bun-library.yml)](https://github.com/flowscripter/mpeg-sdl-parser/actions/workflows/release-bun-library.yml)
-[![coverage](https://codecov.io/gh/flowscripter/mpeg-sdl-parser/branch/main/graph/badge.svg?token=EMFT2938ZF)](https://codecov.io/gh/flowscripter/mpeg-sdl-parser)
-[![docs](https://img.shields.io/badge/docs-API-blue)](https://flowscripter.github.io/mpeg-sdl-parser/index.html)
-[![license: MIT](https://img.shields.io/github/license/flowscripter/mpeg-sdl-parser)](https://github.com/flowscripter/mpeg-sdl-parser/blob/main/LICENSE)
-
-## CLI
-
-A CLI tool using this module is available at
-https://github.com/flowscripter/mpeg-sdl-tool
+[![version](https://img.shields.io/github/v/release/mpeggroup/mpeg-sdl-parser?sort=semver)](https://github.com/mpeggroup/mpeg-sdl-parser/releases)
+[![build](https://img.shields.io/github/actions/workflow/status/mpeggroup/mpeg-sdl-parser/release-bun-library.yml)](https://github.com/mpeggroup/mpeg-sdl-parser/actions/workflows/release-bun-library.yml)
+[![docs](https://img.shields.io/badge/docs-API-blue)](https://mpeggroup.github.io/mpeg-sdl-parser/index.html)
+[![license: MIT](https://img.shields.io/github/license/mpeggroup/mpeg-sdl-parser)](https://github.com/mpeggroup/mpeg-sdl-parser/blob/main/LICENSE)
 
 ## Web Editor
 
 A browser based web editor using this module is available at
-https://github.com/flowscripter/mpeg-sdl-editor
+https://github.com/MPEGGroup/mpeg-sdl-editor
 
 ## Bun Module Usage
 
 Add the module:
 
-`bun add @flowscripter/mpeg-sdl-parser`
+`bun add @mpeggroup/mpeg-sdl-parser`
 
 ```javascript
 import {
@@ -33,7 +27,7 @@ import {
   buildAst,
   dispatchNodeHandler,
   prettyPrint
-} from "@flowscripter/mpeg-sdl-parser";
+} from "@mpeggroup/mpeg-sdl-parser";
 
 // Create a Lezer based SDL parser
 // This will create a lenient parser which recovers from parse errors and places error nodes in the parse tree.
@@ -86,7 +80,7 @@ console.log(prettifiedSpecification);
 
 // A Prettier (prettier.io) plugin for SDL is also available:
 import * as prettier from "prettier/standalone.js";
-import { prettierPluginSdl } from "@flowscripter/mpeg-sdl-parser"; 
+import { prettierPluginSdl } from "@mpeggroup/mpeg-sdl-parser"; 
 
 prettifiedSpecification = await prettier.format("computed int i;", { 
   parser: "sdl",
@@ -187,7 +181,7 @@ classDiagram
 
 Link to auto-generated API docs:
 
-[API Documentation](https://flowscripter.github.io/mpeg-sdl-parser/~/Parser.html)
+[API Documentation](https://mpeggroup.github.io/mpeg-sdl-parser/~/Parser.html)
 
 ### Debug Logging
 
