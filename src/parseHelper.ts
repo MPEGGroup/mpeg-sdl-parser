@@ -47,24 +47,22 @@ export function collateParseErrors(
   );
 
   const parseErrors = [];
+  const errorRows = new Set<number>();
 
   const cursor = parseTree.cursor();
   do {
     if (cursor.type.isError) {
-      parseErrors.push(SyntacticParseError.fromTextAndCursor(text, cursor));
+      const error = SyntacticParseError.fromTextAndCursor(text, cursor);
+
+      // only keep one error per line
+      if (!errorRows.has(error.location!.row)) {
+        errorRows.add(error.location!.row);
+        parseErrors.push(error);
+      }
     }
   } while (cursor.next());
 
-  // only keep one error per line
-  const uniqueParseErrors = new Map<number, SyntacticParseError>();
-  for (const parseError of parseErrors) {
-    const key = parseError.location!.row;
-    if (!uniqueParseErrors.has(key)) {
-      uniqueParseErrors.set(key, parseError);
-    }
-  }
-
-  return Array.from(uniqueParseErrors.values());
+  return parseErrors;
 }
 
 /**
