@@ -18,7 +18,7 @@
   ],
   "module": "index.ts",
   "type": "module",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publishConfig": {
     "access": "public",
     "registry": "https://npm.pkg.github.com"
