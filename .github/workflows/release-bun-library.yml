@@ -8,6 +8,7 @@ permissions:
   pull-requests: write
   id-token: write
   pages: write
+  packages: write
 jobs:
   call-release-bun-library:
     uses: flowscripter/.github/.github/workflows/release-bun-library.yml@v1
