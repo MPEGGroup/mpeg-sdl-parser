@@ -7,7 +7,7 @@
     "url": "git+https://github.com/mpeggroup/mpeg-sdl-parser.git"
   },
   "scripts": {
-    "generate": "node_modules/.bin/lezer-generator --typeScript --output src/lezer/parser ./grammar/sdl.lezer.grammar"
+    "generate": "lezer-generator --typeScript --output src/lezer/parser ./grammar/sdl.lezer.grammar"
   },
   "license": "MIT",
   "keywords": [
