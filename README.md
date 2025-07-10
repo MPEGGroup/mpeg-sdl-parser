@@ -181,7 +181,7 @@ classDiagram
 
 Link to auto-generated API docs:
 
-[API Documentation](https://mpeggroup.github.io/mpeg-sdl-parser/~/Parser.html)
+[API Documentation](https://mpeggroup.github.io/mpeg-sdl-parser)
 
 ### Debug Logging
 
