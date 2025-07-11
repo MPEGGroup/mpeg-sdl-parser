@@ -9,5 +9,4 @@ permissions:
 jobs:
   call-check-bun-dependencies:
     uses: flowscripter/.github/.github/workflows/check-bun-dependencies.yml@v1
-    secrets:
-      CREATE_PR_TOKEN: ${{ secrets.CREATE_PR_TOKEN }}
+    secrets: inherit
