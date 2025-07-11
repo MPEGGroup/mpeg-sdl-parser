@@ -4,17 +4,17 @@
     "": {
       "name": "@mpeggroup/mpeg-sdl-parser",
       "dependencies": {
-        "@codemirror/state": "latest",
-        "@lezer/common": "latest",
-        "@lezer/generator": "latest",
-        "@lezer/lr": "latest",
-        "prettier": "latest",
+        "@codemirror/state": "^6.5.2",
+        "@lezer/common": "^1.2.3",
+        "@lezer/generator": "^1.8.0",
+        "@lezer/lr": "^1.4.2",
+        "prettier": "^3.6.2",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "^1.2.18",
       },
       "peerDependencies": {
-        "typescript": "latest",
+        "typescript": "^5.8.3",
       },
     },
   },
