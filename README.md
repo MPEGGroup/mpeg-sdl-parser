@@ -13,11 +13,56 @@
 A browser based web editor using this module is available at
 https://github.com/MPEGGroup/mpeg-sdl-editor
 
-## Bun Module Usage
+## Module Usage
 
-Add the module:
+### Installation
+
+**NOTE**: `@mpeggroup/mpeg-sdl-parser` is hosted on GitHub packages, so before
+installing it as a dependency, you will need to configure usage of the GitHub
+package registry and setup GitHub authentication.
+
+Firstly, create a GitHub classic personal access token which has permission to
+read packages.
+
+**NPM**
+
+Create an `.npmrc` file with the following content:
+
+```
+@mpeggroup:registry=https://npm.pkg.github.com`
+```
+
+Then login to the GitHub registry:
+
+`npm login --scope=@mpeggroup --auth-type=legacy --registry=https://npm.pkg.github.com`
+
+When prompted, specify:
+
+- Username: `<your_github_username>`
+- Password: `<your_classic_pat>`
+
+Now you can add the module to your project:
+
+`npm install @mpeggroup/mpeg-sdl-parser`
+
+**BUN**
+
+Create a `bunfig.toml` file with the following content:
+
+```
+[install.scopes]
+"@mpeggroup" = { url = "https://npm.pkg.github.com/", token = "$NPM_GITHUB_TOKEN" }
+```
+
+Configure the token as an environment variable:
+
+`export NPM_GITHUB_TOKEN=<your_classic_pat>`
+
+Now you can add the module to your project:
 
 `bun add @mpeggroup/mpeg-sdl-parser`
+
+### Example Code
 
 ```javascript
 import {
