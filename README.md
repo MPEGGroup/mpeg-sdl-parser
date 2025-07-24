@@ -17,10 +17,12 @@ https://github.com/MPEGGroup/mpeg-sdl-editor
 
 ### Installation
 
-**NOTE**: `@mpeggroup/mpeg-sdl-parser` is hosted on GitHub packages, so before installing
-it as a dependency, you will need to configure usage of the GitHub package registry and setup GitHub authentication.
+**NOTE**: `@mpeggroup/mpeg-sdl-parser` is hosted on GitHub packages, so before
+installing it as a dependency, you will need to configure usage of the GitHub
+package registry and setup GitHub authentication.
 
-Firstly, create a GitHub classic personal access token which has permission to read packages.
+Firstly, create a GitHub classic personal access token which has permission to
+read packages.
 
 **NPM**
 
@@ -36,8 +38,8 @@ Then login to the GitHub registry:
 
 When prompted, specify:
 
-* Username: `<your_github_username>`
-* Password: `<your_classic_pat>`
+- Username: `<your_github_username>`
+- Password: `<your_classic_pat>`
 
 Now you can add the module to your project:
 
