@@ -1,16 +1,16 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import type { AbstractExpression } from "../node/AbstractExpression";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import { LengthAttribute } from "../node/LengthAttribute";
-import type { NumberLiteral } from "../node/NumberLiteral";
+} from "../../util/nodeFactoryUtils.ts";
+import type { AbstractExpression } from "../node/AbstractExpression.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import { LengthAttribute } from "../node/LengthAttribute.ts";
+import type { NumberLiteral } from "../node/NumberLiteral.ts";
 
 export function getLengthAttribute(
   cursor: TreeCursor,

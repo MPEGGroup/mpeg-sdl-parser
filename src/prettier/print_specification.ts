@@ -1,9 +1,9 @@
 import { AstPath, type Doc, doc } from "prettier";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { AbstractStatement } from "../ast/node/AbstractStatement";
-import { NodeKind } from "../ast/node/enum/node_kind";
-import { StatementKind } from "../ast/node/enum/statement_kind";
-import type { Specification } from "../ast/node/Specification";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { AbstractStatement } from "../ast/node/AbstractStatement.ts";
+import { NodeKind } from "../ast/node/enum/node_kind.ts";
+import { StatementKind } from "../ast/node/enum/statement_kind.ts";
+import type { Specification } from "../ast/node/Specification.ts";
 const { hardline, join } = doc.builders;
 
 export function printSpecification(

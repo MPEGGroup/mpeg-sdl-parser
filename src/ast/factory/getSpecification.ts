@@ -1,17 +1,17 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { Specification } from "../node/Specification";
-import type { ComputedElementaryTypeDefinition } from "../node/ComputedElementaryTypeDefinition";
-import { NodeKind } from "../node/enum/node_kind";
-import type { AbstractStatement } from "../node/AbstractStatement";
-import { StatementKind } from "../node/enum/statement_kind";
-import type { MapDeclaration } from "../node/MapDeclaration";
-import type { ClassDeclaration } from "../node/ClassDeclaration";
+} from "../../util/nodeFactoryUtils.ts";
+import { Specification } from "../node/Specification.ts";
+import type { ComputedElementaryTypeDefinition } from "../node/ComputedElementaryTypeDefinition.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { AbstractStatement } from "../node/AbstractStatement.ts";
+import { StatementKind } from "../node/enum/statement_kind.ts";
+import type { MapDeclaration } from "../node/MapDeclaration.ts";
+import type { ClassDeclaration } from "../node/ClassDeclaration.ts";
 
 export function getSpecification(
   cursor: TreeCursor,

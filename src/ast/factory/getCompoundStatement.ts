@@ -1,14 +1,14 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Token } from "../token/Token";
-import { CompoundStatement } from "../node/CompoundStatement";
-import type { AbstractStatement } from "../node/AbstractStatement";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Token } from "../token/Token.ts";
+import { CompoundStatement } from "../node/CompoundStatement.ts";
+import type { AbstractStatement } from "../node/AbstractStatement.ts";
 
 export function getCompoundStatement(
   cursor: TreeCursor,

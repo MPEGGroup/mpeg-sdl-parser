@@ -1,8 +1,8 @@
 import { AstPath, type Doc, doc } from "prettier";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { IfStatement } from "../ast/node/IfStatement";
-import { getDocWithTrivia } from "./print_utils";
-import { StatementKind } from "../ast/node/enum/statement_kind";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { IfStatement } from "../ast/node/IfStatement.ts";
+import { getDocWithTrivia } from "./print_utils.ts";
+import { StatementKind } from "../ast/node/enum/statement_kind.ts";
 
 const { hardline, indent, join } = doc.builders;
 

@@ -1,15 +1,15 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import { ClassDefinition } from "../node/ClassDefinition";
-import type { ParameterValueList } from "../node/ParameterValueList";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import { ClassDefinition } from "../node/ClassDefinition.ts";
+import type { ParameterValueList } from "../node/ParameterValueList.ts";
 
 export function getClassDefinition(
   cursor: TreeCursor,

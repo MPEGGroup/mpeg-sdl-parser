@@ -1,19 +1,19 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import type { AbstractExpression } from "../node/AbstractExpression";
-import { ElementaryTypeDefinition } from "../node/ElementaryTypeDefinition";
-import type { ElementaryType } from "../node/ElementaryType";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import { AlignedModifier } from "../node/AlignedModifier";
-import type { LengthAttribute } from "../node/LengthAttribute";
-import type { NumberLiteral } from "../node/NumberLiteral";
+} from "../../util/nodeFactoryUtils.ts";
+import type { AbstractExpression } from "../node/AbstractExpression.ts";
+import { ElementaryTypeDefinition } from "../node/ElementaryTypeDefinition.ts";
+import type { ElementaryType } from "../node/ElementaryType.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import { AlignedModifier } from "../node/AlignedModifier.ts";
+import type { LengthAttribute } from "../node/LengthAttribute.ts";
+import type { NumberLiteral } from "../node/NumberLiteral.ts";
 
 export function getElementaryTypeDefinition(
   cursor: TreeCursor,

@@ -1,7 +1,7 @@
-import type { AbstractCompositeNode } from "../../src/ast/node/AbstractCompositeNode";
-import type { AbstractLeafNode } from "../../src/ast/node/AbstractLeafNode";
-import { NodeKind } from "../../src/ast/node/enum/node_kind";
-import type { NodeHandler } from "../../src/ast/visitor/NodeHandler";
+import type { AbstractCompositeNode } from "../../src/ast/node/AbstractCompositeNode.ts";
+import type { AbstractLeafNode } from "../../src/ast/node/AbstractLeafNode.ts";
+import { NodeKind } from "../../src/ast/node/enum/node_kind.ts";
+import type { NodeHandler } from "../../src/ast/visitor/NodeHandler.ts";
 
 export default class HistoryRecordingNodeHandler implements NodeHandler {
   nodeHistory: string[] = [];

@@ -1,17 +1,17 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import { StringDefinition } from "../node/StringDefinition";
-import { StringLiteral } from "../node/StringLiteral";
-import { AlignedModifier } from "../node/AlignedModifier";
-import { StringVariableKind } from "../node/enum/string_variable_kind";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import { StringDefinition } from "../node/StringDefinition.ts";
+import { StringLiteral } from "../node/StringLiteral.ts";
+import { AlignedModifier } from "../node/AlignedModifier.ts";
+import { StringVariableKind } from "../node/enum/string_variable_kind.ts";
 
 export function getStringDefinition(
   cursor: TreeCursor,

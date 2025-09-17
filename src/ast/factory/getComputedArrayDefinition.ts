@@ -1,16 +1,16 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import type { ExplicitArrayDimension } from "../node/ExplicitArrayDimension";
-import type { ElementaryType } from "../node/ElementaryType";
-import { ComputedArrayDefinition } from "../node/ComputedArrayDefinition";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import type { ExplicitArrayDimension } from "../node/ExplicitArrayDimension.ts";
+import type { ElementaryType } from "../node/ElementaryType.ts";
+import { ComputedArrayDefinition } from "../node/ComputedArrayDefinition.ts";
 
 export function getComputedArrayDefinition(
   cursor: TreeCursor,

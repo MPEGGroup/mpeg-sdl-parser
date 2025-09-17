@@ -1,11 +1,11 @@
 import { Text } from "@codemirror/state";
 import { TreeCursor } from "@lezer/common";
-import type { Token } from "../ast/token/Token";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import { NodeFactory } from "../ast/factory/NodeFactory";
-import type { Trivia } from "../ast/token/Trivia";
-import { SyntacticParseError } from "../ParseError";
-import { getLocationFromTextPosition } from "./locationUtils";
+import type { Token } from "../ast/token/Token.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import { NodeFactory } from "../ast/factory/NodeFactory.ts";
+import type { Trivia } from "../ast/token/Trivia.ts";
+import { SyntacticParseError } from "../ParseError.ts";
+import { getLocationFromTextPosition } from "./locationUtils.ts";
 import {
   AlignmentBitCount,
   BinaryLiteral,
@@ -16,7 +16,7 @@ import {
   Identifier,
   IntegerLiteral,
   Whitespace,
-} from "../lezer/parser.terms";
+} from "../lezer/parser.terms.ts";
 
 const primitiveNodeTypes = new Set([
   AlignmentBitCount,

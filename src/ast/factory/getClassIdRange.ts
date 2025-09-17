@@ -3,12 +3,12 @@ import type { TreeCursor } from "@lezer/common";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { ClassId } from "../node/ClassId";
-import { InternalParseError } from "../../ParseError";
-import { NodeKind } from "../node/enum/node_kind";
-import { ClassIdRange } from "../node/ClassIdRange";
-import type { Token } from "../token/Token";
+} from "../../util/nodeFactoryUtils.ts";
+import { ClassId } from "../node/ClassId.ts";
+import { InternalParseError } from "../../ParseError.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import { ClassIdRange } from "../node/ClassIdRange.ts";
+import type { Token } from "../token/Token.ts";
 
 export function getClassIdRange(
   cursor: TreeCursor,

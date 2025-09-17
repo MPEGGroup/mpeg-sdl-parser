@@ -1,13 +1,13 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { getDocWithTrivia } from "./print_utils";
-import type { AbstractExpression } from "../ast/node/AbstractExpression";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { ArrayElementAccess } from "../ast/node/ArrayElementAccess";
-import type { ClassMemberAccess } from "../ast/node/ClassMemberAccess";
-import { ExpressionKind } from "../ast/node/enum/expression_kind";
-import type { LengthofExpression } from "../ast/node/LengthofExpression";
-import type { BinaryExpression } from "../ast/node/BinaryExpression";
-import type { UnaryExpression } from "../ast/node/UnaryExpression";
+import { getDocWithTrivia } from "./print_utils.ts";
+import type { AbstractExpression } from "../ast/node/AbstractExpression.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { ArrayElementAccess } from "../ast/node/ArrayElementAccess.ts";
+import type { ClassMemberAccess } from "../ast/node/ClassMemberAccess.ts";
+import { ExpressionKind } from "../ast/node/enum/expression_kind.ts";
+import type { LengthofExpression } from "../ast/node/LengthofExpression.ts";
+import type { BinaryExpression } from "../ast/node/BinaryExpression.ts";
+import type { UnaryExpression } from "../ast/node/UnaryExpression.ts";
 const { join } = doc.builders;
 
 export function printClassMemberAccess(

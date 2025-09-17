@@ -1,14 +1,14 @@
 import { Text } from "@codemirror/state";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Token } from "../token/Token";
-import { ExtendsModifier } from "../node/ExtendsModifier";
-import type { Identifier } from "../node/Identifier";
-import type { ParameterValueList } from "../node/ParameterValueList";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Token } from "../token/Token.ts";
+import { ExtendsModifier } from "../node/ExtendsModifier.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { ParameterValueList } from "../node/ParameterValueList.ts";
 import type { TreeCursor } from "@lezer/common";
 
 export function getExtendsModifier(

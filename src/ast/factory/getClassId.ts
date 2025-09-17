@@ -3,11 +3,11 @@ import type { TreeCursor } from "@lezer/common";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import type { NumberLiteral } from "../node/NumberLiteral";
-import { InternalParseError } from "../../ParseError";
-import { NodeKind } from "../node/enum/node_kind";
-import { ClassId } from "../node/ClassId";
+} from "../../util/nodeFactoryUtils.ts";
+import type { NumberLiteral } from "../node/NumberLiteral.ts";
+import { InternalParseError } from "../../ParseError.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import { ClassId } from "../node/ClassId.ts";
 
 export function getClassId(
   cursor: TreeCursor,

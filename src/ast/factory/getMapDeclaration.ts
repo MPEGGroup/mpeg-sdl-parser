@@ -1,16 +1,16 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import { MapDeclaration } from "../node/MapDeclaration";
-import type { ElementaryType } from "../node/ElementaryType";
-import type { MapEntry } from "../node/MapEntry";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import { MapDeclaration } from "../node/MapDeclaration.ts";
+import type { ElementaryType } from "../node/ElementaryType.ts";
+import type { MapEntry } from "../node/MapEntry.ts";
 
 export function getMapDeclaration(
   cursor: TreeCursor,

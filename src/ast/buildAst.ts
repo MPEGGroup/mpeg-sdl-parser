@@ -1,9 +1,9 @@
 import type { Tree } from "@lezer/common";
 import { Text } from "@codemirror/state";
-import type { SdlStringInput } from "../lezer/SdlStringInput";
-import type { Specification } from "./node/Specification";
-import { Specification as SpecificationNodeType } from "../lezer/parser.terms";
-import { NodeFactory } from "./factory/NodeFactory";
+import type { SdlStringInput } from "../lezer/SdlStringInput.ts";
+import type { Specification } from "./node/Specification.ts";
+import { Specification as SpecificationNodeType } from "../lezer/parser.terms.ts";
+import { NodeFactory } from "./factory/NodeFactory.ts";
 import { debugEnabled } from "../util/logger.ts";
 import type { NodeHandler } from "./visitor/NodeHandler.ts";
 import { TraversingVisitor } from "./visitor/TraversingVisitor.ts";

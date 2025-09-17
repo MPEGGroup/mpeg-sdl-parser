@@ -1,20 +1,20 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import { ClassDeclaration } from "../node/ClassDeclaration";
-import { AbstractStatement } from "../node/AbstractStatement";
-import { BitModifier } from "../node/BitModifier";
-import { ExtendsModifier } from "../node/ExtendsModifier";
-import { ParameterList } from "../node/ParameterList";
-import type { ExpandableModifier } from "../node/ExpandableModifier";
-import type { AlignedModifier } from "../node/AlignedModifier";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import { ClassDeclaration } from "../node/ClassDeclaration.ts";
+import { AbstractStatement } from "../node/AbstractStatement.ts";
+import { BitModifier } from "../node/BitModifier.ts";
+import { ExtendsModifier } from "../node/ExtendsModifier.ts";
+import { ParameterList } from "../node/ParameterList.ts";
+import type { ExpandableModifier } from "../node/ExpandableModifier.ts";
+import type { AlignedModifier } from "../node/AlignedModifier.ts";
 
 export function getClassDeclaration(
   cursor: TreeCursor,

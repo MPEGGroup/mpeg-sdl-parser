@@ -1,7 +1,7 @@
 import type { Doc } from "prettier";
 import { doc } from "prettier";
-import type { Token } from "../ast/token/Token";
-import type { Trivia } from "../ast/token/Trivia";
+import type { Token } from "../ast/token/Token.ts";
+import type { Trivia } from "../ast/token/Trivia.ts";
 const { hardline, indent, join } = doc.builders;
 
 function getCommentString(trivia: Trivia): string {

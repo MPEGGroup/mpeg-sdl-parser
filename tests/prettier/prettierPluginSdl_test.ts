@@ -3,9 +3,9 @@ import { promises as fs } from "node:fs";
 import { type Buffer } from "node:buffer";
 import path from "node:path";
 import { describe, expect, test } from "bun:test";
-import { prettierPluginSdl } from "../../src/prettier/prettierPluginSdl";
+import { prettierPluginSdl } from "../../src/prettier/prettierPluginSdl.ts";
 import { createStrictSdlParser } from "../../src/lezer/createSdlParser.ts";
-import { SdlStringInput } from "../../src/lezer/SdlStringInput";
+import { SdlStringInput } from "../../src/lezer/SdlStringInput.ts";
 
 const strictSdlParser = createStrictSdlParser();
 
