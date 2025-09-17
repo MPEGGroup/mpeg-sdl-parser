@@ -1,18 +1,18 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Token } from "../token/Token";
-import type { AbstractStatement } from "../node/AbstractStatement";
-import type { AbstractExpression } from "../node/AbstractExpression";
-import { ForStatement } from "../node/ForStatement";
-import { ComputedElementaryTypeDefinition } from "../node/ComputedElementaryTypeDefinition";
-import { CompoundStatement } from "../node/CompoundStatement";
-import { StatementKind } from "../node/enum/statement_kind";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Token } from "../token/Token.ts";
+import type { AbstractStatement } from "../node/AbstractStatement.ts";
+import type { AbstractExpression } from "../node/AbstractExpression.ts";
+import { ForStatement } from "../node/ForStatement.ts";
+import { ComputedElementaryTypeDefinition } from "../node/ComputedElementaryTypeDefinition.ts";
+import { CompoundStatement } from "../node/CompoundStatement.ts";
+import { StatementKind } from "../node/enum/statement_kind.ts";
 
 export function getForStatement(
   cursor: TreeCursor,

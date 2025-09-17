@@ -3,12 +3,12 @@ import {
   printAbstractExpression,
   printArrayElementAccess,
   printClassMemberAccess,
-} from "./print_expression";
+} from "./print_expression.ts";
 import {
   printAggregateOutputValue,
   printElementaryTypeOutputValue,
   printMapEntry,
-} from "./print_map";
+} from "./print_map.ts";
 import {
   printBitModifier,
   printClassId,
@@ -17,45 +17,45 @@ import {
   printParameter,
   printParameterList,
   printParameterValueList,
-} from "./print_class";
-import { printSpecification } from "./print_specification";
-import { printAbstractArrayDimension } from "./print_array";
+} from "./print_class.ts";
+import { printSpecification } from "./print_specification.ts";
+import { printAbstractArrayDimension } from "./print_array.ts";
 import {
   printAlignedModifier,
   printIdentifier,
   printLengthAttribute,
   printNumberLiteral,
-} from "./print_common";
-import { printElementaryType } from "./print_elementary_type";
-import { printStringLiteral } from "./print_string";
-import { printStatement } from "./print_statement";
-import { printCaseClause, printDefaultClause } from "./print_switch";
-import type { AbstractArrayDimension } from "../ast/node/AbstractArrayDimension";
-import type { AbstractClassId } from "../ast/node/AbstractClassId";
-import type { AbstractExpression } from "../ast/node/AbstractExpression";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { AbstractStatement } from "../ast/node/AbstractStatement";
-import type { AlignedModifier } from "../ast/node/AlignedModifier";
-import type { ArrayElementAccess } from "../ast/node/ArrayElementAccess";
-import type { BitModifier } from "../ast/node/BitModifier";
-import type { ClassMemberAccess } from "../ast/node/ClassMemberAccess";
-import type { ElementaryType } from "../ast/node/ElementaryType";
-import { NodeKind } from "../ast/node/enum/node_kind";
-import type { ExpandableModifier } from "../ast/node/ExpandableModifier";
-import type { ExtendsModifier } from "../ast/node/ExtendsModifier";
-import type { LengthAttribute } from "../ast/node/LengthAttribute";
-import type { MapEntry } from "../ast/node/MapEntry";
-import type { NumberLiteral } from "../ast/node/NumberLiteral";
-import type { Parameter } from "../ast/node/Parameter";
-import type { ParameterList } from "../ast/node/ParameterList";
-import type { ParameterValueList } from "../ast/node/ParameterValueList";
-import type { Specification } from "../ast/node/Specification";
-import type { CaseClause } from "../ast/node/CaseClause";
-import type { DefaultClause } from "../ast/node/DefaultClause";
-import type { Identifier } from "../ast/node/Identifier";
-import type { StringLiteral } from "../ast/node/StringLiteral";
-import type { AggregateOutputValue } from "../ast/node/AggregateOutputValue";
-import type { ElementaryTypeOutputValue } from "../ast/node/ElementaryTypeOutputValue";
+} from "./print_common.ts";
+import { printElementaryType } from "./print_elementary_type.ts";
+import { printStringLiteral } from "./print_string.ts";
+import { printStatement } from "./print_statement.ts";
+import { printCaseClause, printDefaultClause } from "./print_switch.ts";
+import type { AbstractArrayDimension } from "../ast/node/AbstractArrayDimension.ts";
+import type { AbstractClassId } from "../ast/node/AbstractClassId.ts";
+import type { AbstractExpression } from "../ast/node/AbstractExpression.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { AbstractStatement } from "../ast/node/AbstractStatement.ts";
+import type { AlignedModifier } from "../ast/node/AlignedModifier.ts";
+import type { ArrayElementAccess } from "../ast/node/ArrayElementAccess.ts";
+import type { BitModifier } from "../ast/node/BitModifier.ts";
+import type { ClassMemberAccess } from "../ast/node/ClassMemberAccess.ts";
+import type { ElementaryType } from "../ast/node/ElementaryType.ts";
+import { NodeKind } from "../ast/node/enum/node_kind.ts";
+import type { ExpandableModifier } from "../ast/node/ExpandableModifier.ts";
+import type { ExtendsModifier } from "../ast/node/ExtendsModifier.ts";
+import type { LengthAttribute } from "../ast/node/LengthAttribute.ts";
+import type { MapEntry } from "../ast/node/MapEntry.ts";
+import type { NumberLiteral } from "../ast/node/NumberLiteral.ts";
+import type { Parameter } from "../ast/node/Parameter.ts";
+import type { ParameterList } from "../ast/node/ParameterList.ts";
+import type { ParameterValueList } from "../ast/node/ParameterValueList.ts";
+import type { Specification } from "../ast/node/Specification.ts";
+import type { CaseClause } from "../ast/node/CaseClause.ts";
+import type { DefaultClause } from "../ast/node/DefaultClause.ts";
+import type { Identifier } from "../ast/node/Identifier.ts";
+import type { StringLiteral } from "../ast/node/StringLiteral.ts";
+import type { AggregateOutputValue } from "../ast/node/AggregateOutputValue.ts";
+import type { ElementaryTypeOutputValue } from "../ast/node/ElementaryTypeOutputValue.ts";
 
 export function printNode(
   path: AstPath<AbstractNode>,

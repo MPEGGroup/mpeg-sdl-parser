@@ -1,19 +1,19 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { addCommaSeparatorsToDoc, getDocWithTrivia } from "./print_utils";
-import type { BitModifier } from "../ast/node/BitModifier";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { ClassDeclaration } from "../ast/node/ClassDeclaration";
-import type { ExtendedClassIdRange } from "../ast/node/ExtendedClassIdRange";
-import type { AbstractClassId } from "../ast/node/AbstractClassId";
-import type { ClassDefinition } from "../ast/node/ClassDefinition";
-import type { ClassIdRange } from "../ast/node/ClassIdRange";
-import { ClassIdKind } from "../ast/node/enum/class_id_kind";
-import type { ExpandableModifier } from "../ast/node/ExpandableModifier";
-import type { ExtendsModifier } from "../ast/node/ExtendsModifier";
-import type { Parameter } from "../ast/node/Parameter";
-import type { ParameterList } from "../ast/node/ParameterList";
-import type { ParameterValueList } from "../ast/node/ParameterValueList";
-import type { ClassId } from "../ast/node/ClassId";
+import { addCommaSeparatorsToDoc, getDocWithTrivia } from "./print_utils.ts";
+import type { BitModifier } from "../ast/node/BitModifier.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { ClassDeclaration } from "../ast/node/ClassDeclaration.ts";
+import type { ExtendedClassIdRange } from "../ast/node/ExtendedClassIdRange.ts";
+import type { AbstractClassId } from "../ast/node/AbstractClassId.ts";
+import type { ClassDefinition } from "../ast/node/ClassDefinition.ts";
+import type { ClassIdRange } from "../ast/node/ClassIdRange.ts";
+import { ClassIdKind } from "../ast/node/enum/class_id_kind.ts";
+import type { ExpandableModifier } from "../ast/node/ExpandableModifier.ts";
+import type { ExtendsModifier } from "../ast/node/ExtendsModifier.ts";
+import type { Parameter } from "../ast/node/Parameter.ts";
+import type { ParameterList } from "../ast/node/ParameterList.ts";
+import type { ParameterValueList } from "../ast/node/ParameterValueList.ts";
+import type { ClassId } from "../ast/node/ClassId.ts";
 const { hardline, indent, join } = doc.builders;
 
 export function printBitModifier(

@@ -1,5 +1,5 @@
 import { Text } from "@codemirror/state";
-import type { Location } from "../Location";
+import type { Location } from "../Location.ts";
 
 export function getLocationFromTextPosition(
   text: Text,

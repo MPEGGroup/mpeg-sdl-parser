@@ -1,20 +1,20 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import type { AbstractExpression } from "../node/AbstractExpression";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Identifier } from "../node/Identifier";
-import type { Token } from "../token/Token";
-import type { NumberLiteral } from "../node/NumberLiteral";
-import { UnaryExpression } from "../node/UnaryExpression";
-import { UnaryOperatorKind } from "../node/enum/unary_operator_kind";
-import { PostfixOperatorKind } from "../node/enum/postfix_operator_kind";
-import { ArrayElementAccess } from "../node/ArrayElementAccess";
-import type { ClassMemberAccess } from "../node/ClassMemberAccess";
+} from "../../util/nodeFactoryUtils.ts";
+import type { AbstractExpression } from "../node/AbstractExpression.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import type { Token } from "../token/Token.ts";
+import type { NumberLiteral } from "../node/NumberLiteral.ts";
+import { UnaryExpression } from "../node/UnaryExpression.ts";
+import { UnaryOperatorKind } from "../node/enum/unary_operator_kind.ts";
+import { PostfixOperatorKind } from "../node/enum/postfix_operator_kind.ts";
+import { ArrayElementAccess } from "../node/ArrayElementAccess.ts";
+import type { ClassMemberAccess } from "../node/ClassMemberAccess.ts";
 
 export function getUnaryExpression(
   cursor: TreeCursor,

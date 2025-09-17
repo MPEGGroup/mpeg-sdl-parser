@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { SdlStringInput } from "../../src/lezer/SdlStringInput";
+import { SdlStringInput } from "../../src/lezer/SdlStringInput.ts";
 
 describe("SdlStringInput Tests", () => {
   test("Test creation and basic behavior", () => {

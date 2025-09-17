@@ -1,40 +1,40 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { getDocWithTrivia } from "./print_utils";
-import { printClassDeclaration, printClassDefinition } from "./print_class";
-import { printMapDeclaration, printMapDefinition } from "./print_map";
+import { getDocWithTrivia } from "./print_utils.ts";
+import { printClassDeclaration, printClassDefinition } from "./print_class.ts";
+import { printMapDeclaration, printMapDefinition } from "./print_map.ts";
 import {
   printArrayDefinition,
   printComputedArrayDefinition,
-} from "./print_array";
-import { printStringDefinition } from "./print_string";
+} from "./print_array.ts";
+import { printStringDefinition } from "./print_string.ts";
 import {
   printComputedElementaryTypeDefinition,
   printElementaryTypeDefinition,
-} from "./print_elementary_type";
-import { printDoStatement } from "./print_do";
-import { printForStatement } from "./print_for";
-import { printWhileStatement } from "./print_while";
-import { printIfStatement } from "./print_if";
-import { printSwitchStatement } from "./print_switch";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { AbstractStatement } from "../ast/node/AbstractStatement";
-import type { ArrayDefinition } from "../ast/node/ArrayDefinition";
-import type { ClassDefinition } from "../ast/node/ClassDefinition";
-import type { CompoundStatement } from "../ast/node/CompoundStatement";
-import type { ComputedArrayDefinition } from "../ast/node/ComputedArrayDefinition";
-import type { ComputedElementaryTypeDefinition } from "../ast/node/ComputedElementaryTypeDefinition";
-import type { ElementaryTypeDefinition } from "../ast/node/ElementaryTypeDefinition";
-import { StatementKind } from "../ast/node/enum/statement_kind";
-import type { MapDeclaration } from "../ast/node/MapDeclaration";
-import type { MapDefinition } from "../ast/node/MapDefinition";
-import type { StringDefinition } from "../ast/node/StringDefinition";
-import type { ExpressionStatement } from "../ast/node/ExpressionStatement";
-import type { SwitchStatement } from "../ast/node/SwitchStatement";
-import type { IfStatement } from "../ast/node/IfStatement";
-import type { WhileStatement } from "../ast/node/WhileStatement";
-import type { ForStatement } from "../ast/node/ForStatement";
-import type { DoStatement } from "../ast/node/DoStatement";
-import type { ClassDeclaration } from "../ast/node/ClassDeclaration";
+} from "./print_elementary_type.ts";
+import { printDoStatement } from "./print_do.ts";
+import { printForStatement } from "./print_for.ts";
+import { printWhileStatement } from "./print_while.ts";
+import { printIfStatement } from "./print_if.ts";
+import { printSwitchStatement } from "./print_switch.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { AbstractStatement } from "../ast/node/AbstractStatement.ts";
+import type { ArrayDefinition } from "../ast/node/ArrayDefinition.ts";
+import type { ClassDefinition } from "../ast/node/ClassDefinition.ts";
+import type { CompoundStatement } from "../ast/node/CompoundStatement.ts";
+import type { ComputedArrayDefinition } from "../ast/node/ComputedArrayDefinition.ts";
+import type { ComputedElementaryTypeDefinition } from "../ast/node/ComputedElementaryTypeDefinition.ts";
+import type { ElementaryTypeDefinition } from "../ast/node/ElementaryTypeDefinition.ts";
+import { StatementKind } from "../ast/node/enum/statement_kind.ts";
+import type { MapDeclaration } from "../ast/node/MapDeclaration.ts";
+import type { MapDefinition } from "../ast/node/MapDefinition.ts";
+import type { StringDefinition } from "../ast/node/StringDefinition.ts";
+import type { ExpressionStatement } from "../ast/node/ExpressionStatement.ts";
+import type { SwitchStatement } from "../ast/node/SwitchStatement.ts";
+import type { IfStatement } from "../ast/node/IfStatement.ts";
+import type { WhileStatement } from "../ast/node/WhileStatement.ts";
+import type { ForStatement } from "../ast/node/ForStatement.ts";
+import type { DoStatement } from "../ast/node/DoStatement.ts";
+import type { ClassDeclaration } from "../ast/node/ClassDeclaration.ts";
 const { hardline, indent, join } = doc.builders;
 
 function printCompoundStatement(

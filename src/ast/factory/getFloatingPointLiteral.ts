@@ -1,8 +1,8 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { getToken } from "../../util/nodeFactoryUtils";
-import { NumberLiteral } from "../node/NumberLiteral";
-import { NumberLiteralKind } from "../node/enum/number_literal_kind";
+import { getToken } from "../../util/nodeFactoryUtils.ts";
+import { NumberLiteral } from "../node/NumberLiteral.ts";
+import { NumberLiteralKind } from "../node/enum/number_literal_kind.ts";
 
 export function getFloatingPointLiteral(
   cursor: TreeCursor,

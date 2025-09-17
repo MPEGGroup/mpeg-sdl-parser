@@ -1,7 +1,7 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { getDocWithTrivia } from "./print_utils";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { ForStatement } from "../ast/node/ForStatement";
+import { getDocWithTrivia } from "./print_utils.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { ForStatement } from "../ast/node/ForStatement.ts";
 
 const { join } = doc.builders;
 

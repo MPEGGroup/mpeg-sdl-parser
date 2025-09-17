@@ -1,15 +1,15 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Token } from "../token/Token";
-import { AggregateOutputValue } from "../node/AggregateOutputValue";
-import type { NumberLiteral } from "../node/NumberLiteral";
-import type { ElementaryTypeOutputValue } from "../node/ElementaryTypeOutputValue";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Token } from "../token/Token.ts";
+import { AggregateOutputValue } from "../node/AggregateOutputValue.ts";
+import type { NumberLiteral } from "../node/NumberLiteral.ts";
+import type { ElementaryTypeOutputValue } from "../node/ElementaryTypeOutputValue.ts";
 
 export function getAggregateOutputValue(
   cursor: TreeCursor,

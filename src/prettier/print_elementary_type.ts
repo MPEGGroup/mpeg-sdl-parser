@@ -1,10 +1,10 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { getDocWithTrivia } from "./print_utils";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { ComputedElementaryTypeDefinition } from "../ast/node/ComputedElementaryTypeDefinition";
-import type { ElementaryType } from "../ast/node/ElementaryType";
-import type { ElementaryTypeDefinition } from "../ast/node/ElementaryTypeDefinition";
-import { ElementaryTypeKind } from "../ast/node/enum/elementary_type_kind";
+import { getDocWithTrivia } from "./print_utils.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { ComputedElementaryTypeDefinition } from "../ast/node/ComputedElementaryTypeDefinition.ts";
+import type { ElementaryType } from "../ast/node/ElementaryType.ts";
+import type { ElementaryTypeDefinition } from "../ast/node/ElementaryTypeDefinition.ts";
+import { ElementaryTypeKind } from "../ast/node/enum/elementary_type_kind.ts";
 const { join } = doc.builders;
 
 export function printComputedElementaryTypeDefinition(

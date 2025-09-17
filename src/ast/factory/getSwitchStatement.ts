@@ -1,18 +1,18 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Token } from "../token/Token";
-import type { AbstractExpression } from "../node/AbstractExpression";
-import type { NumberLiteral } from "../node/NumberLiteral";
-import type { Identifier } from "../node/Identifier";
-import { SwitchStatement } from "../node/SwitchStatement";
-import { CaseClause } from "../node/CaseClause";
-import { DefaultClause } from "../node/DefaultClause";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Token } from "../token/Token.ts";
+import type { AbstractExpression } from "../node/AbstractExpression.ts";
+import type { NumberLiteral } from "../node/NumberLiteral.ts";
+import type { Identifier } from "../node/Identifier.ts";
+import { SwitchStatement } from "../node/SwitchStatement.ts";
+import { CaseClause } from "../node/CaseClause.ts";
+import { DefaultClause } from "../node/DefaultClause.ts";
 
 export function getSwitchStatement(
   cursor: TreeCursor,

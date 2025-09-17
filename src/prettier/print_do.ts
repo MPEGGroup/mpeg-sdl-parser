@@ -1,7 +1,7 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { getDocWithTrivia } from "./print_utils";
-import type { AbstractNode } from "../ast/node/AbstractNode";
-import type { DoStatement } from "../ast/node/DoStatement";
+import { getDocWithTrivia } from "./print_utils.ts";
+import type { AbstractNode } from "../ast/node/AbstractNode.ts";
+import type { DoStatement } from "../ast/node/DoStatement.ts";
 const { join } = doc.builders;
 
 export function printDoStatement(

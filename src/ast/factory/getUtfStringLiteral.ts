@@ -1,15 +1,15 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
+import { InternalParseError } from "../../ParseError.ts";
 import {
   getChildNodesAndTokens,
   isAbstractNode,
-} from "../../util/nodeFactoryUtils";
-import { NodeKind } from "../node/enum/node_kind";
-import type { Token } from "../token/Token";
-import { StringLiteral } from "../node/StringLiteral";
-import { StringLiteralKind } from "../node/enum/string_literal_kind";
-import { getLocationFromTextPosition } from "../../util/locationUtils";
+} from "../../util/nodeFactoryUtils.ts";
+import { NodeKind } from "../node/enum/node_kind.ts";
+import type { Token } from "../token/Token.ts";
+import { StringLiteral } from "../node/StringLiteral.ts";
+import { StringLiteralKind } from "../node/enum/string_literal_kind.ts";
+import { getLocationFromTextPosition } from "../../util/locationUtils.ts";
 
 const ESCAPED_BACKSLASH_REGEX = /\\\\/g;
 const ESCAPED_DOUBLE_QUOTE_REGEX = /\\"/g;

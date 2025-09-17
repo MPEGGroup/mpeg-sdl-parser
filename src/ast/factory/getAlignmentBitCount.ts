@@ -1,9 +1,9 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import { InternalParseError } from "../../ParseError";
-import { getToken } from "../../util/nodeFactoryUtils";
-import { NumberLiteral } from "../node/NumberLiteral";
-import { NumberLiteralKind } from "../node/enum/number_literal_kind";
+import { InternalParseError } from "../../ParseError.ts";
+import { getToken } from "../../util/nodeFactoryUtils.ts";
+import { NumberLiteral } from "../node/NumberLiteral.ts";
+import { NumberLiteralKind } from "../node/enum/number_literal_kind.ts";
 
 export function getAlignmentBitCount(
   cursor: TreeCursor,
