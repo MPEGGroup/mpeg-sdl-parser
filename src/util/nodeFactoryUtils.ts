@@ -1,5 +1,5 @@
 import { Text } from "@codemirror/state";
-import { TreeCursor } from "@lezer/common";
+import { NodeType, TreeCursor } from "@lezer/common";
 import type { Token } from "../ast/token/Token.ts";
 import type { AbstractNode } from "../ast/node/AbstractNode.ts";
 import { NodeFactory } from "../ast/factory/NodeFactory.ts";
@@ -33,6 +33,10 @@ function getCommentTrivia(cursor: TreeCursor, text: Text): Trivia {
     text: text.sliceString(cursor.from, cursor.to),
     location: getLocationFromTextPosition(text, cursor.from),
   };
+}
+
+export function isPrimitiveNodeType(nodeType: NodeType): boolean {
+  return primitiveNodeTypes.has(nodeType.id);
 }
 
 export function getToken(
@@ -75,19 +79,16 @@ export function getChildNodesAndTokens(
 
     let childNode: AbstractNode | Token;
 
-    // Check if current sytax node is a terminal token and if so also check it is not a primitive node type
+    // Check if current sytax node is a terminal token
     const isTerminal = !cursor.firstChild();
-    let isToken = false;
 
-    if (isTerminal) {
-      isToken = !primitiveNodeTypes.has(cursor.type.id);
-    } else {
-      // return to parent
+    // Return to parent if not a terminal node
+    if (!isTerminal) {
       cursor.parent();
     }
 
-    // If it is a terminal token, create a Token from the syntax node
-    if (isTerminal && isToken) {
+    // If it is terminal node but not a primitive node create a Token
+    if (isTerminal && !isPrimitiveNodeType(cursor.type)) {
       childNode = getToken(cursor, text);
 
       if (trivia.length > 0) {
