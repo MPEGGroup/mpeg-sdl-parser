@@ -2,6 +2,7 @@ import type { Text } from "@codemirror/state";
 import { TreeCursor } from "@lezer/common";
 import type { Location } from "./Location.ts";
 import { getLocationFromTextPosition } from "./util/locationUtils.ts";
+import { isPrimitiveNodeType } from "./util/nodeFactoryUtils.ts";
 
 /**
  * Base error class.
@@ -61,10 +62,23 @@ export class SyntacticParseError extends ParseError {
     // if the error token has a child, the child is an unexpected token
     const unexpectedToken = cursor.firstChild();
 
+    let message;
+
+    if (unexpectedToken) {
+      message = 'Unexpected token: "' +
+        text.sliceString(cursor.from, cursor.to) + '"';
+
+      if (isPrimitiveNodeType(cursor.type)) {
+        message += " (" + cursor.name + ")";
+      }
+    } else {
+      message = "Missing expected token";
+    }
+
     return this.fromTextAndPosition(
       text,
       cursor.from,
-      unexpectedToken ? "Unexpected token" : "Missing expected token",
+      message,
     );
   }
 

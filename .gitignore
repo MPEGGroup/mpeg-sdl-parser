@@ -175,3 +175,5 @@ dist
 .DS_Store
 docs/
 /.releaserc
+.claude
+.vscode

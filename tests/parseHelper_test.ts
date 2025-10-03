@@ -59,7 +59,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Unexpected token => { row: 1, column: 17, position: 16 }",
+      'SYNTACTIC ERROR: Unexpected token: "computed" => { row: 1, column: 17, position: 16 }',
     );
   });
 
@@ -105,7 +105,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Unexpected token => { row: 1, column: 29, position: 28 }",
+      'SYNTACTIC ERROR: Unexpected token: "u" (Identifier) => { row: 1, column: 29, position: 28 }',
     );
   });
 
@@ -129,7 +129,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Unexpected token => { row: 1, column: 28, position: 27 }",
+      'SYNTACTIC ERROR: Unexpected token: "8" (IntegerLiteral) => { row: 1, column: 28, position: 27 }',
     );
   });
 
