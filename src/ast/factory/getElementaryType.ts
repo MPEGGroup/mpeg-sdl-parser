@@ -1,14 +1,12 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
 import { InternalParseError } from "../../ParseError.ts";
-import {
-  getChildNodesAndTokens,
-  isAbstractNode,
-} from "../../util/nodeFactoryUtils.ts";
+import { getChildNodesAndTokens } from "../../util/nodeFactoryUtils.ts";
 import { ElementaryType } from "../node/ElementaryType.ts";
 import type { Token } from "../token/Token.ts";
 import { ElementaryTypeKind } from "../node/enum/elementary_type_kind.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
+import { isAbstractNode } from "../../util/nodeUtils.ts";
 
 export function getElementaryType(
   cursor: TreeCursor,

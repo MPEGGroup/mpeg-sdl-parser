@@ -1,14 +1,12 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
 import { InternalParseError } from "../../ParseError.ts";
-import {
-  getChildNodesAndTokens,
-  isAbstractNode,
-} from "../../util/nodeFactoryUtils.ts";
+import { getChildNodesAndTokens } from "../../util/nodeFactoryUtils.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
 import type { Identifier } from "../node/Identifier.ts";
 import type { Token } from "../token/Token.ts";
 import { ClassMemberAccess } from "../node/ClassMemberAccess.ts";
+import { isAbstractNode } from "../../util/nodeUtils.ts";
 
 export function getClassMemberAccess(
   cursor: TreeCursor,

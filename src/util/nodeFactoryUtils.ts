@@ -1,42 +1,19 @@
 import { Text } from "@codemirror/state";
-import { NodeType, TreeCursor } from "@lezer/common";
+import { TreeCursor } from "@lezer/common";
 import type { Token } from "../ast/token/Token.ts";
 import type { AbstractNode } from "../ast/node/AbstractNode.ts";
 import { NodeFactory } from "../ast/factory/NodeFactory.ts";
 import type { Trivia } from "../ast/token/Trivia.ts";
 import { SyntacticParseError } from "../ParseError.ts";
 import { getLocationFromTextPosition } from "./locationUtils.ts";
-import {
-  AlignmentBitCount,
-  BinaryLiteral,
-  Comment,
-  DecimalLiteral,
-  FloatingPointLiteral,
-  HexadecimalLiteral,
-  Identifier,
-  IntegerLiteral,
-  Whitespace,
-} from "../lezer/parser.terms.ts";
-
-const primitiveNodeTypes = new Set([
-  AlignmentBitCount,
-  BinaryLiteral,
-  DecimalLiteral,
-  FloatingPointLiteral,
-  HexadecimalLiteral,
-  Identifier,
-  IntegerLiteral,
-]);
+import { Comment, Whitespace } from "../lezer/parser.terms.ts";
+import { isAbstractNode, isPrimitiveNodeType } from "./nodeUtils.ts";
 
 function getCommentTrivia(cursor: TreeCursor, text: Text): Trivia {
   return {
     text: text.sliceString(cursor.from, cursor.to),
     location: getLocationFromTextPosition(text, cursor.from),
   };
-}
-
-export function isPrimitiveNodeType(nodeType: NodeType): boolean {
-  return primitiveNodeTypes.has(nodeType.id);
 }
 
 export function getToken(
@@ -152,10 +129,4 @@ export function getChildNodesAndTokens(
   }
 
   return childNodesAndTokens;
-}
-
-export function isAbstractNode(
-  node: AbstractNode | Token,
-): node is AbstractNode {
-  return node && typeof node === "object" && "nodeKind" in node;
 }

@@ -1,13 +1,11 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import {
-  getChildNodesAndTokens,
-  isAbstractNode,
-} from "../../util/nodeFactoryUtils.ts";
+import { getChildNodesAndTokens } from "../../util/nodeFactoryUtils.ts";
 import { NumberLiteral } from "../node/NumberLiteral.ts";
 import { NumberLiteralKind } from "../node/enum/number_literal_kind.ts";
 import { InternalParseError } from "../../ParseError.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
+import { isAbstractNode } from "../../util/nodeUtils.ts";
 
 const ESCAPED_BACKSLASH_REGEX = /\\\\/g;
 const ESCAPED_SINGLE_QUOTE_REGEX = /\\'/g;
