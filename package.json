@@ -21,7 +21,7 @@
   "module": "index.ts",
   "main": "dist/index.js",
   "type": "module",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "files": [
     "dist",
     "grammar",
