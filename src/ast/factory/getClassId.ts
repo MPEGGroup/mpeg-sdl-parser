@@ -1,13 +1,11 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
-import {
-  getChildNodesAndTokens,
-  isAbstractNode,
-} from "../../util/nodeFactoryUtils.ts";
+import { getChildNodesAndTokens } from "../../util/nodeFactoryUtils.ts";
 import type { NumberLiteral } from "../node/NumberLiteral.ts";
 import { InternalParseError } from "../../ParseError.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
 import { ClassId } from "../node/ClassId.ts";
+import { isAbstractNode } from "../../util/nodeUtils.ts";
 
 export function getClassId(
   cursor: TreeCursor,

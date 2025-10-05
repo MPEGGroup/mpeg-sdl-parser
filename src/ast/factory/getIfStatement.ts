@@ -1,10 +1,7 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
 import { InternalParseError } from "../../ParseError.ts";
-import {
-  getChildNodesAndTokens,
-  isAbstractNode,
-} from "../../util/nodeFactoryUtils.ts";
+import { getChildNodesAndTokens } from "../../util/nodeFactoryUtils.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
 import { IfStatement } from "../node/IfStatement.ts";
 import type { Token } from "../token/Token.ts";
@@ -12,6 +9,7 @@ import type { AbstractStatement } from "../node/AbstractStatement.ts";
 import type { AbstractExpression } from "../node/AbstractExpression.ts";
 import type { NumberLiteral } from "../node/NumberLiteral.ts";
 import type { Identifier } from "../node/Identifier.ts";
+import { isAbstractNode } from "../../util/nodeUtils.ts";
 
 export function getIfStatement(
   cursor: TreeCursor,

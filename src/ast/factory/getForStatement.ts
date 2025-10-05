@@ -1,10 +1,7 @@
 import { Text } from "@codemirror/state";
 import type { TreeCursor } from "@lezer/common";
 import { InternalParseError } from "../../ParseError.ts";
-import {
-  getChildNodesAndTokens,
-  isAbstractNode,
-} from "../../util/nodeFactoryUtils.ts";
+import { getChildNodesAndTokens } from "../../util/nodeFactoryUtils.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
 import type { Token } from "../token/Token.ts";
 import type { AbstractStatement } from "../node/AbstractStatement.ts";
@@ -13,6 +10,7 @@ import { ForStatement } from "../node/ForStatement.ts";
 import { ComputedElementaryTypeDefinition } from "../node/ComputedElementaryTypeDefinition.ts";
 import { CompoundStatement } from "../node/CompoundStatement.ts";
 import { StatementKind } from "../node/enum/statement_kind.ts";
+import { isAbstractNode } from "../../util/nodeUtils.ts";
 
 export function getForStatement(
   cursor: TreeCursor,
