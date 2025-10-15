@@ -39,7 +39,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.23"
+    "@types/bun": "^1.3.0"
   },
   "peerDependencies": {
     "typescript": "^5.9.3"
