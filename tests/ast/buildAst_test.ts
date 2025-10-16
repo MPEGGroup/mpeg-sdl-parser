@@ -18,7 +18,7 @@ describe("buildAst Tests", () => {
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     expect(() => buildAst(parseTree, sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Missing expected token => { row: 1, column: 1, position: 0 }",
+      "SYNTACTIC ERROR: Missing expected token: computed => { row: 1, column: 1, position: 0 }",
     );
   });
 

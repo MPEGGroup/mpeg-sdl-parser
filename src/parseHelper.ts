@@ -9,6 +9,7 @@ import type { Plugin } from "prettier";
 import { Text } from "@codemirror/state";
 import type { AbstractNode } from "./ast/node/AbstractNode.ts";
 import { SdlStringInput } from "./lezer/SdlStringInput.ts";
+import { getLocationFromTextPosition } from "./util/locationUtils.ts";
 
 /**
  * Create a dynamic prettier plugin for SDL using the pre-parsed AST.
@@ -52,11 +53,14 @@ export function collateParseErrors(
   const cursor = parseTree.cursor();
   do {
     if (cursor.type.isError) {
-      const error = SyntacticParseError.fromTextAndCursor(text, cursor);
+      const location = getLocationFromTextPosition(text, cursor.from);
 
       // only keep one error per line
-      if (!errorRows.has(error.location!.row)) {
-        errorRows.add(error.location!.row);
+      if (!errorRows.has(location!.row)) {
+        errorRows.add(location!.row);
+
+        const error = SyntacticParseError.fromTextAndCursor(text, cursor);
+
         parseErrors.push(error);
       }
     }

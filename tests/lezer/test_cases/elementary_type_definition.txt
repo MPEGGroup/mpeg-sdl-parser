@@ -49,7 +49,7 @@ Specification(
             AlignedModifier(
                 aligned
                 OpenParenthesis
-                AlignmentBitCount
+                AlignmentBitCount8
                 CloseParenthesis
             )
             Whitespace
@@ -135,7 +135,7 @@ Specification(
             AlignedModifier(
                 aligned
                 OpenParenthesis
-                AlignmentBitCount
+                AlignmentBitCount16
                 CloseParenthesis
             )
             Whitespace

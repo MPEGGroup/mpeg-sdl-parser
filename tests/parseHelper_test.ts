@@ -49,7 +49,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -59,7 +59,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      'SYNTACTIC ERROR: Unexpected token: "computed" => { row: 1, column: 17, position: 16 }',
+      "SYNTACTIC ERROR: Unexpected token: computed => { row: 1, column: 17, position: 16 }",
     );
   });
 
@@ -69,19 +69,75 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
     );
   });
 
-  test("Test collateParseErrors - mix of concatenated string literal types fails to parse", () => {
+  test("Test collateParseErrors - unterminated class parameter values ending in expression fails to parse", () => {
+    const sdlStringInput = new SdlStringInput("class A {ClassD d(3;}");
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected token: , or ) => { row: 1, column: 20, position: 19 }",
+    );
+  });
+
+  test("Test collateParseErrors - unterminated class parameter values ending in comma fails to parse", () => {
+    const sdlStringInput = new SdlStringInput("class A {ClassD d(3,;}");
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
+    );
+  });
+
+  test("Test collateParseErrors - unterminated string literal types fails to parse", () => {
     const sdlStringInput = new SdlStringInput(
-      'class A {utf8string d = "hello" u"world";}',
+      'class A {utf8string d = u";}',
     );
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token => { row: 1, column: 25, position: 24 }",
+      'SYNTACTIC ERROR: Missing expected token: " => { row: 1, column: 29, position: 28 }',
+    );
+  });
+
+  test("Test collateParseErrors - missing utf string literal types fails to parse", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A {utf8string d = ;}",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected token: u => { row: 1, column: 25, position: 24 }",
+    );
+  });
+
+  test("Test collateParseErrors - missing string literal types fails to parse", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A {base64string d = ;}",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      'SYNTACTIC ERROR: Missing expected token: " => { row: 1, column: 27, position: 26 }',
+    );
+  });
+
+  test("Test collateParseErrors - mix of concatenated string literal types fails to parse", () => {
+    const sdlStringInput = new SdlStringInput(
+      'class A {utf8string d = u"hello" "world";}',
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected token: u => { row: 1, column: 34, position: 33 }",
     );
   });
 
@@ -93,7 +149,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Missing expected token: const or <AlignedModifier> or utf8string or utf16string or utfstring or base64string => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -105,7 +161,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      'SYNTACTIC ERROR: Unexpected token: "u" (Identifier) => { row: 1, column: 29, position: 28 }',
+      "SYNTACTIC ERROR: Unexpected token: u <Identifier> => { row: 1, column: 29, position: 28 }",
     );
   });
 
@@ -117,7 +173,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token => { row: 1, column: 27, position: 26 }",
+      "SYNTACTIC ERROR: Missing expected token: u => { row: 1, column: 27, position: 26 }",
     );
   });
 
@@ -129,7 +185,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      'SYNTACTIC ERROR: Unexpected token: "8" (IntegerLiteral) => { row: 1, column: 28, position: 27 }',
+      "SYNTACTIC ERROR: Unexpected token: 8 <IntegerLiteral> => { row: 1, column: 28, position: 27 }",
     );
   });
 
@@ -141,7 +197,39 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token => { row: 1, column: 18, position: 17 }",
+      "SYNTACTIC ERROR: Missing expected token: 8 or 16 or 32 or 64 or 128 => { row: 1, column: 18, position: 17 }",
+    );
+  });
+
+  test("Test collateParseErrors - unterminated alignment modifier fails to parse", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A {aligned(16 utf8string foo;}",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected token: ) => { row: 1, column: 21, position: 20 }",
+    );
+  });
+
+  test("Test collateParseErrors - while loop fails to parse", () => {
+    const sdlStringInput = new SdlStringInput("class A {while (1)}");
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected token: <CompoundStatement> => { row: 1, column: 19, position: 18 }",
+    );
+  });
+
+  test("Test collateParseErrors - empty specification", () => {
+    const sdlStringInput = new SdlStringInput("");
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected token: <ClassDeclaration> or <MapDeclaration> or <ComputedElementaryTypeDefinition> => { row: 1, column: 1, position: 0 }",
     );
   });
 

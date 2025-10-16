@@ -2,7 +2,9 @@ import type { Text } from "@codemirror/state";
 import { TreeCursor } from "@lezer/common";
 import type { Location } from "./Location.ts";
 import { getLocationFromTextPosition } from "./util/locationUtils.ts";
-import { isPrimitiveNodeType } from "./util/nodeUtils.ts";
+import { primitiveNodeProp } from "./lezer/props/primitiveNodePropSource.ts";
+import { syntacticTokenNodeProp } from "./lezer/props/syntacticTokenNodePropSource.ts";
+import { getExpectedTokenTypes } from "./completion/getExpectedTokenTypes.ts";
 
 /**
  * Base error class.
@@ -62,19 +64,39 @@ export class SyntacticParseError extends ParseError {
     // if the error token has a child, the child is an unexpected token
     const unexpectedToken = cursor.firstChild();
 
-    let message;
+    let message: string;
 
     if (unexpectedToken) {
-      message = 'Unexpected token: "' +
-        text.sliceString(cursor.from, cursor.to) + '"';
+      message = "Unexpected token: " +
+        text.sliceString(cursor.from, cursor.to);
 
-      if (isPrimitiveNodeType(cursor.type)) {
-        message += " (" + cursor.name + ")";
+      if (cursor.type.prop(primitiveNodeProp)) {
+        message += " <" + cursor.name + ">";
       }
     } else {
-      message = "Missing expected token";
-    }
+      // otherwise it is a missing expected token and we should indicate what token or tokens would be expected here
+      const expectedTokenTypes = getExpectedTokenTypes(
+        cursor,
+      );
 
+      message = "Missing expected token";
+
+      if (expectedTokenTypes) {
+        message += ":";
+        expectedTokenTypes.forEach((type, index) => {
+          if (index > 0) {
+            message += " or";
+          }
+          let value: string;
+          if (type.prop(syntacticTokenNodeProp)) {
+            value = type.prop(syntacticTokenNodeProp)!;
+          } else {
+            value = "<" + type.name + ">";
+          }
+          message += " " + value;
+        });
+      }
+    }
     return this.fromTextAndPosition(
       text,
       cursor.from,
