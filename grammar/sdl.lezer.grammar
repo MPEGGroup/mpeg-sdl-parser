@@ -119,6 +119,35 @@
 
   FloatingPointLiteral { (integer_literal | decimal_literal) "e" ("0" | (("+" | "-")? positive_integer)) }
 
+  // 5.18 String literal values
+
+  UtfPrefix { "u" }
+
+  // Rule E.2: Look-ahead parsing
+
+  LookAhead {
+    "*"
+  }
+
+  AlignmentBitCount8 {
+    "8"
+  }
+
+  AlignmentBitCount16 {
+    "16"
+  }
+
+  AlignmentBitCount32 {
+    "32"
+  }
+
+  AlignmentBitCount64 {
+    "64"
+  }
+
+  AlignmentBitCount128 {
+    "128"
+  }
 
   // Lezer token precedence rules
 
@@ -295,10 +324,6 @@ number_literal { BinaryLiteral | HexadecimalLiteral | MultipleCharacterLiteral |
 
 // 5.18 String literal values
 
-UtfPrefix {
-  "u"
-}
-
 UtfStringLiteralCharacters { (escaped_sdl_compatible_ucs_character | universal_character_name)* }
 
 // One or more string literals to support concatenation
@@ -314,16 +339,15 @@ UtfStringLiteral { (UtfPrefix DoubleQuote UtfStringLiteralCharacters DoubleQuote
 
 
 // Rule E.1: Elementary data types
-// Rule E.2: Look-ahead parsing
 // Rule E.3: Legacy keyword
 // Rule E.4: Reserved keyword
 
-AlignmentBitCount {
-  "8" | "16" | "32" | "64" | "128"
+alignment_bit_count {
+  AlignmentBitCount8 | AlignmentBitCount16 | AlignmentBitCount32 | AlignmentBitCount64 | AlignmentBitCount128
 }
 
 AlignedModifier { 
-  keyword<"aligned"> (OpenParenthesis AlignmentBitCount CloseParenthesis)?
+  keyword<"aligned"> (OpenParenthesis alignment_bit_count CloseParenthesis)?
 }
 
 ElementaryType {
@@ -332,10 +356,6 @@ ElementaryType {
 
 LengthAttribute {
   OpenParenthesis expression CloseParenthesis
-}
-
-LookAhead {
-  "*"
 }
 
 ElementaryTypeDefinition {

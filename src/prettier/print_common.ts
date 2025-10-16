@@ -10,7 +10,6 @@ const { join } = doc.builders;
 
 export function printAlignedModifier(
   path: AstPath<AlignedModifier>,
-  print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const alignedModifier = path.node;
 
@@ -23,10 +22,7 @@ export function printAlignedModifier(
       getDocWithTrivia(alignedModifier.openParenthesisPunctuator!),
     );
     elements.push(
-      path.call(
-        print,
-        "bitCountModifier" as keyof AlignedModifier["bitCountModifier"],
-      ),
+      getDocWithTrivia(alignedModifier.bitCountModifierToken!),
     ),
       elements.push(
         getDocWithTrivia(alignedModifier.closeParenthesisPunctuator!),

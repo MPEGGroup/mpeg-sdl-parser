@@ -1,14 +1,12 @@
 import type { Token } from "../token/Token.ts";
-import { AbstractCompositeNode } from "./AbstractCompositeNode.ts";
-import type { AbstractNode } from "./AbstractNode.ts";
+import { AbstractLeafNode } from "./AbstractLeafNode.ts";
 import { NodeKind } from "./enum/node_kind.ts";
-import type { NumberLiteral } from "./NumberLiteral.ts";
 
-export class AlignedModifier extends AbstractCompositeNode {
+export class AlignedModifier extends AbstractLeafNode {
   constructor(
     public readonly bitCount: number,
     public readonly isDefault8BitCount: boolean,
-    public readonly bitCountModifier: NumberLiteral | undefined,
+    public readonly bitCountModifierToken: Token | undefined,
     public readonly alignedKeyword: Token,
     public readonly openParenthesisPunctuator?: Token,
     public readonly closeParenthesisPunctuator?: Token,
@@ -20,9 +18,7 @@ export class AlignedModifier extends AbstractCompositeNode {
     );
   }
 
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    if (!this.isDefault8BitCount) {
-      yield this.bitCountModifier!;
-    }
+  toString(): string {
+    return this.bitCount.toString();
   }
 }

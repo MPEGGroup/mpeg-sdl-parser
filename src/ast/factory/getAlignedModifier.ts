@@ -4,7 +4,6 @@ import { InternalParseError } from "../../ParseError.ts";
 import { getChildNodesAndTokens } from "../../util/nodeFactoryUtils.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
 import type { Token } from "../token/Token.ts";
-import type { NumberLiteral } from "../node/NumberLiteral.ts";
 import { AlignedModifier } from "../node/AlignedModifier.ts";
 import { isAbstractNode } from "../../util/nodeUtils.ts";
 
@@ -15,21 +14,16 @@ export function getAlignedModifier(
   const childNodesAndTokens = getChildNodesAndTokens(cursor, text);
 
   let bitCount: number | undefined;
-  let bitCountModifier: NumberLiteral | undefined;
+  let bitCountModifier: Token | undefined;
   let alignedKeyword: Token | undefined;
   let openParenthesisPunctuator: Token | undefined;
   let closedParenthesisPunctuator: Token | undefined;
 
   for (const childNodeOrToken of childNodesAndTokens) {
     if (isAbstractNode(childNodeOrToken)) {
-      if (childNodeOrToken.nodeKind === NodeKind.NUMBER_LITERAL) {
-        bitCountModifier = childNodeOrToken as NumberLiteral;
-        bitCount = bitCountModifier.value;
-      } else {
-        throw new InternalParseError(
-          `Unexpected node kind: ${NodeKind[childNodeOrToken.nodeKind]}`,
-        );
-      }
+      throw new InternalParseError(
+        `Unexpected node kind: ${NodeKind[childNodeOrToken.nodeKind]}`,
+      );
     } else {
       switch (childNodeOrToken.text) {
         case "(":
@@ -40,6 +34,26 @@ export function getAlignedModifier(
           break;
         case "aligned":
           alignedKeyword = childNodeOrToken;
+          break;
+        case "8":
+          bitCountModifier = childNodeOrToken;
+          bitCount = 8;
+          break;
+        case "16":
+          bitCountModifier = childNodeOrToken;
+          bitCount = 16;
+          break;
+        case "32":
+          bitCountModifier = childNodeOrToken;
+          bitCount = 32;
+          break;
+        case "64":
+          bitCountModifier = childNodeOrToken;
+          bitCount = 64;
+          break;
+        case "128":
+          bitCountModifier = childNodeOrToken;
+          bitCount = 128;
           break;
         default:
           throw new InternalParseError(

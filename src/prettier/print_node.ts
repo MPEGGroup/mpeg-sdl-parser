@@ -72,7 +72,7 @@ export function printNode(
         print,
       );
     case NodeKind.ALIGNED_MODIFIER:
-      return printAlignedModifier(path as AstPath<AlignedModifier>, print);
+      return printAlignedModifier(path as AstPath<AlignedModifier>);
     case NodeKind.ARRAY_DIMENSION:
       return printAbstractArrayDimension(
         path as AstPath<AbstractArrayDimension>,

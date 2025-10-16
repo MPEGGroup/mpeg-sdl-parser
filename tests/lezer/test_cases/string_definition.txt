@@ -68,7 +68,7 @@ Specification(
                 aligned
                 Whitespace
                 OpenParenthesis
-                AlignmentBitCount
+                AlignmentBitCount16
                 CloseParenthesis
             )
             Whitespace
