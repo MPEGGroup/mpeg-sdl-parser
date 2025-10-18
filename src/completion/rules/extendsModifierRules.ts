@@ -4,10 +4,10 @@ import * as TokenTypeId from "../../lezer/parser.terms.ts";
 export const extendsModifierRules = [
   {
     previous: -1,
-    expected: TokenTypeId.KeywordExtends,
+    expected: TokenTypeId._extends,
   },
   {
-    previous: TokenTypeId.KeywordExtends,
+    previous: TokenTypeId._extends,
     expected: TokenTypeId.Identifier,
   },
   {
