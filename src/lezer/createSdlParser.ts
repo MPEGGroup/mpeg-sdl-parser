@@ -8,10 +8,10 @@ import { SyntacticParseError } from "../ParseError.ts";
 import { parser } from "./parser.ts";
 
 import { getContextTracker } from "./contextTracker.ts";
-import { getStyleTagsNodePropSource } from "./props/styleTagsNodePropSource.ts";
-import { getBlockStatementNodePropSource } from "./props/blockStatementNodePropSource.ts";
-import { getPrimitiveNodePropSource } from "./props/primitiveNodePropSource.ts";
-import { getSyntacticTokenNodePropSource } from "./props/syntacticTokenNodePropSource.ts";
+import { styleTagsNodePropSource } from "./props/styleTagsNodePropSource.ts";
+import { blockStatementNodePropSource } from "./props/blockStatementNodePropSource.ts";
+import { primitiveNodePropSource } from "./props/primitiveNodePropSource.ts";
+import { syntacticTokenNodePropSource } from "./props/syntacticTokenNodePropSource.ts";
 
 let lenientSdlParser: LezerParser | undefined;
 let strictSdlParser: LezerParser | undefined;
@@ -32,10 +32,10 @@ export function createLenientSdlParser(): LezerParser {
     // Configure the parser with custom node properties
     lenientSdlParser = lenientSdlParser.configure({
       props: [
-        getStyleTagsNodePropSource(),
-        getBlockStatementNodePropSource(),
-        getPrimitiveNodePropSource(),
-        getSyntacticTokenNodePropSource(),
+        styleTagsNodePropSource,
+        blockStatementNodePropSource,
+        primitiveNodePropSource,
+        syntacticTokenNodePropSource,
       ],
     });
   }
