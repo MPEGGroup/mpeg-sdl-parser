@@ -1,3 +1,6 @@
+/**
+ * A hierarchical search structure that allows for searching with progressively shorter suffixes of ID arrays.
+ */
 export class HierarchicalSearch<T> {
   private store = new Map<string, T>();
 

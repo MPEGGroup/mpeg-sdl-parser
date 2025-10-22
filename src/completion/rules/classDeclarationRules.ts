@@ -71,95 +71,11 @@ export const classDeclarationRules = [
       TokenTypeId.CloseBrace,
     ],
   },
-  {
-    previous: TokenTypeId.IfStatement,
+  ...statementTypes.map((type) => ({
+    previous: type,
     expected: [
       ...statementTypes,
       TokenTypeId.CloseBrace,
     ],
-  },
-  {
-    previous: TokenTypeId.SwitchStatement,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.ForStatement,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.DoStatement,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.WhileStatement,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.ExpressionStatement,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.ElementaryTypeDefinition,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.MapDefinition,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.ClassDefinition,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.StringDefinition,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.ArrayDefinition,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.ComputedElementaryTypeDefinition,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
-  {
-    previous: TokenTypeId.ComputedArrayDefinition,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
-  },
+  })),
 ];

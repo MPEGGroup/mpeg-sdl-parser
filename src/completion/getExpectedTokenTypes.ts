@@ -10,6 +10,12 @@ const logger = getLogger("getExpectedTokenTypes");
 
 const lenientSdlParser = createLenientSdlParser();
 
+/**
+ * Given a TreeCursor positioned at an error node, returns the expected token types at that position.
+ * @param errorCursor The TreeCursor positioned at an error node.
+ *
+ * @returns An array of expected NodeTypes, or undefined if none found.
+ */
 export function getExpectedTokenTypes(
   errorCursor: TreeCursor,
 ): NodeType[] | undefined {
@@ -64,13 +70,12 @@ export function getExpectedTokenTypes(
         parentTokenTypes[parentTokenTypes.length - 1].name,
     );
 
-    // try again with the parent
-    return getExpectedTokenTypes(parentCursorClone);
+    return undefined;
   }
 
   const expectedTokenTypes = expectedTokensByPreviousSiblingMap.get(
     previousSiblingTokenTypes.length > 0
-      ? previousSiblingTokenTypes.map((type) => type.id)
+      ? [-1, ...previousSiblingTokenTypes.map((type) => type.id)]
       : [-1],
   );
 

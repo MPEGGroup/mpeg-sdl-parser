@@ -53,6 +53,9 @@ const logger = getLogger("getExpectedTokenTypes");
 
 const lenientSdlParser = createLenientSdlParser();
 
+/**
+ * A map from parent token type ID to a HierarchicalSearch of previous sibling token type IDs to expected token type IDs.
+ */
 export const completionRulesByParentMap: Map<
   number,
   HierarchicalSearch<number[]>

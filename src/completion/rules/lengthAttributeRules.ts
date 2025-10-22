@@ -9,12 +9,8 @@ export const lengthAttributeRules = [
     previous: TokenTypeId.OpenParenthesis,
     expected: expressionTypes,
   },
-  {
-    previous: TokenTypeId.UnaryExpression,
+  ...expressionTypes.map((expressionType) => ({
+    previous: expressionType,
     expected: TokenTypeId.CloseParenthesis,
-  },
-  {
-    previous: TokenTypeId.BinaryExpression,
-    expected: TokenTypeId.CloseParenthesis,
-  },
+  })),
 ];

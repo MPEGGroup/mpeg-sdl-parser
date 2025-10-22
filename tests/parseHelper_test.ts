@@ -49,7 +49,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> or + or - or <LengthofExpression> or <Identifier> or <BinaryLiteral> or <HexadecimalLiteral> or <MultipleCharacterLiteral> or <IntegerLiteral> or <DecimalLiteral> or <FloatingPointLiteral> or ( => { row: 1, column: 19, position: 18 }",
     );
   });
 

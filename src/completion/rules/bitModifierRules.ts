@@ -22,5 +22,4 @@ export const bitModifierRules = [
     previous: TokenTypeId.Assignment,
     expected: TokenTypeId.ExtendedClassIdRange,
   },
-  { previous: TokenTypeId.ExtendedClassIdRange, expected: -1 },
 ];

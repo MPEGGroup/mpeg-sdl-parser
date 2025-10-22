@@ -22,3 +22,42 @@ export const statementTypes = [
   TokenTypeId.ComputedElementaryTypeDefinition,
   TokenTypeId.ComputedArrayDefinition,
 ];
+
+export const numberLiteralTypes = [
+  TokenTypeId.BinaryLiteral,
+  TokenTypeId.HexadecimalLiteral,
+  TokenTypeId.MultipleCharacterLiteral,
+  TokenTypeId.IntegerLiteral,
+  TokenTypeId.DecimalLiteral,
+  TokenTypeId.FloatingPointLiteral,
+];
+
+export const unaryOperatorTypes = [
+  TokenTypeId.UnaryPlus,
+  TokenTypeId.UnaryNegation,
+];
+
+export const postfixOperatorTypes = [
+  TokenTypeId.PostfixIncrement,
+  TokenTypeId.PostfixDecrement,
+];
+
+export const binaryOperatorTypes = [
+  TokenTypeId.Multiplication,
+  TokenTypeId.Division,
+  TokenTypeId.Modulus,
+  TokenTypeId.Addition,
+  TokenTypeId.Subtraction,
+  TokenTypeId.BitwiseShiftLeft,
+  TokenTypeId.BitwiseShiftRight,
+  TokenTypeId.RelationalLessThan,
+  TokenTypeId.RelationalLessThanOrEqual,
+  TokenTypeId.RelationalGreaterThan,
+  TokenTypeId.RelationalGreaterThanOrEqual,
+  TokenTypeId.RelationalEqual,
+  TokenTypeId.RelationalNotEqual,
+  TokenTypeId.BitwiseAnd,
+  TokenTypeId.BitwiseOr,
+  TokenTypeId.LogicalAnd,
+  TokenTypeId.LogicalOr,
+];
