@@ -1,5 +1,5 @@
 import type { Parser, Plugin, Printer, SupportLanguage } from "prettier";
-import { printNode } from "./print_node.ts";
+import { printAbstractNode } from "./print_abstract_node.ts";
 import type { AbstractNode } from "../ast/node/AbstractNode.ts";
 import { createStrictSdlParser } from "../lezer/createSdlParser.ts";
 import { buildAst } from "../ast/buildAst.ts";
@@ -38,7 +38,7 @@ const parsers: Record<string, Parser<AbstractNode>> = {
 
 const printers: Record<string, Printer<AbstractNode>> = {
   "sdl": {
-    print: printNode,
+    print: printAbstractNode,
   },
 };
 

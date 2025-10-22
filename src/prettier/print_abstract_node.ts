@@ -1,4 +1,5 @@
 import type { AstPath, Doc, ParserOptions } from "prettier";
+import { NodeKind } from "../ast/node/enum/node_kind.ts";
 import {
   printAbstractExpression,
   printArrayElementAccess,
@@ -40,7 +41,6 @@ import type { ArrayElementAccess } from "../ast/node/ArrayElementAccess.ts";
 import type { BitModifier } from "../ast/node/BitModifier.ts";
 import type { ClassMemberAccess } from "../ast/node/ClassMemberAccess.ts";
 import type { ElementaryType } from "../ast/node/ElementaryType.ts";
-import { NodeKind } from "../ast/node/enum/node_kind.ts";
 import type { ExpandableModifier } from "../ast/node/ExpandableModifier.ts";
 import type { ExtendsModifier } from "../ast/node/ExtendsModifier.ts";
 import type { LengthAttribute } from "../ast/node/LengthAttribute.ts";
@@ -57,7 +57,7 @@ import type { StringLiteral } from "../ast/node/StringLiteral.ts";
 import type { AggregateOutputValue } from "../ast/node/AggregateOutputValue.ts";
 import type { ElementaryTypeOutputValue } from "../ast/node/ElementaryTypeOutputValue.ts";
 
-export function printNode(
+export function printAbstractNode(
   path: AstPath<AbstractNode>,
   _options: ParserOptions<AbstractNode>,
   print: (_path: AstPath<AbstractNode>) => Doc,
