@@ -111,68 +111,279 @@ function addRulesForParent(
   );
 }
 
-addRulesForParent(TokenTypeId.AlignedModifier, alignedModifierRules);
-addRulesForParent(
-  TokenTypeId.ComputedElementaryTypeDefinition,
-  computedElementaryTypeRules,
-);
-addRulesForParent(TokenTypeId.ParameterValueList, parameterValueListRules);
-addRulesForParent(TokenTypeId.Specification, specificationRules);
-addRulesForParent(TokenTypeId.StringDefinition, stringDefinitionRules);
-addRulesForParent(TokenTypeId.UtfStringLiteral, utfStringLiteralRules);
-addRulesForParent(TokenTypeId.WhileStatement, whileStatementRules);
-addRulesForParent(TokenTypeId.ElementaryType, elementaryTypeRules);
-addRulesForParent(TokenTypeId.CompoundStatement, compoundStatementRules);
-addRulesForParent(TokenTypeId.IfStatement, ifStatementRules);
-addRulesForParent(TokenTypeId.ForStatement, forStatementRules);
-addRulesForParent(TokenTypeId.SwitchStatement, switchStatementRules);
-addRulesForParent(TokenTypeId.CaseClause, caseClauseRules);
-addRulesForParent(TokenTypeId.DefaultClause, defaultClauseRules);
-addRulesForParent(TokenTypeId.ClassDeclaration, classDeclarationRules);
-addRulesForParent(TokenTypeId.ExpandableModifier, expandableModifierRules);
-addRulesForParent(TokenTypeId.ClassDefinition, classDefinitionRules);
-addRulesForParent(TokenTypeId.AssignmentExpression, assignmentExpressionRules);
-addRulesForParent(TokenTypeId.DoStatement, doStatementRules);
-addRulesForParent(
-  TokenTypeId.ElementaryTypeDefinition,
-  elementaryTypeDefinitionRules,
-);
-addRulesForParent(TokenTypeId.LengthAttribute, lengthAttributeRules);
-addRulesForParent(TokenTypeId.ExtendsModifier, extendsModifierRules);
-addRulesForParent(TokenTypeId.ParameterList, parameterListRules);
-addRulesForParent(TokenTypeId.Parameter, parameterRules);
-addRulesForParent(TokenTypeId.BinaryExpression, binaryExpressionRules);
-addRulesForParent(TokenTypeId.UnaryExpression, unaryExpressionRules);
-addRulesForParent(TokenTypeId.ArrayElementAccess, arrayElementAccessRules);
-addRulesForParent(TokenTypeId.ClassMemberAccess, classMemberAccessRules);
-addRulesForParent(TokenTypeId.LengthofExpression, lengthofExpressionRules);
-addRulesForParent(TokenTypeId.BitModifier, bitModifierRules);
-addRulesForParent(TokenTypeId.ExtendedClassIdRange, extendedClassIdRangeRules);
-addRulesForParent(TokenTypeId.ClassId, classIdRules);
-addRulesForParent(TokenTypeId.ClassIdRange, classIdRangeRules);
-addRulesForParent(TokenTypeId.ExpressionStatement, expressionStatementRules);
-addRulesForParent(TokenTypeId.MapDefinition, mapDefinitionRules);
-addRulesForParent(TokenTypeId.ArrayDefinition, arrayDefinitionRules);
-addRulesForParent(
-  TokenTypeId.ImplicitArrayDimension,
-  implicitArrayDimensionRules,
-);
-addRulesForParent(
-  TokenTypeId.ExplicitArrayDimension,
-  explicitArrayDimensionRules,
-);
-addRulesForParent(
-  TokenTypeId.PartialArrayDimension,
-  partialArrayDimensionRules,
-);
-addRulesForParent(
-  TokenTypeId.ComputedArrayDefinition,
-  computedArrayDefinitionRules,
-);
-addRulesForParent(TokenTypeId.MapDeclaration, mapDeclarationRules);
-addRulesForParent(TokenTypeId.MapEntry, mapEntryRules);
-addRulesForParent(TokenTypeId.AggregateOutputValue, aggregateOutputValueRules);
-addRulesForParent(
-  TokenTypeId.ElementaryTypeOutputValue,
-  elementaryTypeOutputValueRules,
-);
+/**
+ * Validate that all TokenTypeIds have completion rules defined, except for those that are intentionally excluded.
+ */
+Object.values(TokenTypeId).forEach((tokenTypeId) => {
+  switch (tokenTypeId) {
+    case TokenTypeId.AlignedModifier:
+      addRulesForParent(TokenTypeId.AlignedModifier, alignedModifierRules);
+      break;
+    case TokenTypeId.AggregateOutputValue:
+      addRulesForParent(
+        TokenTypeId.AggregateOutputValue,
+        aggregateOutputValueRules,
+      );
+      break;
+    case TokenTypeId.ArrayDefinition:
+      addRulesForParent(TokenTypeId.ArrayDefinition, arrayDefinitionRules);
+      break;
+    case TokenTypeId.AssignmentExpression:
+      addRulesForParent(
+        TokenTypeId.AssignmentExpression,
+        assignmentExpressionRules,
+      );
+      break;
+    case TokenTypeId.ArrayElementAccess:
+      addRulesForParent(
+        TokenTypeId.ArrayElementAccess,
+        arrayElementAccessRules,
+      );
+      break;
+    case TokenTypeId.BinaryExpression:
+      addRulesForParent(TokenTypeId.BinaryExpression, binaryExpressionRules);
+      break;
+    case TokenTypeId.BitModifier:
+      addRulesForParent(TokenTypeId.BitModifier, bitModifierRules);
+      break;
+    case TokenTypeId.CaseClause:
+      addRulesForParent(TokenTypeId.CaseClause, caseClauseRules);
+      break;
+    case TokenTypeId.ClassDefinition:
+      addRulesForParent(TokenTypeId.ClassDefinition, classDefinitionRules);
+      break;
+    case TokenTypeId.ClassDeclaration:
+      addRulesForParent(TokenTypeId.ClassDeclaration, classDeclarationRules);
+      break;
+    case TokenTypeId.ClassId:
+      addRulesForParent(TokenTypeId.ClassId, classIdRules);
+      break;
+    case TokenTypeId.ClassIdRange:
+      addRulesForParent(TokenTypeId.ClassIdRange, classIdRangeRules);
+      break;
+    case TokenTypeId.ClassMemberAccess:
+      addRulesForParent(TokenTypeId.ClassMemberAccess, classMemberAccessRules);
+      break;
+    case TokenTypeId.CompoundStatement:
+      addRulesForParent(TokenTypeId.CompoundStatement, compoundStatementRules);
+      break;
+    case TokenTypeId.ComputedArrayDefinition:
+      addRulesForParent(
+        TokenTypeId.ComputedArrayDefinition,
+        computedArrayDefinitionRules,
+      );
+      break;
+    case TokenTypeId.ComputedElementaryTypeDefinition:
+      addRulesForParent(
+        TokenTypeId.ComputedElementaryTypeDefinition,
+        computedElementaryTypeRules,
+      );
+      break;
+    case TokenTypeId.DefaultClause:
+      addRulesForParent(TokenTypeId.DefaultClause, defaultClauseRules);
+      break;
+    case TokenTypeId.DoStatement:
+      addRulesForParent(TokenTypeId.DoStatement, doStatementRules);
+      break;
+    case TokenTypeId.ElementaryType:
+      addRulesForParent(TokenTypeId.ElementaryType, elementaryTypeRules);
+      break;
+    case TokenTypeId.ElementaryTypeDefinition:
+      addRulesForParent(
+        TokenTypeId.ElementaryTypeDefinition,
+        elementaryTypeDefinitionRules,
+      );
+      break;
+    case TokenTypeId.ElementaryTypeOutputValue:
+      addRulesForParent(
+        TokenTypeId.ElementaryTypeOutputValue,
+        elementaryTypeOutputValueRules,
+      );
+      break;
+    case TokenTypeId.ExpandableModifier:
+      addRulesForParent(
+        TokenTypeId.ExpandableModifier,
+        expandableModifierRules,
+      );
+      break;
+    case TokenTypeId.ExplicitArrayDimension:
+      addRulesForParent(
+        TokenTypeId.ExplicitArrayDimension,
+        explicitArrayDimensionRules,
+      );
+      break;
+    case TokenTypeId.ExpressionStatement:
+      addRulesForParent(
+        TokenTypeId.ExpressionStatement,
+        expressionStatementRules,
+      );
+      break;
+    case TokenTypeId.ExtendedClassIdRange:
+      addRulesForParent(
+        TokenTypeId.ExtendedClassIdRange,
+        extendedClassIdRangeRules,
+      );
+      break;
+    case TokenTypeId.ExtendsModifier:
+      addRulesForParent(TokenTypeId.ExtendsModifier, extendsModifierRules);
+      break;
+    case TokenTypeId.ForStatement:
+      addRulesForParent(TokenTypeId.ForStatement, forStatementRules);
+      break;
+    case TokenTypeId.IfStatement:
+      addRulesForParent(TokenTypeId.IfStatement, ifStatementRules);
+      break;
+    case TokenTypeId.ImplicitArrayDimension:
+      addRulesForParent(
+        TokenTypeId.ImplicitArrayDimension,
+        implicitArrayDimensionRules,
+      );
+      break;
+    case TokenTypeId.LengthAttribute:
+      addRulesForParent(TokenTypeId.LengthAttribute, lengthAttributeRules);
+      break;
+    case TokenTypeId.LengthofExpression:
+      addRulesForParent(
+        TokenTypeId.LengthofExpression,
+        lengthofExpressionRules,
+      );
+      break;
+    case TokenTypeId.MapDeclaration:
+      addRulesForParent(TokenTypeId.MapDeclaration, mapDeclarationRules);
+      break;
+    case TokenTypeId.MapDefinition:
+      addRulesForParent(TokenTypeId.MapDefinition, mapDefinitionRules);
+      break;
+    case TokenTypeId.MapEntry:
+      addRulesForParent(TokenTypeId.MapEntry, mapEntryRules);
+      break;
+    case TokenTypeId.Parameter:
+      addRulesForParent(TokenTypeId.Parameter, parameterRules);
+      break;
+    case TokenTypeId.ParameterList:
+      addRulesForParent(TokenTypeId.ParameterList, parameterListRules);
+      break;
+    case TokenTypeId.ParameterValueList:
+      addRulesForParent(
+        TokenTypeId.ParameterValueList,
+        parameterValueListRules,
+      );
+      break;
+    case TokenTypeId.PartialArrayDimension:
+      addRulesForParent(
+        TokenTypeId.PartialArrayDimension,
+        partialArrayDimensionRules,
+      );
+      break;
+    case TokenTypeId.Specification:
+      addRulesForParent(TokenTypeId.Specification, specificationRules);
+      break;
+    case TokenTypeId.StringDefinition:
+      addRulesForParent(TokenTypeId.StringDefinition, stringDefinitionRules);
+      break;
+    case TokenTypeId.SwitchStatement:
+      addRulesForParent(TokenTypeId.SwitchStatement, switchStatementRules);
+      break;
+    case TokenTypeId.UnaryExpression:
+      addRulesForParent(TokenTypeId.UnaryExpression, unaryExpressionRules);
+      break;
+    case TokenTypeId.UtfStringLiteral:
+      addRulesForParent(TokenTypeId.UtfStringLiteral, utfStringLiteralRules);
+      break;
+    case TokenTypeId.WhileStatement:
+      addRulesForParent(TokenTypeId.WhileStatement, whileStatementRules);
+      break;
+    // Tokens that do not require completion rules
+    case TokenTypeId._break:
+    case TokenTypeId._case:
+    case TokenTypeId._class:
+    case TokenTypeId._const:
+    case TokenTypeId._default:
+    case TokenTypeId._do:
+    case TokenTypeId._else:
+    case TokenTypeId._extends:
+    case TokenTypeId._for:
+    case TokenTypeId._if:
+    case TokenTypeId._switch:
+    case TokenTypeId._while:
+    case TokenTypeId.abstract:
+    case TokenTypeId.Addition:
+    case TokenTypeId.AlignmentBitCount8:
+    case TokenTypeId.AlignmentBitCount16:
+    case TokenTypeId.AlignmentBitCount32:
+    case TokenTypeId.AlignmentBitCount64:
+    case TokenTypeId.AlignmentBitCount128:
+    case TokenTypeId.aligned:
+    case TokenTypeId.Assignment:
+    case TokenTypeId.base64string:
+    case TokenTypeId.Base64StringLiteral:
+    case TokenTypeId.Base64StringLiteralCharacters:
+    case TokenTypeId.BinaryLiteral:
+    case TokenTypeId.bit:
+    case TokenTypeId.BitwiseAnd:
+    case TokenTypeId.BitwiseOr:
+    case TokenTypeId.BitwiseShiftLeft:
+    case TokenTypeId.BitwiseShiftRight:
+    case TokenTypeId.CloseBrace:
+    case TokenTypeId.CloseBracket:
+    case TokenTypeId.CloseParenthesis:
+    case TokenTypeId.Colon:
+    case TokenTypeId.Comma:
+    case TokenTypeId.Comment:
+    case TokenTypeId.computed:
+    case TokenTypeId.DecimalLiteral:
+    case TokenTypeId.Division:
+    case TokenTypeId.DoubleQuote:
+    case TokenTypeId.expandable:
+    case TokenTypeId.float:
+    case TokenTypeId.FloatingPointLiteral:
+    case TokenTypeId.HexadecimalLiteral:
+    case TokenTypeId.Identifier:
+    case TokenTypeId.int:
+    case TokenTypeId.IntegerLiteral:
+    case TokenTypeId.legacy:
+    case TokenTypeId.lengthof:
+    case TokenTypeId.LogicalAnd:
+    case TokenTypeId.LogicalOr:
+    case TokenTypeId.LookAhead:
+    case TokenTypeId.map:
+    case TokenTypeId.Modulus:
+    case TokenTypeId.MultipleCharacterLiteral:
+    case TokenTypeId.MultipleCharacterLiteralCharacters:
+    case TokenTypeId.Multiplication:
+    case TokenTypeId.OpenBrace:
+    case TokenTypeId.OpenBracket:
+    case TokenTypeId.OpenParenthesis:
+    case TokenTypeId.Period:
+    case TokenTypeId.PostfixDecrement:
+    case TokenTypeId.PostfixIncrement:
+    case TokenTypeId.RangeOperator:
+    case TokenTypeId.reserved:
+    case TokenTypeId.RelationalEqual:
+    case TokenTypeId.RelationalGreaterThan:
+    case TokenTypeId.RelationalGreaterThanOrEqual:
+    case TokenTypeId.RelationalLessThan:
+    case TokenTypeId.RelationalLessThanOrEqual:
+    case TokenTypeId.RelationalNotEqual:
+    case TokenTypeId.Semicolon:
+    case TokenTypeId.SingleQuote:
+    case TokenTypeId.Subtraction:
+    case TokenTypeId.UnaryNegation:
+    case TokenTypeId.UnaryPlus:
+    case TokenTypeId.unsigned:
+    case TokenTypeId.utf16string:
+    case TokenTypeId.utf8list:
+    case TokenTypeId.utf8string:
+    case TokenTypeId.utfstring:
+    case TokenTypeId.UtfPrefix:
+    case TokenTypeId.UtfStringLiteralCharacters:
+    case TokenTypeId.Whitespace:
+      break;
+    default: {
+      const exhaustiveCheck: never = tokenTypeId;
+      throw new Error(
+        "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
+      );
+    }
+  }
+});
