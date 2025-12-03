@@ -6,7 +6,7 @@ import {
 import type { AbstractExpression } from "../ast/node/AbstractExpression.ts";
 import type { AbstractNode } from "../ast/node/AbstractNode.ts";
 import { ExpressionKind } from "../ast/node/enum/expression_kind.ts";
-import type { LengthofExpression } from "../ast/node/LengthofExpression.ts";
+import type { LengthofExpression } from "../ast/node/length-of-expression.ts";
 import type { BinaryExpression } from "../ast/node/BinaryExpression.ts";
 import type { UnaryExpression } from "../ast/node/UnaryExpression.ts";
 

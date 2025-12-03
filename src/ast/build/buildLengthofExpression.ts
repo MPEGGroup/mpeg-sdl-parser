@@ -1,7 +1,7 @@
 import type { AbstractExpression } from "../node/AbstractExpression.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
 import type { Identifier } from "../node/Identifier.ts";
-import { LengthofExpression } from "../node/LengthofExpression.ts";
+import { LengthofExpression } from "../node/length-of-expression.ts";
 import type { BuildContext } from "./BuildContext.ts";
 import type { Token } from "../node/Token.ts";
 import { fetchRequiredNode } from "../util/fetchNode.ts";

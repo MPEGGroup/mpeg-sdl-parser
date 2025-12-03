@@ -47,7 +47,7 @@ export * from "./src/ast/node/Identifier.ts";
 export * from "./src/ast/node/IfStatement.ts";
 export * from "./src/ast/node/ImplicitArrayDimension.ts";
 export * from "./src/ast/node/LengthAttribute.ts";
-export * from "./src/ast/node/LengthofExpression.ts";
+export * from "./src/ast/node/length-of-expression.ts";
 export * from "./src/ast/node/MapDeclaration.ts";
 export * from "./src/ast/node/MapDefinition.ts";
 export * from "./src/ast/node/MapEntry.ts";
