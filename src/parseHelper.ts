@@ -10,6 +10,7 @@ import { Text } from "@codemirror/state";
 import type { AbstractNode } from "./ast/node/AbstractNode.ts";
 import { SdlStringInput } from "./lezer/SdlStringInput.ts";
 import { getLocationFromTextPosition } from "./util/locationUtils.ts";
+import { createParseErrorFromTextAndCursor } from "./lezer/createParseErrorFromTextAndCursor.ts";
 
 /**
  * Create a dynamic prettier plugin for SDL using the pre-parsed AST.
@@ -59,7 +60,7 @@ export function collateParseErrors(
       if (!errorRows.has(location!.row)) {
         errorRows.add(location!.row);
 
-        const error = SyntacticParseError.fromTextAndCursor(text, cursor);
+        const error = createParseErrorFromTextAndCursor(text, cursor);
 
         parseErrors.push(error);
       }
@@ -74,14 +75,17 @@ export function collateParseErrors(
  *
  * @param specification The specification to be used for the pre-parsed AST.
  * @param sdlStringInput The SDL source `StringInput`.
+ * @param lineWidth The line width to format to.
  */
 export function prettyPrint(
   specification: Specification,
   sdlStringInput: SdlStringInput,
+  lineWidth = 80,
 ): Promise<string> {
   return prettier.format(sdlStringInput.read(0, sdlStringInput.length), {
     parser: "sdl",
     plugins: [getPreParsedAstPrettierPlugin(specification)],
+    printWidth: lineWidth,
   });
 }
 

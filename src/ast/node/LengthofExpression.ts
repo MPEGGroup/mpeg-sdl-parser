@@ -1,24 +1,21 @@
-import type { Token } from "../token/Token.ts";
+import type { RequiredNode } from "../util/types.ts";
 import { AbstractExpression } from "./AbstractExpression.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import { ExpressionKind } from "./enum/expression_kind.ts";
 import type { Identifier } from "./Identifier.ts";
+import type { Token } from "./Token.ts";
 
 export class LengthofExpression extends AbstractExpression {
   constructor(
-    public readonly operand: AbstractExpression | Identifier,
-    public readonly lengthOfKeyword: Token,
-    public readonly openParenthesisPunctuator: Token,
-    public readonly closeParenthesisPunctuator: Token,
+    public readonly lengthOfKeyword: RequiredNode<Token>,
+    public readonly openParenthesisPunctuator: RequiredNode<Token>,
+    public readonly operand: RequiredNode<AbstractExpression | Identifier>,
+    public readonly closeParenthesisPunctuator: RequiredNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       ExpressionKind.LENGTHOF,
-      lengthOfKeyword,
-      closeParenthesisPunctuator,
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    yield this.operand;
   }
 }

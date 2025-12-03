@@ -1,35 +1,30 @@
-import type { Token } from "../token/Token.ts";
+import type {
+  OptionalNode,
+  RequiredNode,
+  ZeroToManyList,
+} from "../util/types.ts";
 import { AbstractCompositeNode } from "./AbstractCompositeNode.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import type { AbstractStatement } from "./AbstractStatement.ts";
 import { NodeKind } from "./enum/node_kind.ts";
 import type { NumberLiteral } from "./NumberLiteral.ts";
+import type { Token } from "./Token.ts";
 
 export class CaseClause extends AbstractCompositeNode {
   constructor(
-    public readonly value: NumberLiteral,
-    public readonly statements: AbstractStatement[],
-    public readonly caseKeyword: Token,
-    public readonly colonPunctuator: Token,
-    public readonly openBracePunctuator: Token | undefined,
-    public readonly breakKeyword: Token | undefined,
-    public readonly semicolonPunctuator: Token | undefined,
-    public readonly closeBracePunctuator: Token | undefined,
+    public readonly caseKeyword: RequiredNode<Token>,
+    public readonly value: RequiredNode<NumberLiteral>,
+    public readonly colonPunctuator: RequiredNode<Token>,
+    public readonly openBracePunctuator: OptionalNode<Token>,
+    public readonly statements: ZeroToManyList<AbstractStatement>,
+    public readonly breakKeyword: OptionalNode<Token>,
+    public readonly semicolonPunctuator: OptionalNode<Token>,
+    public readonly closeBracePunctuator: OptionalNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       NodeKind.CASE_CLAUSE,
-      caseKeyword,
-      closeBracePunctuator ?? semicolonPunctuator ??
-        (statements.length > 0
-          ? statements[statements.length - 1]?.endToken
-          : colonPunctuator),
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    yield this.value;
-    for (const statement of this.statements) {
-      yield statement;
-    }
   }
 }

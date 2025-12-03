@@ -1,44 +1,29 @@
-import type { Token } from "../token/Token.ts";
+import type { OptionalNode, RequiredNode } from "../util/types.ts";
 import type { AbstractExpression } from "./AbstractExpression.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import { AbstractStatement } from "./AbstractStatement.ts";
-import type { CompoundStatement } from "./CompoundStatement.ts";
 import type { ComputedElementaryTypeDefinition } from "./ComputedElementaryTypeDefinition.ts";
 import { StatementKind } from "./enum/statement_kind.ts";
+import type { Token } from "./Token.ts";
 
 export class ForStatement extends AbstractStatement {
   constructor(
+    public readonly forKeyword: RequiredNode<Token>,
+    public readonly openParenthesisPunctuator: RequiredNode<Token>,
     // either ((assignment_expression semicolon) | computed_elementary_type_definition | semicolon)
-    public readonly expression1: AbstractExpression | undefined,
-    public readonly computedElementaryDefinition:
-      | ComputedElementaryTypeDefinition
-      | undefined,
-    public readonly expression2: AbstractExpression | undefined,
-    public readonly expression3: AbstractExpression | undefined,
-    public readonly compoundStatement: CompoundStatement,
-    public readonly forKeyword: Token,
-    public readonly openParenthesisPunctuator: Token,
+    public readonly expression1: OptionalNode<AbstractExpression>,
+    public readonly computedElementaryDefinition: OptionalNode<
+      ComputedElementaryTypeDefinition
+    >,
     // optional as the first semicolon can be considered part of the optional computedElementaryDefinition
-    public readonly semicolon1Punctuator: Token | undefined,
-    public readonly semicolon2Punctuator: Token,
-    public readonly closeParenthesisPunctuator: Token,
+    public readonly semicolon1Punctuator: OptionalNode<Token>,
+    public readonly expression2: OptionalNode<AbstractExpression>,
+    public readonly semicolon2Punctuator: RequiredNode<Token>,
+    public readonly expression3: OptionalNode<AbstractExpression>,
+    public readonly closeParenthesisPunctuator: RequiredNode<Token>,
+    public readonly statement: RequiredNode<AbstractStatement>,
+    children: Array<AbstractNode>,
   ) {
-    super(StatementKind.FOR, forKeyword, compoundStatement.endToken);
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    if (this.expression1) {
-      yield this.expression1;
-    }
-    if (this.computedElementaryDefinition) {
-      yield this.computedElementaryDefinition;
-    }
-    if (this.expression2) {
-      yield this.expression2;
-    }
-    if (this.expression3) {
-      yield this.expression3;
-    }
-    yield this.compoundStatement;
+    super(StatementKind.FOR, children);
   }
 }

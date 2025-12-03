@@ -5,6 +5,8 @@ import type { AbstractNode } from "../node/AbstractNode.ts";
 import { NodeKind } from "../node/enum/node_kind.ts";
 import type { NodeHandler } from "./NodeHandler.ts";
 import type { NodeVisitor } from "./NodeVisitor.ts";
+import { debugEnabled } from "../../util/logger.ts";
+import { isToken } from "../util/types.ts";
 
 const logger = getLogger("TraversingVisitor");
 
@@ -23,19 +25,40 @@ export class TraversingVisitor implements NodeVisitor {
   visit(node: AbstractNode): void {
     const indent = "  ".repeat(this.depth);
 
-    logger.debug(
-      "visit: %s %s => %s",
-      indent,
-      NodeKind[node.nodeKind],
-      node.toString(),
-    );
+    if (debugEnabled) {
+      let tokenText = "";
+      if (isToken(node)) {
+        tokenText = ` => ${node.text}`;
+      }
+
+      if (node.leadingTrivia) {
+        tokenText += ` => leadingTrivia: ${
+          node.leadingTrivia.map((t) => `"${t.text.replace(/\n/g, "\\n")}"`)
+            .join(", ")
+        }`;
+      }
+
+      if (node.trailingTrivia) {
+        tokenText += ` => trailingTrivia: ${
+          node.trailingTrivia.map((t) => `"${t.text.replace(/\n/g, "\\n")}"`)
+            .join(", ")
+        }`;
+      }
+
+      logger.debug(
+        "visit: %s %s%s",
+        indent,
+        NodeKind[node.nodeKind],
+        tokenText,
+      );
+    }
 
     if (node.isComposite) {
       const compositeNode = node as AbstractCompositeNode;
 
       this.nodeHandler.beforeVisit(compositeNode);
 
-      for (const childNode of compositeNode.getChildNodeIterable()) {
+      for (const childNode of compositeNode.children) {
         this.depth++;
         this.visit(childNode);
         this.depth--;

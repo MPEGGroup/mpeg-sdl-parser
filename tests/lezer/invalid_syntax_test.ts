@@ -6,8 +6,14 @@ import { SdlStringInput } from "../../src/lezer/SdlStringInput.ts";
 const sdlParser = createStrictSdlParser();
 
 describe("Invalid Syntax Tests", () => {
-  test("No declarations fails to parse", () => {
+  test("Empty declarations parses", () => {
     const sdlStringInput = new SdlStringInput("");
+
+    sdlParser.parse(sdlStringInput);
+  });
+
+  test("Declarations with single invalud token fails to parse", () => {
+    const sdlStringInput = new SdlStringInput("§");
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTACTIC ERROR: Parse error => { row: 1, column: 1, position: 0 }",

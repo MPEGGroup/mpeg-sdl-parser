@@ -1,24 +1,19 @@
-import type { Token } from "../token/Token.ts";
+import type { RequiredNode, ZeroToManyList } from "../util/types.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import { AbstractStatement } from "./AbstractStatement.ts";
 import { StatementKind } from "./enum/statement_kind.ts";
+import type { Token } from "./Token.ts";
 
 export class CompoundStatement extends AbstractStatement {
   constructor(
-    public readonly statements: AbstractStatement[],
-    public readonly openBracePunctuator: Token,
-    public readonly closeBracePunctuator: Token,
+    public readonly openBracePunctuator: RequiredNode<Token>,
+    public readonly statements: ZeroToManyList<AbstractStatement>,
+    public readonly closeBracePunctuator: RequiredNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       StatementKind.COMPOUND,
-      openBracePunctuator,
-      closeBracePunctuator,
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    for (const statement of this.statements) {
-      yield statement;
-    }
   }
 }

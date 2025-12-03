@@ -1,4 +1,8 @@
-import type { Token } from "../token/Token.ts";
+import type {
+  OptionalNode,
+  RequiredNode,
+  ZeroToManyList,
+} from "../util/types.ts";
 import { AbstractArrayDefinition } from "./AbstractArrayDefinition.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import type { AlignedModifier } from "./AlignedModifier.ts";
@@ -9,55 +13,32 @@ import type { Identifier } from "./Identifier.ts";
 import type { ImplicitArrayDimension } from "./ImplicitArrayDimension.ts";
 import type { LengthAttribute } from "./LengthAttribute.ts";
 import type { PartialArrayDimension } from "./PartialArrayDimension.ts";
+import type { Token } from "./Token.ts";
 
 export class ArrayDefinition extends AbstractArrayDefinition {
   constructor(
-    public readonly isReserved: boolean,
-    public readonly isLegacy: boolean,
-    public readonly alignedModifier: AlignedModifier | undefined,
-    public readonly elementaryType: ElementaryType | undefined,
-    public readonly lengthAttribute: LengthAttribute | undefined,
-    public readonly classIdentifier: Identifier | undefined,
-    public readonly identifier: Identifier,
-    public readonly implicitArrayDimension: ImplicitArrayDimension | undefined,
-    public readonly dimensions:
-      | (ExplicitArrayDimension | PartialArrayDimension)[]
-      | undefined,
-    public readonly reservedKeyword: Token | undefined,
-    public readonly legacyKeyword: Token | undefined,
-    semicolonPunctuator: Token,
+    public readonly reservedKeyword: OptionalNode<Token>,
+    public readonly legacyKeyword: OptionalNode<Token>,
+    public readonly alignedModifier: OptionalNode<AlignedModifier>,
+    public readonly elementaryType: OptionalNode<ElementaryType>,
+    public readonly lengthAttribute: OptionalNode<LengthAttribute>,
+    public readonly classIdentifier: OptionalNode<Identifier>,
+    public readonly identifier: RequiredNode<Identifier>,
+    public readonly implicitArrayDimension: OptionalNode<
+      ImplicitArrayDimension
+    >,
+    public readonly dimensions: ZeroToManyList<
+      | ExplicitArrayDimension
+      | PartialArrayDimension
+    >,
+    semicolonPunctuator: RequiredNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       StatementKind.ARRAY_DEFINITION,
-      reservedKeyword ?? legacyKeyword ??
-        alignedModifier?.startToken ?? elementaryType?.startToken ??
-        classIdentifier!.startToken,
       identifier,
       semicolonPunctuator,
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    if (this.alignedModifier) {
-      yield this.alignedModifier;
-    }
-
-    if (this.elementaryType) {
-      yield this.elementaryType;
-      yield this.lengthAttribute!;
-    } else {
-      yield this.classIdentifier!;
-    }
-    yield this.identifier;
-
-    if (this.implicitArrayDimension) {
-      yield this.implicitArrayDimension;
-    }
-
-    if (this.dimensions) {
-      for (const dimension of this.dimensions) {
-        yield dimension;
-      }
-    }
   }
 }

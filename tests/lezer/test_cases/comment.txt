@@ -18,6 +18,30 @@ Specification(
     )
 )
 
+# Leading and trailing comments
+
+// hello
+class A {// world
+}// again
+
+==>
+
+Specification(
+    Comment
+    Whitespace
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        Whitespace
+        OpenBrace
+        Comment
+        Whitespace
+        CloseBrace
+    )
+    Comment
+)
+
 
 # Multiple comments
 
@@ -106,4 +130,60 @@ Specification(
     )
     Whitespace
     Comment
+)
+
+# Comment within syntax element
+
+class A {i // hello
+;}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        Whitespace
+        OpenBrace
+        ExpressionStatement(
+            UnaryExpression(
+                Identifier
+            )
+            Whitespace
+            Comment
+            Whitespace
+            Semicolon
+        )
+        CloseBrace
+    )
+)
+
+# Comment within unary expression syntax element
+
+class A {i++// comment
+;}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        Whitespace
+        OpenBrace
+        ExpressionStatement(
+            UnaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                PostfixIncrement
+            )
+            Comment
+            Whitespace
+            Semicolon
+        )
+        CloseBrace
+    )
 )

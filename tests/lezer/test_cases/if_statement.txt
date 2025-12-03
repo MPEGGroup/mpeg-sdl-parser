@@ -136,3 +136,48 @@ Specification(
         CloseBrace
     )
 )
+
+# Two if statements
+
+class A{if(x)1;if(y)2;}
+
+==>
+
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        IfStatement(
+            if
+            OpenParenthesis
+            UnaryExpression(
+                Identifier
+            )
+            CloseParenthesis
+            ExpressionStatement(
+                UnaryExpression(
+                    IntegerLiteral
+                )
+                Semicolon
+            )
+        )
+        IfStatement(
+            if
+            OpenParenthesis
+            UnaryExpression(
+                Identifier
+            )
+            CloseParenthesis
+            ExpressionStatement(
+                UnaryExpression(
+                    IntegerLiteral
+                )
+                Semicolon
+            )
+        )
+        CloseBrace
+    )    
+)

@@ -210,7 +210,7 @@ utf_string_literal ::= ('u' double_quote (escaped_sdl_compatible_ucs_character |
 
 /* computed_elementary_type_definition can only be const */
 
-Specification ::= (class_declaration | map_declaration | computed_elementary_type_definition)+
+Specification ::= (class_declaration | map_declaration | computed_elementary_type_definition)*
 
 /* 6.2 Constant-length direct representation bit fields */
 
@@ -388,7 +388,7 @@ switch_statement ::= switch open_parenthesis expression close_parenthesis open_b
 /* Rule FC.3: Flow control using for */
 
 for_statement ::= for open_parenthesis ((assignment_expression semicolon) | computed_elementary_type_definition | semicolon)
-    expression? semicolon (assignment_expression | expression)? close_parenthesis compound_statement
+    expression? semicolon (assignment_expression | expression)? close_parenthesis statement
 
 /* Rule FC.4: Flow control using do */
 

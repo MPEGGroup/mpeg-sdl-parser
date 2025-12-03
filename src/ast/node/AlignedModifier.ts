@@ -1,24 +1,20 @@
-import type { Token } from "../token/Token.ts";
-import { AbstractLeafNode } from "./AbstractLeafNode.ts";
+import type { OptionalNode, RequiredNode } from "../util/types.ts";
+import { AbstractCompositeNode } from "./AbstractCompositeNode.ts";
+import type { AbstractNode } from "./AbstractNode.ts";
 import { NodeKind } from "./enum/node_kind.ts";
+import type { Token } from "./Token.ts";
 
-export class AlignedModifier extends AbstractLeafNode {
+export class AlignedModifier extends AbstractCompositeNode {
   constructor(
-    public readonly bitCount: number,
-    public readonly isDefault8BitCount: boolean,
-    public readonly bitCountModifierToken: Token | undefined,
-    public readonly alignedKeyword: Token,
-    public readonly openParenthesisPunctuator?: Token,
-    public readonly closeParenthesisPunctuator?: Token,
+    public readonly alignedKeyword: RequiredNode<Token>,
+    public readonly openParenthesisPunctuator: OptionalNode<Token>,
+    public readonly bitCountModifierToken: OptionalNode<Token>,
+    public readonly closeParenthesisPunctuator: OptionalNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       NodeKind.ALIGNED_MODIFIER,
-      alignedKeyword,
-      closeParenthesisPunctuator ?? alignedKeyword,
+      children,
     );
-  }
-
-  toString(): string {
-    return this.bitCount.toString();
   }
 }

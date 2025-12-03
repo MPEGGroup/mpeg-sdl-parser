@@ -17,7 +17,9 @@ PID;
   base64string foo2 = "BAR";
   computed int dummy1 = 'ABCD' '' '01AB';
   computed int dummy2 = lengthof(transport_scrambling_control) + N++;
-  if (adaptation_field_control == 0b10 || adaptation_field_control == 0b11) {
+  if (adaptation_field_control == 0b10 || adaptation_field_control == 0b11) 
+  
+  {
 adaptation_field data; // previously declared class
 
     // N is 184 minus the number of bytes in the adaptation_field
@@ -29,7 +31,9 @@ adaptation_field data; // previously declared class
 
 map Offsets (int) {0b00,{1024},0b01,{2048}}
 
-expandable(20) class odd(int a, B b) extends odder(a): bit(2) id = 2 {
+expandable(20) class odd(int a, B b) extends odder(a): bit(2) id = 2 
+
+{
   reserved unsigned int(Offsets) offset;
   computed int myArray[2];
   computed int i = 1;
@@ -58,6 +62,11 @@ expandable(20) class odd(int a, B b) extends odder(a): bit(2) id = 2 {
       
       // nothing
       break;
+   case 2: 
+      
+      { // nothing
+      break;
+      }
     default:
       i++;
       //     foo

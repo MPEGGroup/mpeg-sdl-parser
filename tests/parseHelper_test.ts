@@ -16,6 +16,7 @@ import {
   prettyPrint,
 } from "../src/parseHelper.ts";
 import { SdlStringInput } from "../src/lezer/SdlStringInput.ts";
+import type { Specification } from "../src/ast/node/Specification.ts";
 
 const strictSdlParser = createStrictSdlParser();
 const lenientSdlParser = createLenientSdlParser();
@@ -49,7 +50,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> or + or - or <LengthofExpression> or <Identifier> or <BinaryLiteral> or <HexadecimalLiteral> or <MultipleCharacterLiteral> or <IntegerLiteral> or <DecimalLiteral> or <FloatingPointLiteral> or ( => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Missing expected token or node: <UnaryExpression> or <BinaryExpression> or + or - or <LengthofExpression> or <Identifier> or <BinaryLiteral> or <HexadecimalLiteral> or <MultipleCharacterLiteral> or <IntegerLiteral> or <DecimalLiteral> or <FloatingPointLiteral> or ( => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -69,7 +70,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Missing expected node: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
     );
   });
 
@@ -89,7 +90,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Missing expected node: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
     );
   });
 
@@ -149,7 +150,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: const or <AlignedModifier> or utf8string or utf16string or utfstring or base64string => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Missing expected token or node: const or <AlignedModifier> or utf8string or utf16string or utfstring or base64string => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -219,17 +220,25 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: <CompoundStatement> => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Missing expected node: <CompoundStatement> => { row: 1, column: 19, position: 18 }",
     );
   });
 
-  test("Test collateParseErrors - empty specification", () => {
+  test("Test collateParseErrors - empty specification produces no errors", () => {
     const sdlStringInput = new SdlStringInput("");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
+    expect(parseErrors.length).toBe(0);
+  });
+
+  test("Test collateParseErrors - single invalid token produces error", () => {
+    const sdlStringInput = new SdlStringInput("§");
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: <ClassDeclaration> or <MapDeclaration> or <ComputedElementaryTypeDefinition> => { row: 1, column: 1, position: 0 }",
+      "SYNTACTIC ERROR: Missing expected node: <ClassDeclaration> or <MapDeclaration> or <ComputedElementaryTypeDefinition> => { row: 1, column: 1, position: 0 }",
     );
   });
 
@@ -250,12 +259,66 @@ describe("Parse Helper Tests", () => {
     const specification = buildAst(parseTree, sdlStringInput);
 
     const prettifiedSdlString = await prettyPrint(
-      specification,
+      specification as Specification,
       sdlStringInput,
     );
-
     expect(
       prettifiedSdlString,
+    ).toEqual(
+      expectedSdlString,
+    );
+  });
+
+  test("Test prettyPrint - narrower", async () => {
+    const sdlString = await fs.readFile(
+      path.join(__dirname, "./sample_specifications/various_elements.sdl"),
+    ).then((buffer: Buffer) => buffer.toString());
+    let expectedSdlString = await fs.readFile(
+      path.join(
+        __dirname,
+        "./sample_specifications/prettified_various_elements_narrow.sdl",
+      ),
+    ).then((buffer: Buffer) => buffer.toString());
+    expectedSdlString = expectedSdlString.replace(/\r/g, "");
+
+    const sdlStringInput = new SdlStringInput(sdlString);
+    const parseTree = strictSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput);
+
+    const narrowPrettifiedSdlString = await prettyPrint(
+      specification as Specification,
+      sdlStringInput,
+      40,
+    );
+    expect(
+      narrowPrettifiedSdlString,
+    ).toEqual(
+      expectedSdlString,
+    );
+  });
+
+  test("Test prettyPrint - with syntax errors", async () => {
+    const sdlString = await fs.readFile(
+      path.join(__dirname, "./sample_specifications/invalid.sdl"),
+    ).then((buffer: Buffer) => buffer.toString());
+    let expectedSdlString = await fs.readFile(
+      path.join(
+        __dirname,
+        "./sample_specifications/prettified_invalid.sdl",
+      ),
+    ).then((buffer: Buffer) => buffer.toString());
+    expectedSdlString = expectedSdlString.replace(/\r/g, "");
+
+    const sdlStringInput = new SdlStringInput(sdlString);
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput, true);
+
+    const invalidPrettifiedSdlString = await prettyPrint(
+      specification as Specification,
+      sdlStringInput,
+    );
+    expect(
+      invalidPrettifiedSdlString,
     ).toEqual(
       expectedSdlString,
     );
@@ -272,7 +335,10 @@ describe("Parse Helper Tests", () => {
 
     const historyRecordingNodeHandler = new HistoryRecordingNodeHandler();
 
-    dispatchNodeHandler(specification, historyRecordingNodeHandler);
+    dispatchNodeHandler(
+      specification as Specification,
+      historyRecordingNodeHandler,
+    );
 
     expect(
       historyRecordingNodeHandler.nodeHistory,

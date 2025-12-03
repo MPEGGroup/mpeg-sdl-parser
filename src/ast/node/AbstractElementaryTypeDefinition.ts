@@ -1,28 +1,29 @@
-import type { Token } from "../token/Token.ts";
+import type { OptionalNode, RequiredNode } from "../util/types.ts";
 import type { AbstractExpression } from "./AbstractExpression.ts";
+import type { AbstractNode } from "./AbstractNode.ts";
 import { AbstractStatement } from "./AbstractStatement.ts";
 import type { ElementaryType } from "./ElementaryType.ts";
 import type { StatementKind } from "./enum/statement_kind.ts";
 import type { Identifier } from "./Identifier.ts";
 import type { NumberLiteral } from "./NumberLiteral.ts";
+import type { Token } from "./Token.ts";
 
 export abstract class AbstractElementaryTypeDefinition
   extends AbstractStatement {
   constructor(
     kind: StatementKind,
-    startToken: Token,
-    public readonly isConst: boolean,
-    public readonly elementaryType: ElementaryType,
-    public readonly identifier: Identifier,
-    public readonly value:
+    public readonly constKeyword: OptionalNode<Token>,
+    public readonly elementaryType: RequiredNode<ElementaryType>,
+    public readonly identifier: RequiredNode<Identifier>,
+    public readonly assignmentOperator: OptionalNode<Token>,
+    public readonly value: OptionalNode<
       | AbstractExpression
       | NumberLiteral
       | Identifier
-      | undefined,
-    public readonly constKeyword: Token | undefined,
-    public readonly assignmentOperator: Token | undefined,
-    public readonly semicolonPunctuator: Token,
+    >,
+    public readonly semicolonPunctuator: RequiredNode<Token>,
+    children: Array<AbstractNode>,
   ) {
-    super(kind, startToken, semicolonPunctuator);
+    super(kind, children);
   }
 }

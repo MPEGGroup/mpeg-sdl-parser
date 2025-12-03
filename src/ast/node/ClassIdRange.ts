@@ -1,20 +1,17 @@
-import type { Token } from "../token/Token.ts";
+import type { RequiredNode } from "../util/types.ts";
 import { AbstractClassId } from "./AbstractClassId.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import type { ClassId } from "./ClassId.ts";
 import { ClassIdKind } from "./enum/class_id_kind.ts";
+import type { Token } from "./Token.ts";
 
 export class ClassIdRange extends AbstractClassId {
   constructor(
-    public readonly startClassId: ClassId,
-    public readonly endClassId: ClassId,
-    public readonly rangeOperator: Token,
+    public readonly startClassId: RequiredNode<ClassId>,
+    public readonly rangeOperator: RequiredNode<Token>,
+    public readonly endClassId: RequiredNode<ClassId>,
+    children: Array<AbstractNode>,
   ) {
-    super(ClassIdKind.RANGE, startClassId.startToken, endClassId.endToken);
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    yield this.startClassId;
-    yield this.endClassId;
+    super(ClassIdKind.RANGE, children);
   }
 }

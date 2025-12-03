@@ -1,36 +1,4 @@
-import type { AstPath, Doc, ParserOptions } from "prettier";
-import { NodeKind } from "../ast/node/enum/node_kind.ts";
-import {
-  printAbstractExpression,
-  printArrayElementAccess,
-  printClassMemberAccess,
-} from "./print_expression.ts";
-import {
-  printAggregateOutputValue,
-  printElementaryTypeOutputValue,
-  printMapEntry,
-} from "./print_map.ts";
-import {
-  printBitModifier,
-  printClassId,
-  printExpandableModifier,
-  printExtendsModifier,
-  printParameter,
-  printParameterList,
-  printParameterValueList,
-} from "./print_class.ts";
-import { printSpecification } from "./print_specification.ts";
-import { printAbstractArrayDimension } from "./print_array.ts";
-import {
-  printAlignedModifier,
-  printIdentifier,
-  printLengthAttribute,
-  printNumberLiteral,
-} from "./print_common.ts";
-import { printElementaryType } from "./print_elementary_type.ts";
-import { printStringLiteral } from "./print_string.ts";
-import { printStatement } from "./print_statement.ts";
-import { printCaseClause, printDefaultClause } from "./print_switch.ts";
+import { type AstPath, type Doc, doc, type ParserOptions } from "prettier";
 import type { AbstractArrayDimension } from "../ast/node/AbstractArrayDimension.ts";
 import type { AbstractClassId } from "../ast/node/AbstractClassId.ts";
 import type { AbstractExpression } from "../ast/node/AbstractExpression.ts";
@@ -56,88 +24,167 @@ import type { Identifier } from "../ast/node/Identifier.ts";
 import type { StringLiteral } from "../ast/node/StringLiteral.ts";
 import type { AggregateOutputValue } from "../ast/node/AggregateOutputValue.ts";
 import type { ElementaryTypeOutputValue } from "../ast/node/ElementaryTypeOutputValue.ts";
+import type { Token } from "../ast/node/Token.ts";
+import type { UnexpectedError } from "../ast/node/UnexpectedError.ts";
+import type { RequiredNode } from "../ast/util/types.ts";
+import { NodeKind } from "../ast/node/enum/node_kind.ts";
+import { printAbstractExpression } from "./print_abstract_expression.ts";
+import { printMapEntry } from "./print_map_entry.ts";
+import { printSpecification } from "./print_specification.ts";
+import { printElementaryType } from "./print_elementary_type.ts";
+import { printStringLiteral } from "./print_string_literal.ts";
+import { printAbstractStatement } from "./print_abstract_statement.ts";
+import { addTrivia } from "./print_utils.ts";
+import { printUnexpectedError } from "./print_unexpected_error.ts";
+import { printAlignedModifier } from "./print_aligned_modifier.ts";
+import { printIdentifier } from "./print_identifier.ts";
+import { printLengthAttribute } from "./print_length_attribute.ts";
+import { printNumberLiteral } from "./print_number_literal.ts";
+import { printBitModifier } from "./print_bit_modifier.ts";
+import { printAbstractClassId } from "./print_abstract_class_id.ts";
+import { printExpandableModifier } from "./print_expandable_modifier.ts";
+import { printExtendsModifier } from "./print_extends_modifier.ts";
+import { printParameter } from "./print_parameter.ts";
+import { printParameterList } from "./print_parameter_list.ts";
+import { printParameterValueList } from "./print_parameter_value_list.ts";
+import { printArrayElementAccess } from "./print_array_element_access.ts";
+import { printClassMemberAccess } from "./print_class_member_access.ts";
+import { printAggregateOutputValue } from "./print_aggregate_output_value.ts";
+import { printElementaryTypeOutputValue } from "./print_elementary_type_output_value.ts";
+import { printAbstractArrayDimension } from "./print_abstract_array_dimension.ts";
+import { printCaseClause } from "./print_case_clause.ts";
+import { printDefaultClause } from "./print_default_clause.ts";
+import { printToken } from "./print_token.ts";
+
+const { hardline, ifBreak, line } = doc.builders;
 
 export function printAbstractNode(
-  path: AstPath<AbstractNode>,
+  path: AstPath<RequiredNode<AbstractNode>>,
   _options: ParserOptions<AbstractNode>,
-  print: (_path: AstPath<AbstractNode>) => Doc,
+  print: (_path: AstPath<RequiredNode<AbstractNode>>) => Doc,
 ): Doc {
   const node = path.node;
   const nodeKind = node.nodeKind;
 
+  const docs: Doc = [];
+
+  if (node.leadingTrivia && (node.leadingTrivia.length > 0)) {
+    node.leadingTrivia.forEach((trivia) => {
+      addTrivia(docs, trivia);
+      docs.push(hardline);
+    });
+  }
+
   switch (nodeKind) {
     case NodeKind.AGGREGATE_OUTPUT_VALUE:
-      return printAggregateOutputValue(
+      docs.push(printAggregateOutputValue(
         path as AstPath<AggregateOutputValue>,
         print,
-      );
+      ));
+      break;
     case NodeKind.ALIGNED_MODIFIER:
-      return printAlignedModifier(path as AstPath<AlignedModifier>);
+      docs.push(printAlignedModifier(path as AstPath<AlignedModifier>, print));
+      break;
     case NodeKind.ARRAY_DIMENSION:
-      return printAbstractArrayDimension(
+      docs.push(printAbstractArrayDimension(
         path as AstPath<AbstractArrayDimension>,
         print,
-      );
+      ));
+      break;
     case NodeKind.ARRAY_ELEMENT_ACCESS:
-      return printArrayElementAccess(
+      docs.push(printArrayElementAccess(
         path as AstPath<ArrayElementAccess>,
         print,
-      );
+      ));
+      break;
     case NodeKind.BIT_MODIFIER:
-      return printBitModifier(path as AstPath<BitModifier>, print);
+      docs.push(printBitModifier(path as AstPath<BitModifier>, print));
+      break;
     case NodeKind.CASE_CLAUSE:
-      return printCaseClause(path as AstPath<CaseClause>, print);
+      docs.push(printCaseClause(path as AstPath<CaseClause>, print));
+      break;
     case NodeKind.CLASS_ID:
-      return printClassId(path as AstPath<AbstractClassId>, print);
+      docs.push(printAbstractClassId(path as AstPath<AbstractClassId>, print));
+      break;
     case NodeKind.CLASS_MEMBER_ACCESS:
-      return printClassMemberAccess(path as AstPath<ClassMemberAccess>, print);
+      docs.push(
+        printClassMemberAccess(path as AstPath<ClassMemberAccess>, print),
+      );
+      break;
     case NodeKind.DEFAULT_CLAUSE:
-      return printDefaultClause(
+      docs.push(printDefaultClause(
         path as AstPath<DefaultClause>,
         print,
-      );
+      ));
+      break;
     case NodeKind.ELEMENTARY_TYPE:
-      return printElementaryType(path as AstPath<ElementaryType>);
+      docs.push(printElementaryType(path as AstPath<ElementaryType>, print));
+      break;
     case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
-      return printElementaryTypeOutputValue(
+      docs.push(printElementaryTypeOutputValue(
         path as AstPath<ElementaryTypeOutputValue>,
         print,
-      );
+      ));
+      break;
     case NodeKind.EXPRESSION:
-      return printAbstractExpression(
+      docs.push(printAbstractExpression(
         path as AstPath<AbstractExpression>,
         print,
-      );
+      ));
+      break;
     case NodeKind.EXPANDABLE_MODIFIER:
-      return printExpandableModifier(
+      docs.push(printExpandableModifier(
         path as AstPath<ExpandableModifier>,
         print,
-      );
+      ));
+      break;
     case NodeKind.EXTENDS_MODIFIER:
-      return printExtendsModifier(path as AstPath<ExtendsModifier>, print);
+      docs.push(printExtendsModifier(path as AstPath<ExtendsModifier>, print));
+      break;
     case NodeKind.IDENTIFIER:
-      return printIdentifier(path as AstPath<Identifier>);
+      docs.push(printIdentifier(path as AstPath<Identifier>, print));
+      break;
     case NodeKind.LENGTH_ATTRIBUTE:
-      return printLengthAttribute(path as AstPath<LengthAttribute>, print);
+      docs.push(printLengthAttribute(path as AstPath<LengthAttribute>, print));
+      break;
     case NodeKind.MAP_ENTRY:
-      return printMapEntry(path as AstPath<MapEntry>, print);
+      docs.push(printMapEntry(path as AstPath<MapEntry>, print));
+      break;
+    case NodeKind.MISSING_ERROR:
+      // nothing to do here
+      break;
     case NodeKind.NUMBER_LITERAL:
-      return printNumberLiteral(path as AstPath<NumberLiteral>);
+      docs.push(printNumberLiteral(path as AstPath<NumberLiteral>, print));
+      break;
     case NodeKind.PARAMETER:
-      return printParameter(path as AstPath<Parameter>, print);
+      docs.push(printParameter(path as AstPath<Parameter>, print));
+      break;
     case NodeKind.PARAMETER_LIST:
-      return printParameterList(path as AstPath<ParameterList>, print);
+      docs.push(printParameterList(path as AstPath<ParameterList>, print));
+      break;
     case NodeKind.PARAMETER_VALUE_LIST:
-      return printParameterValueList(
+      docs.push(printParameterValueList(
         path as AstPath<ParameterValueList>,
         print,
-      );
+      ));
+      break;
     case NodeKind.SPECIFICATION:
-      return printSpecification(path as AstPath<Specification>, print);
+      docs.push(printSpecification(path as AstPath<Specification>, print));
+      break;
     case NodeKind.STATEMENT:
-      return printStatement(path as AstPath<AbstractStatement>, print);
+      docs.push(
+        printAbstractStatement(path as AstPath<AbstractStatement>, print),
+      );
+      break;
     case NodeKind.STRING_LITERAL:
-      return printStringLiteral(path as AstPath<StringLiteral>);
+      docs.push(printStringLiteral(path as AstPath<StringLiteral>, print));
+      break;
+    case NodeKind.TOKEN:
+      docs.push(printToken(path as AstPath<Token>));
+      break;
+    case NodeKind.UNEXPECTED_ERROR:
+      docs.push(printUnexpectedError(path as AstPath<UnexpectedError>, print));
+      break;
     default: {
       const exhaustiveCheck: never = nodeKind;
       throw new Error(
@@ -145,4 +192,14 @@ export function printAbstractNode(
       );
     }
   }
+
+  if (node.trailingTrivia && (node.trailingTrivia.length > 0)) {
+    docs.push(ifBreak([line, "  "], " "));
+    node.trailingTrivia.forEach((trivia) => {
+      addTrivia(docs, trivia);
+      docs.push(hardline);
+    });
+  }
+
+  return docs;
 }

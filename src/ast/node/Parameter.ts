@@ -1,3 +1,4 @@
+import type { OptionalNode, RequiredNode } from "../util/types.ts";
 import { AbstractCompositeNode } from "./AbstractCompositeNode.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import type { ElementaryType } from "./ElementaryType.ts";
@@ -6,23 +7,14 @@ import type { Identifier } from "./Identifier.ts";
 
 export class Parameter extends AbstractCompositeNode {
   constructor(
-    public readonly classIdentifier: Identifier | undefined,
-    public readonly elementaryType: ElementaryType | undefined,
-    public readonly identifier: Identifier,
+    public readonly classIdentifier: OptionalNode<Identifier>,
+    public readonly elementaryType: OptionalNode<ElementaryType>,
+    public readonly identifier: RequiredNode<Identifier>,
+    children: Array<AbstractNode>,
   ) {
     super(
       NodeKind.PARAMETER,
-      classIdentifier?.startToken ?? elementaryType!.startToken,
-      identifier.endToken,
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    if (this.classIdentifier) {
-      yield this.classIdentifier;
-    } else {
-      yield this.elementaryType!;
-    }
-    yield this.identifier;
   }
 }

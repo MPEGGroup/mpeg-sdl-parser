@@ -334,7 +334,7 @@ UtfStringLiteral { (UtfPrefix DoubleQuote UtfStringLiteralCharacters DoubleQuote
 // 5.19 Scope
 
 @top Specification { 
-  (ClassDeclaration | MapDeclaration | ComputedElementaryTypeDefinition)+
+  (ClassDeclaration | MapDeclaration | ComputedElementaryTypeDefinition)*
 }
 
 
@@ -564,7 +564,7 @@ ForStatement {
   keyword<"for"> OpenParenthesis ((AssignmentExpression Semicolon) | ComputedElementaryTypeDefinition | Semicolon)
   expression? Semicolon
   (AssignmentExpression | expression)? CloseParenthesis 
-  CompoundStatement
+  statement
 }
 
 

@@ -1,4 +1,4 @@
-import type { Token } from "../token/Token.ts";
+import type { OptionalNode, RequiredNode } from "../util/types.ts";
 import { AbstractElementaryTypeDefinition } from "./AbstractElementaryTypeDefinition.ts";
 import type { AbstractExpression } from "./AbstractExpression.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
@@ -6,37 +6,29 @@ import type { ElementaryType } from "./ElementaryType.ts";
 import { StatementKind } from "./enum/statement_kind.ts";
 import type { Identifier } from "./Identifier.ts";
 import type { NumberLiteral } from "./NumberLiteral.ts";
+import type { Token } from "./Token.ts";
 
 export class ComputedElementaryTypeDefinition
   extends AbstractElementaryTypeDefinition {
   constructor(
-    isConst: boolean,
-    elementaryType: ElementaryType,
-    identifier: Identifier,
-    value: AbstractExpression | Identifier | NumberLiteral | undefined,
-    public readonly computedKeyword: Token,
-    constKeyword: Token | undefined,
-    assignmentOperator: Token | undefined,
-    semicolonPunctuator: Token,
+    public readonly computedKeyword: RequiredNode<Token>,
+    constKeyword: OptionalNode<Token>,
+    elementaryType: RequiredNode<ElementaryType>,
+    identifier: RequiredNode<Identifier>,
+    assignmentOperator: OptionalNode<Token>,
+    value: OptionalNode<AbstractExpression | Identifier | NumberLiteral>,
+    semicolonPunctuator: RequiredNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION,
-      computedKeyword,
-      isConst,
+      constKeyword,
       elementaryType,
       identifier,
-      value,
-      constKeyword,
       assignmentOperator,
+      value,
       semicolonPunctuator,
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    yield this.elementaryType;
-    yield this.identifier;
-    if (this.value) {
-      yield this.value;
-    }
   }
 }

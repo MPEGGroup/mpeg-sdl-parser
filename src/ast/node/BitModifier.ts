@@ -1,32 +1,24 @@
-import type { Token } from "../token/Token.ts";
+import type { OptionalNode, RequiredNode } from "../util/types.ts";
 import type { AbstractClassId } from "./AbstractClassId.ts";
 import { AbstractCompositeNode } from "./AbstractCompositeNode.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import { NodeKind } from "./enum/node_kind.ts";
 import type { Identifier } from "./Identifier.ts";
 import type { NumberLiteral } from "./NumberLiteral.ts";
+import type { Token } from "./Token.ts";
 
 export class BitModifier extends AbstractCompositeNode {
   constructor(
-    public readonly length: NumberLiteral,
-    public readonly identifier: Identifier | undefined,
-    public readonly classId: AbstractClassId,
-    public readonly colonPunctuator: Token,
-    public readonly bitKeyword: Token,
-    public readonly openParenthesisPunctuator: Token,
-    public readonly closeParenthesisPunctuator: Token,
-    public readonly assignmentOperator: Token | undefined,
+    public readonly colonPunctuator: RequiredNode<Token>,
+    public readonly bitKeyword: RequiredNode<Token>,
+    public readonly openParenthesisPunctuator: RequiredNode<Token>,
+    public readonly length: RequiredNode<NumberLiteral>,
+    public readonly closeParenthesisPunctuator: RequiredNode<Token>,
+    public readonly identifier: OptionalNode<Identifier>,
+    public readonly assignmentOperator: OptionalNode<Token>,
+    public readonly classId: RequiredNode<AbstractClassId>,
+    children: Array<AbstractNode>,
   ) {
-    super(NodeKind.BIT_MODIFIER, colonPunctuator, classId.endToken);
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    yield this.length;
-
-    if (this.identifier) {
-      yield this.identifier;
-    }
-
-    yield this.classId;
+    super(NodeKind.BIT_MODIFIER, children);
   }
 }

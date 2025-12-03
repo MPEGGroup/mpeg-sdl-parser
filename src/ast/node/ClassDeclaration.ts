@@ -1,4 +1,8 @@
-import type { Token } from "../token/Token.ts";
+import type {
+  OptionalNode,
+  RequiredNode,
+  ZeroToManyList,
+} from "../util/types.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import { AbstractStatement } from "./AbstractStatement.ts";
 import type { AlignedModifier } from "./AlignedModifier.ts";
@@ -8,55 +12,28 @@ import type { ExpandableModifier } from "./ExpandableModifier.ts";
 import type { ExtendsModifier } from "./ExtendsModifier.ts";
 import type { Identifier } from "./Identifier.ts";
 import type { ParameterList } from "./ParameterList.ts";
+import type { Token } from "./Token.ts";
 
 export class ClassDeclaration extends AbstractStatement {
   constructor(
-    public readonly alignedModifier: AlignedModifier | undefined,
-    public readonly expandableModifier: ExpandableModifier | undefined,
-    public readonly isAbstract: boolean,
-    public readonly identifier: Identifier,
-    public readonly parameterList: ParameterList | undefined,
-    public readonly extendsModifier: ExtendsModifier | undefined,
-    public readonly bitModifier: BitModifier | undefined,
-    public readonly statements: AbstractStatement[],
-    public readonly abstractKeyword: Token | undefined,
-    public readonly classKeyword: Token,
-    public readonly openBracePunctuator: Token,
-    public readonly closeBracePunctuator: Token,
+    public readonly alignedModifier: OptionalNode<AlignedModifier>,
+    public readonly expandableModifier:
+      | OptionalNode<ExpandableModifier>
+      | undefined,
+    public readonly abstractKeyword: OptionalNode<Token>,
+    public readonly classKeyword: RequiredNode<Token>,
+    public readonly identifier: RequiredNode<Identifier>,
+    public readonly parameterList: OptionalNode<ParameterList>,
+    public readonly extendsModifier: OptionalNode<ExtendsModifier>,
+    public readonly bitModifier: OptionalNode<BitModifier>,
+    public readonly openBracePunctuator: RequiredNode<Token>,
+    public readonly statements: ZeroToManyList<AbstractStatement>,
+    public readonly closeBracePunctuator: RequiredNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       StatementKind.CLASS_DECLARATION,
-      alignedModifier?.startToken ?? expandableModifier?.startToken ??
-        classKeyword,
-      closeBracePunctuator,
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    if (this.alignedModifier) {
-      yield this.alignedModifier;
-    }
-
-    if (this.expandableModifier) {
-      yield this.expandableModifier;
-    }
-
-    yield this.identifier;
-
-    if (this.parameterList) {
-      yield this.parameterList;
-    }
-
-    if (this.extendsModifier) {
-      yield this.extendsModifier;
-    }
-
-    if (this.bitModifier) {
-      yield this.bitModifier;
-    }
-
-    for (const statement of this.statements) {
-      yield statement;
-    }
   }
 }

@@ -36,8 +36,23 @@ describe("Prettier Plugin SDL tests", () => {
     };
 
     const prettified = await prettier.format(sampleSdlSpecification, options);
-
     const sdlStringInput = new SdlStringInput(prettified);
+
     strictSdlParser.parse(sdlStringInput);
+  });
+
+  test("can prettify with syntax errors", async () => {
+    const sampleSdlSpecification = await fs.readFile(
+      path.join(__dirname, "../sample_specifications/invalid.sdl"),
+    ).then((buffer: Buffer) => buffer.toString());
+
+    const options: prettier.Options = {
+      parser: "sdl",
+      plugins: [prettierPluginSdl],
+    };
+
+    const prettified = await prettier.format(sampleSdlSpecification, options);
+
+    expect(prettified).toMatchSnapshot();
   });
 });

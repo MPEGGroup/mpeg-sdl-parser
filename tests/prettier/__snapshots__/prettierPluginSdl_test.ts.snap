@@ -10,9 +10,10 @@ class transport_packet {
   bit(1) payload_unit_start_indicator;
   bit(1) transport_priority;
   unsigned int(13) // odd but valid comment position
-   PID;
+    PID;
   bit(2)* transport_scrambling_control;
   aligned(16) bit(2) adaptation_field_control = 0x0000.0000;
+
   computed unsigned int N = 184;
   computed float test = 1e1;
   utf8string foo = u"bar" u"foo";
@@ -24,8 +25,8 @@ class transport_packet {
 
     // N is 184 minus the number of bytes in the adaptation_field
     N = N - // and another
-    1 // and another odd comment
-     - data.adaptation_field_length;
+      1 // and another odd comment
+      - data.adaptation_field_length;
   }
   if (adaptation_field_control == 0b01 || adaptation_field_control == 0b11) {
     bit(8) data_byte[N];
@@ -68,6 +69,9 @@ expandable(20) class odd(int a, B b) extends odder(a) : bit(2) id = 2 {
     case 1:
       // nothing
       break;
+    case 2: { // nothing
+      break;
+    }
     default:
       i++;
     // foo

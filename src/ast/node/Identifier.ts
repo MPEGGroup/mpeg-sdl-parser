@@ -1,16 +1,12 @@
-import type { Token } from "../token/Token.ts";
-import { AbstractLeafNode } from "./AbstractLeafNode.ts";
+import { AbstractCompositeNode } from "./AbstractCompositeNode.ts";
 import { NodeKind } from "./enum/node_kind.ts";
+import type { Token } from "./Token.ts";
 
-export class Identifier extends AbstractLeafNode {
+export class Identifier extends AbstractCompositeNode {
   constructor(
     public readonly name: string,
-    public readonly literal: Token,
+    token: Token,
   ) {
-    super(NodeKind.IDENTIFIER, literal, literal);
-  }
-
-  toString(): string {
-    return this.name;
+    super(NodeKind.IDENTIFIER, [token]);
   }
 }

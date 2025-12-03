@@ -1,25 +1,24 @@
-import type { Token } from "../token/Token.ts";
+import type { RequiredNode } from "../util/types.ts";
 import { AbstractCompositeNode } from "./AbstractCompositeNode.ts";
 import type { AbstractExpression } from "./AbstractExpression.ts";
 import type { AbstractNode } from "./AbstractNode.ts";
 import { NodeKind } from "./enum/node_kind.ts";
 import type { Identifier } from "./Identifier.ts";
 import type { NumberLiteral } from "./NumberLiteral.ts";
+import type { Token } from "./Token.ts";
 
 export class LengthAttribute extends AbstractCompositeNode {
   constructor(
-    public readonly length: NumberLiteral | Identifier | AbstractExpression,
-    public readonly openParenthesisPunctuator: Token,
-    public readonly closeParenthesisPunctuator: Token,
+    public readonly openParenthesisPunctuator: RequiredNode<Token>,
+    public readonly length: RequiredNode<
+      NumberLiteral | Identifier | AbstractExpression
+    >,
+    public readonly closeParenthesisPunctuator: RequiredNode<Token>,
+    children: Array<AbstractNode>,
   ) {
     super(
       NodeKind.LENGTH_ATTRIBUTE,
-      openParenthesisPunctuator,
-      closeParenthesisPunctuator,
+      children,
     );
-  }
-
-  override *getChildNodeIterable(): IterableIterator<AbstractNode> {
-    yield this.length;
   }
 }
