@@ -626,4 +626,4 @@ comma_separated<content> {
 @detectDelim
 
 // Lezer context tracker insertion will be performed when buildParser is invoked
-@context defaultContextTracker from "./contextTracker.ts"
+@context defaultContextTracker from "./context-tracker.ts"

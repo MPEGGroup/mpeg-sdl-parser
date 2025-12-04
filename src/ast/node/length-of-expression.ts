@@ -1,9 +1,9 @@
 import type { RequiredNode } from "../util/types.ts";
-import { AbstractExpression } from "./AbstractExpression.ts";
-import type { AbstractNode } from "./AbstractNode.ts";
-import { ExpressionKind } from "./enum/expression_kind.ts";
-import type { Identifier } from "./Identifier.ts";
-import type { Token } from "./Token.ts";
+import { AbstractExpression } from "./abstract-expression.ts";
+import type { AbstractNode } from "./abstract-node.ts";
+import { ExpressionKind } from "./enum/expression-kind.ts";
+import type { Identifier } from "./identifier.ts";
+import type { Token } from "./token.ts";
 
 export class LengthofExpression extends AbstractExpression {
   constructor(

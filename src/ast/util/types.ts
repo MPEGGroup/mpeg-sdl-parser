@@ -1,11 +1,11 @@
 import { StatementKind } from "../../../index.ts";
-import type { AbstractCompositeNode } from "../node/AbstractCompositeNode.ts";
-import type { AbstractNode } from "../node/AbstractNode.ts";
-import type { AbstractStatement } from "../node/AbstractStatement.ts";
-import { NodeKind } from "../node/enum/node_kind.ts";
-import type { MissingError } from "../node/MissingError.ts";
-import type { Token } from "../node/Token.ts";
-import type { UnexpectedError } from "../node/UnexpectedError.ts";
+import type { AbstractCompositeNode } from "../node/abstract-composite-node.ts";
+import type { AbstractNode } from "../node/abstract-node.ts";
+import type { AbstractStatement } from "../node/abstract-statement.ts";
+import { NodeKind } from "../node/enum/node-kind.ts";
+import type { MissingError } from "../node/missing-error.ts";
+import type { Token } from "../node/token.ts";
+import type { UnexpectedError } from "../node/unexpected-error.ts";
 
 export type OptionalNode<T> = T | UnexpectedError | undefined;
 
