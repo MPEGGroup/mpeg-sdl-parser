@@ -4,7 +4,7 @@ import {
   addBreakingSeparator,
   addIndentedBlock,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 import type { ClassDeclaration } from "../ast/node/class-declaration.ts";
 
 const { fill } = doc.builders;

@@ -5,7 +5,7 @@ import {
   addIndentedStatements,
   addNonBreakingSeparator,
   removeLeadingBlankline,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 import type { CaseClause } from "../ast/node/case-clause.ts";
 
 export function printCaseClause(

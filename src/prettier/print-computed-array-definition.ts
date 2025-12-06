@@ -4,7 +4,7 @@ import type { ComputedArrayDefinition } from "../ast/node/computed-array-definit
 import {
   addBreakingSeparator,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
 

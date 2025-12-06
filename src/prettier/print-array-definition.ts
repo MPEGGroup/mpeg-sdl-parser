@@ -2,7 +2,7 @@ import { AstPath, type Doc, doc } from "prettier";
 import {
   addBreakingSeparator,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 import type { ArrayDefinition } from "../ast/node/array-definition.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 

@@ -1,45 +1,16 @@
 import { type Doc, doc } from "prettier";
-import type { Trivia } from "../ast/node/trivia.ts";
-import type { Token } from "../ast/node/token.ts";
+import type { Trivia } from "../../ast/node/trivia.ts";
+import type { Token } from "../../ast/node/token.ts";
 import {
   isUnexpectedError,
+  type OptionalNode,
   type RequiredNode,
   type ZeroToManyList,
-} from "../ast/util/types.ts";
+} from "../../ast/util/types.ts";
+import type { AbstractNode } from "../../ast/node/abstract-node.ts";
+import { isBreakParent, isFill, isHardline, isIndent } from "./types.ts";
 
 const { hardline, ifBreak, line, indent } = doc.builders;
-
-type Fill = doc.builders.Fill;
-type Indent = doc.builders.Indent;
-type Hardline = doc.builders.Hardline;
-type HardlineWithoutBreakParent = doc.builders.HardlineWithoutBreakParent;
-type BreakParent = doc.builders.BreakParent;
-
-function isIndent(
-  doc: Doc,
-): doc is Indent {
-  return (doc as Indent).type === "indent";
-}
-
-function isFill(
-  doc: Doc,
-): doc is Fill {
-  return (doc as Fill).type === "fill";
-}
-
-function isBreakParent(
-  doc: Doc,
-): doc is BreakParent {
-  return (doc as BreakParent).type === "break-parent";
-}
-
-function isHardline(
-  doc: Doc,
-): doc is Hardline {
-  return Array.isArray(doc) && (doc.length === 2) &&
-    ((doc[0] as HardlineWithoutBreakParent).type === "line") &&
-    (doc[0] as HardlineWithoutBreakParent).hard === true;
-}
 
 function getCommentString(trivia: Trivia): string {
   if (!trivia.text.startsWith("//")) {
@@ -50,43 +21,6 @@ function getCommentString(trivia: Trivia): string {
   }
   // Remove leading "//" from the comment text
   return "// " + trivia.text.replace(/^\s*\/\/\s*/, "").trim();
-}
-
-function getLeadingTriviaDoc(token: RequiredNode<Token>): Doc[] {
-  const docs: Doc[] = [];
-
-  if (token.leadingTrivia && (token.leadingTrivia.length > 0)) {
-    token.leadingTrivia.forEach((trivia, index) => {
-      addTrivia(docs, trivia);
-      if (token.leadingTrivia && (index < token.leadingTrivia.length - 1)) {
-        docs.push(hardline);
-      }
-    });
-  }
-
-  return docs;
-}
-
-function getTokenWithTrailingTriviaOnlyDoc(
-  token: RequiredNode<Token>,
-): Doc[] {
-  const docs: Doc[] = [];
-
-  if (isUnexpectedError(token)) {
-    docs.push(getTokenWithLeadingAndTrailingTriviaDoc(token.unexpectedToken));
-  } else {
-    docs.push(token.text);
-  }
-
-  if (token.trailingTrivia && (token.trailingTrivia.length > 0)) {
-    docs.push(line);
-    token.trailingTrivia.forEach((trivia) => {
-      addTrivia(docs, trivia);
-      docs.push(hardline);
-    });
-  }
-
-  return docs;
 }
 
 function removeTrailingBlankline(doc: Doc): void {
@@ -141,12 +75,70 @@ function removeTrailingBlankline(doc: Doc): void {
   }
 }
 
-export function addTrivia(docs: Doc[], trivia: Trivia): void {
+function addTrivia(docs: Doc[], trivia: Trivia): void {
   if (trivia.text === "\n") {
     docs.push("");
   } else {
     docs.push(getCommentString(trivia));
   }
+}
+
+function getTokenWithLeadingAndTrailingTriviaDoc(
+  token: OptionalNode<Token> | RequiredNode<Token>,
+): Doc[] {
+  if (!token) {
+    return [];
+  }
+
+  const leadingTriviaDoc = getLeadingTriviaDoc(token);
+  const trailingTriviaDoc = getTrailingTriviaDoc(token);
+
+  const doc = [];
+  if (leadingTriviaDoc.length > 0) {
+    doc.push(leadingTriviaDoc);
+  }
+
+  if (isUnexpectedError(token)) {
+    doc.push(...getTokenWithLeadingAndTrailingTriviaDoc(token.unexpectedToken));
+  } else {
+    doc.push(token.text);
+  }
+  if (trailingTriviaDoc.length > 0) {
+    doc.push(trailingTriviaDoc);
+  }
+
+  return doc;
+}
+
+export function getLeadingTriviaDoc(node: OptionalNode<AbstractNode>): Doc[] {
+  const docs: Doc[] = [];
+
+  if (!node || !node.leadingTrivia || (node.leadingTrivia.length === 0)) {
+    return docs;
+  }
+
+  node.leadingTrivia.forEach((trivia) => {
+    addTrivia(docs, trivia);
+    docs.push(hardline);
+  });
+
+  return docs;
+}
+
+export function getTrailingTriviaDoc(node: OptionalNode<AbstractNode>): Doc[] {
+  const docs: Doc[] = [];
+
+  if (!node || !node.trailingTrivia || (node.trailingTrivia.length === 0)) {
+    return docs;
+  }
+
+  docs.push(ifBreak([line, "  "], " "));
+  node.trailingTrivia.forEach((trivia) => {
+    addTrivia(docs, trivia);
+    docs.push(hardline);
+  });
+
+  return docs;
 }
 
 export function endsWithHardline(doc: Doc): boolean {
@@ -356,7 +348,18 @@ export function addIndentedBlock(
 
   docs.push(indent(indentedDocs));
   docs.push(hardline);
-  docs.push(getTokenWithTrailingTriviaOnlyDoc(closeBracePunctuator));
+
+  if (isUnexpectedError(closeBracePunctuator)) {
+    docs.push(
+      ...getTokenWithLeadingAndTrailingTriviaDoc(
+        closeBracePunctuator.unexpectedToken,
+      ),
+    );
+  } else {
+    docs.push(closeBracePunctuator.text);
+  }
+
+  docs.push(...getTrailingTriviaDoc(closeBracePunctuator));
 }
 
 export function addIndentedStatements(docs: Doc[], statementDocs: Doc[]) {

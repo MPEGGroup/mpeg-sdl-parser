@@ -4,7 +4,7 @@ import type { BitModifier } from "../ast/node/bit-modifier.ts";
 import {
   addBreakingSeparator,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 export function printBitModifier(
   path: AstPath<BitModifier>,

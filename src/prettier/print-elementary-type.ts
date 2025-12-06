@@ -1,5 +1,5 @@
 import { AstPath, type Doc } from "prettier";
-import { addNonBreakingSeparator } from "./print-utils.ts";
+import { addNonBreakingSeparator } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ElementaryType } from "../ast/node/elementary-type.ts";
 

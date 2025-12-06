@@ -1,7 +1,7 @@
 import type { AstPath, Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ParameterList } from "../ast/node/parameter-list.ts";
-import { addCommaSeparatorsToDoc } from "./print-utils.ts";
+import { addCommaSeparatorsToDoc } from "./util/print-utils.ts";
 
 export function printParameterList(
   path: AstPath<ParameterList>,

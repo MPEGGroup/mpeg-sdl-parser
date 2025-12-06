@@ -5,7 +5,7 @@ import { testPrettierScenario } from "./test-prettier-scenario.ts";
 import {
   endsWithHardline,
   removeTrailingHardline,
-} from "../../src/prettier/print-utils.ts";
+} from "../../src/prettier/util/print-utils.ts";
 
 const { breakParent, hardline, line, indent, fill } = doc.builders;
 

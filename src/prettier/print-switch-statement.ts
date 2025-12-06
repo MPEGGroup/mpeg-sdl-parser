@@ -1,5 +1,8 @@
 import { AstPath, type Doc } from "prettier";
-import { addIndentedBlock, addNonBreakingSeparator } from "./print-utils.ts";
+import {
+  addIndentedBlock,
+  addNonBreakingSeparator,
+} from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { SwitchStatement } from "../ast/node/switch-statement.ts";
 

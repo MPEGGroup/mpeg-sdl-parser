@@ -1,5 +1,5 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { addIndentedBlock } from "./print-utils.ts";
+import { addIndentedBlock } from "./util/print-utils.ts";
 import { printArrayDefinition } from "./print-array-definition.ts";
 import { printDoStatement } from "./print-do-statement.ts";
 import { printForStatement } from "./print-for-statement.ts";

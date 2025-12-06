@@ -5,7 +5,7 @@ import {
   addIfNoTrailingHardline,
   addIndentedStatements,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 import { StatementKind } from "../ast/node/enum/statement-kind.ts";
 import { isStatement } from "../ast/util/types.ts";
 

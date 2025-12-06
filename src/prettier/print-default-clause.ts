@@ -1,6 +1,6 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
-import { addIndentedBlock, addIndentedStatements } from "./print-utils.ts";
+import { addIndentedBlock, addIndentedStatements } from "./util/print-utils.ts";
 import type { DefaultClause } from "../ast/node/default-clause.ts";
 
 export function printDefaultClause(

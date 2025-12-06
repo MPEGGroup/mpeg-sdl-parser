@@ -7,7 +7,7 @@ import type { Specification } from "../ast/node/specification.ts";
 import {
   addIfNoTrailingHardline,
   removeLeadingBlankline,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 const { hardline } = doc.builders;
 

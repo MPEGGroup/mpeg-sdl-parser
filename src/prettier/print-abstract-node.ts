@@ -1,4 +1,4 @@
-import { type AstPath, type Doc, doc, type ParserOptions } from "prettier";
+import { type AstPath, type Doc, type ParserOptions } from "prettier";
 import type { AbstractArrayDimension } from "../ast/node/abstract-array-dimension.ts";
 import type { AbstractClassId } from "../ast/node/abstract-class-id.ts";
 import type { AbstractExpression } from "../ast/node/abstract-expression.ts";
@@ -34,7 +34,10 @@ import { printSpecification } from "./print-specification.ts";
 import { printElementaryType } from "./print-elementary-type.ts";
 import { printStringLiteral } from "./print-string-literal.ts";
 import { printAbstractStatement } from "./print-abstract-statement.ts";
-import { addTrivia } from "./print-utils.ts";
+import {
+  getLeadingTriviaDoc,
+  getTrailingTriviaDoc,
+} from "./util/print-utils.ts";
 import { printUnexpectedError } from "./print-unexpected-error.ts";
 import { printAlignedModifier } from "./print-aligned-modifier.ts";
 import { printIdentifier } from "./print-identifier.ts";
@@ -56,8 +59,6 @@ import { printCaseClause } from "./print-case-clause.ts";
 import { printDefaultClause } from "./print-default-clause.ts";
 import { printToken } from "./print-token.ts";
 
-const { hardline, ifBreak, line } = doc.builders;
-
 export function printAbstractNode(
   path: AstPath<RequiredNode<AbstractNode>>,
   _options: ParserOptions<AbstractNode>,
@@ -66,14 +67,7 @@ export function printAbstractNode(
   const node = path.node;
   const nodeKind = node.nodeKind;
 
-  const docs: Doc = [];
-
-  if (node.leadingTrivia && (node.leadingTrivia.length > 0)) {
-    node.leadingTrivia.forEach((trivia) => {
-      addTrivia(docs, trivia);
-      docs.push(hardline);
-    });
-  }
+  const docs = getLeadingTriviaDoc(node);
 
   switch (nodeKind) {
     case NodeKind.AGGREGATE_OUTPUT_VALUE:
@@ -193,13 +187,7 @@ export function printAbstractNode(
     }
   }
 
-  if (node.trailingTrivia && (node.trailingTrivia.length > 0)) {
-    docs.push(ifBreak([line, "  "], " "));
-    node.trailingTrivia.forEach((trivia) => {
-      addTrivia(docs, trivia);
-      docs.push(hardline);
-    });
-  }
+  docs.push(...getTrailingTriviaDoc(node));
 
   return docs;
 }

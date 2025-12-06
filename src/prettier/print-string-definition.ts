@@ -4,7 +4,7 @@ import type { StringDefinition } from "../ast/node/string-definition.ts";
 import {
   addBreakingSeparator,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
 

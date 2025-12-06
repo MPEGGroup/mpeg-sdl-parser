@@ -4,7 +4,7 @@ import type { ElementaryTypeDefinition } from "../ast/node/elementary-type-defin
 import {
   addBreakingSeparator,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
 

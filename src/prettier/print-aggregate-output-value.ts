@@ -4,7 +4,7 @@ import type { AggregateOutputValue } from "../ast/node/aggregate-output-value.ts
 import {
   addCommaSeparatorsToDoc,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 export function printAggregateOutputValue(
   path: AstPath<AggregateOutputValue>,

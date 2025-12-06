@@ -4,7 +4,7 @@ import type { MapDefinition } from "../ast/node/map-definition.ts";
 import {
   addBreakingSeparator,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 export function printMapDefinition(
   path: AstPath<MapDefinition>,

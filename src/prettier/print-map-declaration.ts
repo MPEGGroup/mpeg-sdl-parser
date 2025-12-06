@@ -1,7 +1,10 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { MapDeclaration } from "../ast/node/map-declaration.ts";
-import { addIndentedBlock, addNonBreakingSeparator } from "./print-utils.ts";
+import {
+  addIndentedBlock,
+  addNonBreakingSeparator,
+} from "./util/print-utils.ts";
 
 export function printMapDeclaration(
   path: AstPath<MapDeclaration>,

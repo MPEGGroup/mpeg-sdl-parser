@@ -4,7 +4,7 @@ import type { ComputedElementaryTypeDefinition } from "../ast/node/computed-elem
 import {
   addBreakingSeparator,
   addNonBreakingSeparator,
-} from "./print-utils.ts";
+} from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
 

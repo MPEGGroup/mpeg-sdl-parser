@@ -1,7 +1,7 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ClassDefinition } from "../ast/node/class-definition.ts";
-import { addNonBreakingSeparator } from "./print-utils.ts";
+import { addNonBreakingSeparator } from "./util/print-utils.ts";
 
 export function printClassDefinition(
   path: AstPath<ClassDefinition>,
