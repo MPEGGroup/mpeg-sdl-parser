@@ -1,0 +1,183 @@
+# With braces in clauses
+
+class A {if(i==1){i++;}else if(i==2){i--;}else{j++;}}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        Whitespace
+        OpenBrace
+        IfStatement(
+            if
+            OpenParenthesis
+            BinaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                RelationalEqual
+                UnaryExpression(
+                    IntegerLiteral
+                )
+            )
+            CloseParenthesis
+            CompoundStatement(
+                OpenBrace
+                ExpressionStatement(
+                    UnaryExpression(
+                        UnaryExpression(
+                            Identifier
+                        )
+                        PostfixIncrement
+                    )
+                    Semicolon
+                )
+                CloseBrace
+            )
+            else
+            Whitespace
+            IfStatement(
+                if
+                OpenParenthesis
+                BinaryExpression(
+                    UnaryExpression(
+                        Identifier
+                    )
+                    RelationalEqual
+                    UnaryExpression(
+                        IntegerLiteral
+                    )
+                )
+                CloseParenthesis
+                CompoundStatement(
+                    OpenBrace
+                    ExpressionStatement(
+                        UnaryExpression(
+                            UnaryExpression(
+                                Identifier
+                            )
+                            PostfixDecrement
+                        )
+                        Semicolon
+                    )
+                    CloseBrace
+                )
+                else
+                CompoundStatement(
+                    OpenBrace
+                    ExpressionStatement(
+                        UnaryExpression(
+                            UnaryExpression(
+                                Identifier
+                            )
+                            PostfixIncrement
+                        )
+                        Semicolon
+                    )
+                    CloseBrace
+                )
+            )
+        )
+        CloseBrace
+    )
+)
+
+# No braces and no else if clause
+
+class A {if(i==1)i++;else j++;}
+
+==>
+
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        Whitespace
+        OpenBrace
+        IfStatement(
+            if
+            OpenParenthesis
+            BinaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                RelationalEqual
+                UnaryExpression(
+                    IntegerLiteral
+                )
+            )
+            CloseParenthesis
+            ExpressionStatement(
+                UnaryExpression(
+                    UnaryExpression(
+                        Identifier
+                    )
+                    PostfixIncrement
+                )
+                Semicolon
+            )
+            else
+            Whitespace
+            ExpressionStatement(
+                UnaryExpression(
+                    UnaryExpression(
+                        Identifier
+                    )
+                    PostfixIncrement
+                )
+                Semicolon
+            )
+        )
+        CloseBrace
+    )
+)
+
+# Two if statements
+
+class A{if(x)1;if(y)2;}
+
+==>
+
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        IfStatement(
+            if
+            OpenParenthesis
+            UnaryExpression(
+                Identifier
+            )
+            CloseParenthesis
+            ExpressionStatement(
+                UnaryExpression(
+                    IntegerLiteral
+                )
+                Semicolon
+            )
+        )
+        IfStatement(
+            if
+            OpenParenthesis
+            UnaryExpression(
+                Identifier
+            )
+            CloseParenthesis
+            ExpressionStatement(
+                UnaryExpression(
+                    IntegerLiteral
+                )
+                Semicolon
+            )
+        )
+        CloseBrace
+    )    
+)

@@ -74,13 +74,13 @@ import {
   prettyPrint
 } from "@mpeggroup/mpeg-sdl-parser";
 
-// Create a Lezer based SDL parser
+// Create a Lezer based SDL concrete syntax parser.
 // This will create a lenient parser which recovers from parse errors and places error nodes in the parse tree.
-// A strict parser which will throw SyntacticParseError can be created with createStrictSdlParser().
+// A strict parser which will throw a `SyntacticParseError` can be created with `createStrictSdlParser()`.
 const parser = await createLenientSdlParser();
 
 // Prepare the SDL input
-const sdlStringInput = new SdlStringInput("computed int i;");
+const sdlStringInput = new SdlStringInput("class A{}");
 
 // Parse SDL input and produce a parse tree
 const sdlParseTree = sdlParser.parse(sdlStringInput);
@@ -96,9 +96,10 @@ const parseErrors = collateParseErrors(sdlParseTree, sdlStringInput);
 
 console.log(JSON.stringify(parseErrors);
 
-// Build an Abstract Syntax Tree (AST) of the SDL specification from the parse tree
-// Note that this will throw a SyntacticParseError if the parse tree contains parsing errors.
-const specification = buildAst(sdlParseTree, sdlStringInput);
+// Build an Abstract Syntax Tree (AST) of the SDL specification from the concrete parse tree
+// The third argument sets `lenient = true`. If this is not set or is `false`
+// a `SyntacticParseError` will be thrown if the sdlParseTree contains parsing errors.
+const specification = buildAst(sdlParseTree, sdlStringInput, true);
 
 // Define a simple AST Node handler
 class MyNodeHandler implements NodeHandler {
@@ -118,7 +119,7 @@ class MyNodeHandler implements NodeHandler {
 // Dispatch the handler to visit all nodes in the AST
 dispatchNodeHandler(specification, new MyNodeHandler());
 
-// Pretty print the specification (retaining comments)
+// Pretty print the specification (retaining comments and handling parse errors)
 let prettifiedSpecification = await prettyPrint(specification, sdlStringInput)
 
 console.log(prettifiedSpecification);
@@ -127,7 +128,7 @@ console.log(prettifiedSpecification);
 import * as prettier from "prettier/standalone.js";
 import { prettierPluginSdl } from "@mpeggroup/mpeg-sdl-parser"; 
 
-prettifiedSpecification = await prettier.format("computed int i;", { 
+prettifiedSpecification = await prettier.format("class A{}", { 
   parser: "sdl",
   plugins: [prettierPluginSdl],
 });
@@ -168,58 +169,101 @@ Generate HTML API Documentation:
 
 ### Overview
 
-The parser is implemented using [Lezer](https://lezer.codemirror.net) using the
-Lezer grammar defined in [sdl.lezer.grammar](grammar/sdl.lezer.grammar).
+The concrete syntax parser is implemented using
+[Lezer](https://lezer.codemirror.net) and the Lezer grammar defined in
+[sdl.lezer.grammar](grammar/sdl.lezer.grammar). This framework was chosen as it:
+
+- Provides robust error recovery whilst parsing.
+- Integrates well with the web based code editor framework
+  [Codemirror](https://codemirror.net) which is used in the
+  [MPEG SDL Editor](https://github.com/MPEGGroup/mpeg-sdl-editor).
 
 For reference purposes an SDL EBNF grammar is also provided in
 [sdl.ebnf.grammar](grammar/sdl.ebnf.grammar)
+
+The concrete syntax tree is then converted to an Abstract Syntax Tree (AST)
+which is not tied to any underlying framework. The AST representation is used
+for pretty printing and as such retains a "full fidelity" represenation of the
+source i.e. including text location and trivia items (comments and blank lines).
 
 ### Abstract Syntax Tree Model
 
 ```mermaid
 classDiagram
 
+  class Trivia {
+    <<interface>> 
+    text: string;
+  }
+
   class Location {
+    <<interface>> 
     row: number
     column: number
     position: number
   }
 
   class AbstractNode {
+    <<Abstract>>
     nodeKind: NodeKind
-    text: string
-    accept(visitor: NodeVisitor) boolean
+    isCompositeNode: boolean
   }
 
   class AbstractLeafNode {
+    <<Abstract>>
     isCompositeNode = false
   }
 
   class AbstractCompositeNode {
+    <<Abstract>>
     isCompositeNode = true
-    getChildNodeIterable() IterableIterator
+  }
+
+  class Token {
+    text: string;
+    tokenKind: TokenKind;
+  }
+
+  class TraversingVisitor {
+  }
+
+  class NodeVisitor {
+    <<interface>> 
+    visit(node: AbstractNode)
   }
 
   class NodeHandler {
+    <<interface>> 
     beforeVisit(node: AbstractCompositeNode)
     visit(node: AbstractLeafNode)
     afterVisit(node: AbstractCompositeNode)
   }
 
-  AbstractNode --> Location : location
+  Trivia --> Location : location
+
+  NodeHandler ..> AbstractCompositeNode : afterVisit
+  NodeHandler ..> AbstractCompositeNode : beforeVisit
+  NodeHandler ..> AbstractLeafNode : visit
+
+  AbstractNode --> "*" Trivia : leadingTrivia
+  AbstractNode --> "*" Trivia : trailingTrivia
+
   AbstractLeafNode --|> AbstractNode
 
   AbstractCompositeNode --|> AbstractNode
-  AbstractCompositeNode --> "*" AbstractNode : childNodes
+  AbstractCompositeNode --> "*" AbstractNode : children
+  AbstractCompositeNode --> "0..1" Token : startToken
+  AbstractCompositeNode --> "0..1" Token : endToken
 
-  LeafNodeXXX "*" --|> AbstractLeafNode
-  CompositeNodeYYY "*" --|> AbstractCompositeNode
+  Token --|> AbstractLeafNode
+  Token --> Location
 
+  NodeVisitor ..> AbstractNode : visit
+  TraversingVisitor --|> NodeVisitor
+  TraversingVisitor --> NodeHandler
+
+  CompositeNodeXYZ "*" --|> AbstractCompositeNode
   Specification --|> AbstractCompositeNode
-
-  NodeHandler ..> AbstractCompositeNode : beforeVisit
-  NodeHandler ..> AbstractLeafNode : visit
-  NodeHandler ..> AbstractCompositeNode : afterVisit
 ```
 
 ### API

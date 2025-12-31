@@ -1,0 +1,123 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+
+exports[`Prettier Plugin SDL tests prettified output is as expected 1`] = `
+"// repeated packets in bitstream
+//
+// should be declared in a wrapping Bitstream class
+class transport_packet {
+  unsigned int(8) sync_byte = 0x47;
+  bit(1) transport_error_indicator;
+  bit(1) payload_unit_start_indicator;
+  bit(1) transport_priority;
+  unsigned int(13 // odd but valid comment position
+  ) PID;
+  bit(2)* transport_scrambling_control;
+  aligned(16) bit(2) adaptation_field_control = 0x0000.0000;
+
+  computed unsigned int N = 184;
+  computed float test = 1e1;
+  utf8string foo = u"bar" u"foo";
+  base64string foo2 = "BAR";
+  computed int dummy1 = 'ABCD' '01AB';
+  computed int dummy2 = lengthof(transport_scrambling_control) + N++;
+  if (adaptation_field_control == 0b10 || adaptation_field_control == 0b11) {
+    adaptation_field data; // previously declared class
+
+    // N is 184 minus the number of bytes in the adaptation_field
+    N = N - // and another
+      1 // and another odd comment
+      - data.adaptation_field_length;
+  }
+  if (adaptation_field_control == 0b01 || adaptation_field_control == 0b11) {
+    bit(8) data_byte[N];
+  }
+}
+
+map Offsets (int) {
+  0b00, { 1024 },
+  0b01, { 2048 }
+}
+
+expandable(20) class odd(int a, B b) extends odder(a) : bit(2) id = 2 {
+  reserved unsigned int(Offsets) offset;
+  computed int myArray[2];
+  computed int i = 1;
+  Strange s(1, 2);
+  while (i < 2) {
+    i++;
+  }
+  i = 2;
+  do {
+    i--;
+  } while (i > 0);
+  if (1) {
+    i++;
+  }
+  else if (1) {
+    i--;
+  }
+  else {
+    i++;
+  }
+  if (1)
+    if (2)
+      i--;
+    else
+      i++;
+  switch (i) {
+    case 0:
+    case 1:
+      // nothing
+      break;
+    case 2: { // nothing
+      break;
+    }
+    default:
+      i++;
+    // foo
+  }
+}
+
+class odd2(int a) {
+  computed int x = 0;
+  for (computed int j = 0; j < 2; j++) {
+    x++;
+  }
+  for (; j > 0; j--) {
+  }
+} // until EOF
+"
+`;
+
+exports[`Prettier Plugin SDL tests can prettify with syntax errors 1`] = `
+"// repeated packets in bitstream
+class transport_packet {
+  unsigned int(8) sync_byte = 0x47;
+  bit(1) transport_error_indicator;
+  bit(1) payload_unit_start_indicator;
+  bit
+  transport_priority;
+  unsigned int(13) PID;
+  bit(2) transport_scrambling_control;
+  bit(2) adaptation_field_control;
+
+  unsigned int
+  N = 184;
+
+  if (adaptation_field_control == 0b10 || adaptation_field_control == 0b11) {
+    adaptation_field data; // previously declared class
+
+    // N is 184 minus the number of bytes in the adaptation_field
+    N = N - 1 - data.adaptation_field_length;
+  }
+
+  if (adaptation_
+
+  field_control == 0b01 || adaptation_field_control == 0b11)
+  {
+    bit(8) data_byte[N];
+  }
+} // until EOF
+"
+`;

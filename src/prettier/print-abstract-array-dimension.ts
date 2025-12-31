@@ -1,0 +1,85 @@
+import type { AstPath, Doc } from "prettier";
+import type { AbstractArrayDimension } from "../ast/node/abstract-array-dimension.ts";
+import type { AbstractNode } from "../ast/node/abstract-node.ts";
+import { ArrayDimensionKind } from "../ast/node/enum/array-dimension-kind.ts";
+import type { ExplicitArrayDimension } from "../ast/node/explicit-array-dimension.ts";
+import type { ImplicitArrayDimension } from "../ast/node/implicit-array-dimension.ts";
+import type { PartialArrayDimension } from "../ast/node/partial-array-dimension.ts";
+
+export function printAbstractArrayDimension(
+  path: AstPath<AbstractArrayDimension>,
+  print: (path: AstPath<AbstractNode>) => Doc,
+): Doc {
+  const { arrayDimensionKind } = path.node;
+
+  switch (arrayDimensionKind) {
+    case ArrayDimensionKind.EXPLICIT: {
+      return [
+        path.call(print, "openBracketPunctuator"),
+        (path as AstPath<ExplicitArrayDimension>).call(print, "size"),
+        path.call(print, "closeBracketPunctuator"),
+      ];
+    }
+    case ArrayDimensionKind.PARTIAL: {
+      return [
+        path.call(print, "openBracketPunctuator"),
+        path.call(print, "openBracketPunctuator"),
+        (path as AstPath<PartialArrayDimension>).call(
+          print,
+          "innerOpenBracketPunctuator",
+        ),
+        (path as AstPath<PartialArrayDimension>).call(print, "index"),
+        (path as AstPath<PartialArrayDimension>).call(
+          print,
+          "innerCloseBracketPunctuator",
+        ),
+        path.call(print, "closeBracketPunctuator"),
+      ];
+    }
+    case ArrayDimensionKind.IMPLICIT: {
+      const node = path.node as ImplicitArrayDimension;
+      const doc: Doc = [];
+
+      doc.push(
+        path.call(print, "openBracketPunctuator"),
+      );
+      doc.push("[");
+
+      if (node.rangeStart !== undefined) {
+        doc.push(
+          path.call(
+            print,
+            "rangeStart" as keyof ImplicitArrayDimension["rangeStart"],
+          ),
+        );
+      }
+
+      if (node.rangeOperator !== undefined) {
+        doc.push(
+          path.call(
+            print,
+            "rangeOperator" as keyof ImplicitArrayDimension["rangeOperator"],
+          ),
+        );
+        doc.push(
+          path.call(
+            print,
+            "rangeEnd" as keyof ImplicitArrayDimension["rangeEnd"],
+          ),
+        );
+      }
+
+      doc.push(
+        path.call(print, "closeBracketPunctuator"),
+      );
+      return doc;
+    }
+
+    default: {
+      const exhaustiveCheck: never = arrayDimensionKind;
+      throw new InternalParseError(
+        "Unreachable code reached, arrayDimensionKind == " + exhaustiveCheck,
+      );
+    }
+  }
+}
