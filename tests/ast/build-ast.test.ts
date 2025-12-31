@@ -13,6 +13,7 @@ import { UnaryExpression } from "../../src/ast/node/unary-expression.ts";
 import { Token } from "../../src/ast/node/token.ts";
 import { TokenKind } from "../../src/ast/node/enum/token-kind.ts";
 import { MissingError } from "../../src/ast/node/missing-error.ts";
+import { UnexpectedError } from "../../src/ast/node/unexpected-error.ts";
 
 const lenientSdlParser = createLenientSdlParser();
 const strictSdlParser = createStrictSdlParser();
@@ -80,7 +81,24 @@ describe("buildAst Tests", () => {
     buildAst(parseTree, sdlStringInput, true);
   });
 
-  test("buildAst - simple", () => {
+  test("Comment only", () => {
+    const sdlStringInput = new SdlStringInput(" // hello world");
+    const parseTree = strictSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput);
+    const expected = new Specification([]);
+
+    expected.trailingTrivia = [
+      { text: "// hello world", location: { row: 1, column: 2, position: 1 } },
+    ];
+
+    expect(
+      specification,
+    ).toEqual(
+      expected,
+    );
+  });
+
+  test("Simple", () => {
     const sdlStringInput = new SdlStringInput("class A {}");
     const parseTree = strictSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
@@ -132,7 +150,7 @@ describe("buildAst Tests", () => {
     );
   });
 
-  test("buildAst - simple with comments", () => {
+  test("Simple with comments", () => {
     const sdlStringInput = new SdlStringInput(
       "// hello\nclass A {// world\n}// again",
     );
@@ -199,7 +217,7 @@ describe("buildAst Tests", () => {
     );
   });
 
-  test("buildAst - lenient with missing identifier", () => {
+  test("Lenient with missing identifier", () => {
     const sdlStringInput = new SdlStringInput("class {}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
@@ -244,7 +262,7 @@ describe("buildAst Tests", () => {
     );
   });
 
-  test("buildAst - lenient with multiple missing tokens", () => {
+  test("Lenient with multiple missing tokens", () => {
     const sdlStringInput = new SdlStringInput("class A { - }");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
@@ -336,119 +354,15 @@ describe("buildAst Tests", () => {
     );
   });
 
-  test("buildAst - comment within syntax element", () => {
+  test("Comment within syntax element", () => {
     const sdlStringInput = new SdlStringInput("class A {i++// comment\n;}");
     const parseTree = strictSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
-    const classToken = new Token(
-      TokenKind.CLASS,
-      "class",
-      { row: 1, column: 1, position: 0 },
-    );
-    const identifier = new Identifier(
-      "A",
-      new Token(
-        TokenKind.IDENTIFIER,
-        "A",
-        { row: 1, column: 7, position: 6 },
-      ),
-    );
-    const openBraceToken = new Token(
-      TokenKind.OPEN_BRACE,
-      "{",
-      { row: 1, column: 9, position: 8 },
-    );
-    const identifier2 = new Identifier(
-      "i",
-      new Token(
-        TokenKind.IDENTIFIER,
-        "i",
-        { row: 1, column: 10, position: 9 },
-      ),
-    );
-    const postfixOperatorToken = new Token(
-      TokenKind.POSTFIX_INCREMENT,
-      "++",
-      { row: 1, column: 11, position: 10 },
-    );
 
-    const unaryExpression2 = new UnaryExpression(
-      undefined,
-      undefined,
-      identifier2,
-      undefined,
-      undefined,
-      undefined,
-      postfixOperatorToken,
-      [identifier2, postfixOperatorToken],
-    );
-    const unaryExpression = new UnaryExpression(
-      undefined,
-      undefined,
-      unaryExpression2,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      [unaryExpression2],
-    );
-
-    unaryExpression2.trailingTrivia = [
-      {
-        text: "// comment",
-        location: { row: 1, column: 13, position: 12 },
-      },
-    ];
-
-    const semicolonPunctuator = new Token(
-      TokenKind.SEMICOLON,
-      ";",
-      { row: 2, column: 1, position: 23 },
-    );
-    const expressionStatement = new ExpressionStatement(
-      unaryExpression,
-      semicolonPunctuator,
-      [unaryExpression, semicolonPunctuator],
-    );
-    const closeBraceToken = new Token(
-      TokenKind.CLOSE_BRACE,
-      "}",
-      { row: 2, column: 2, position: 24 },
-    );
-
-    expect(
-      specification,
-    ).toEqual(
-      new Specification(
-        [
-          new ClassDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            classToken,
-            identifier,
-            undefined,
-            undefined,
-            undefined,
-            openBraceToken,
-            [
-              expressionStatement,
-            ],
-            closeBraceToken,
-            [
-              classToken,
-              identifier,
-              openBraceToken,
-              expressionStatement,
-              closeBraceToken,
-            ],
-          ),
-        ],
-      ),
-    );
+    expect(specification).toMatchSnapshot();
   });
 
-  test("buildAst - JSON", () => {
+  test("JSON", () => {
     const sdlStringInput = new SdlStringInput("computed int i;");
     const parseTree = strictSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
@@ -457,12 +371,92 @@ describe("buildAst Tests", () => {
     expect(actual).toMatchSnapshot();
   });
 
-  test("buildAst - leading and trailing comments", () => {
+  test("Leading comment", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A{\n  // Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée\n}",
+    );
+    const parseTree = strictSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput);
+
+    expect(specification).toMatchSnapshot();
+  });
+
+  test("Leading and trailing comments", () => {
     const sdlStringInput = new SdlStringInput(
       "class A {// trailing 1\ni++; // trailing 2\n//leading 1\nN = N + // trailing 3\n 1;}\n// trailing 4",
     );
     const parseTree = strictSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
+
+    expect(specification).toMatchSnapshot();
+  });
+
+  test("Switch statement", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A{switch (1) { case 1: break; default: i++; }}",
+    );
+    const parseTree = strictSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput);
+
+    expect(specification).toMatchSnapshot();
+  });
+
+  test("Invalid elementary type definition", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A{bit transport_priority;}",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput, true);
+
+    expect(specification).toMatchSnapshot();
+  });
+
+  test("Single invalid token", () => {
+    const sdlStringInput = new SdlStringInput(
+      "§\n",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput, true);
+
+    const unknownToken = new Token(
+      TokenKind.ERROR_UNKNOWN_TOKEN,
+      "§",
+      { row: 1, column: 1, position: 0 },
+    );
+
+    const unexpectedError = new UnexpectedError(unknownToken);
+
+    expect(specification).toEqual(
+      new Specification([unexpectedError]),
+    );
+  });
+
+  test("Invalid various elements 1", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A{if(a fie==1) {}}\n",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput, true);
+
+    expect(specification).toMatchSnapshot();
+  });
+
+  test("Invalid various elements 2", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A{if(a fie==1){}}\n",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput, true);
+
+    expect(specification).toMatchSnapshot();
+  });
+
+  test("While statement", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A{while(i<2){i++;}}\n",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const specification = buildAst(parseTree, sdlStringInput, true);
 
     expect(specification).toMatchSnapshot();
   });

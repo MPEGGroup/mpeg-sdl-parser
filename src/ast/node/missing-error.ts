@@ -4,6 +4,6 @@ import type { Location } from "../../location.ts";
 
 export class MissingError extends Token {
   constructor(location: Location) {
-    super(TokenKind.ERROR_MISSING_TOKEN, "<missing>", location);
+    super(TokenKind.ERROR_MISSING_TOKEN, "", location);
   }
 }

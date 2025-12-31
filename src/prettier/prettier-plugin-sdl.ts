@@ -34,7 +34,9 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       let token: Token;
       if (isCompositeNode(node)) {
         if (!node.startToken) {
-          throw new Error("Composite node does not have a start token.");
+          throw new InternalParseError(
+            "Composite node does not have a start token.",
+          );
         }
         token = node.startToken;
       } else if (isToken(node)) {
@@ -53,7 +55,9 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       let token: Token;
       if (isCompositeNode(node)) {
         if (!node.endToken) {
-          throw new Error("Composite node does not have an end token.");
+          throw new InternalParseError(
+            "Composite node does not have an end token.",
+          );
         }
         token = node.endToken;
       } else if (isToken(node)) {

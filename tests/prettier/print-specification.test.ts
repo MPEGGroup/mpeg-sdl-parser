@@ -31,8 +31,8 @@ describe("Print Specification tests", () => {
   test("prettified specification output is as expected for empty specification", async () => {
     await testPrettierScenario(
       "\n",
-      "\n",
-      "\n",
+      "",
+      "",
     );
   });
 

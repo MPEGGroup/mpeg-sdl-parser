@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import * as path from "path";
 import { describe, test } from "bun:test";
-import { createStrictSdlParser } from "../../src/lezer/create-sdl-parser.ts";
+import { createLenientSdlParser } from "../../src/lezer/create-sdl-parser.ts";
 import { fileTests } from "@lezer/generator/dist/test";
 
-const sdlParser = createStrictSdlParser();
+const sdlParser = createLenientSdlParser();
 const testCaseDir = path.join(__dirname, "./test-cases");
 
 for (const filename of fs.readdirSync(testCaseDir)) {

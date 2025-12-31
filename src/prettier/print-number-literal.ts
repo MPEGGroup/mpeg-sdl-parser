@@ -13,8 +13,8 @@ function printMultipleCharacterNumberLiteral(
 ): Doc {
   const multipleCharacterNumberLiteral = path.node;
 
-  const multipleCharacterNumberLiterals: Doc[] = [];
-  let currentLiteral: Doc[] = [];
+  const multipleCharacterNumberLiteralsDoc: Doc = [];
+  let currentLiterals: Doc[] = [];
   let opened = false;
   let containsContent = false;
 
@@ -23,36 +23,38 @@ function printMultipleCharacterNumberLiteral(
       return;
     }
     if (isUnexpectedError(literal)) {
-      currentLiteral.push(path.call(print, "literals", index));
+      currentLiterals.push(path.call(print, "literals", index));
       return;
     }
     const literalToken = literal as Token;
     if (literalToken.text === "'") {
       if (!opened) {
-        currentLiteral.push(path.call(print, "literals", index));
+        currentLiterals.push(path.call(print, "literals", index));
         opened = true;
       } else {
-        currentLiteral.push(path.call(print, "literals", index));
+        currentLiterals.push(path.call(print, "literals", index));
 
         // avoid empty multiple character number literals after the first one
-        if ((multipleCharacterNumberLiterals.length === 0) || containsContent) {
-          multipleCharacterNumberLiterals.push(currentLiteral);
+        if (
+          (multipleCharacterNumberLiteralsDoc.length === 0) || containsContent
+        ) {
+          multipleCharacterNumberLiteralsDoc.push(currentLiterals);
         }
 
         // reset state
-        currentLiteral = [];
+        currentLiterals = [];
         containsContent = false;
         opened = false;
       }
     } else if (literalToken.text.length > 0) {
-      currentLiteral.push(literalToken.text);
+      currentLiterals.push(literalToken.text);
       containsContent = true;
     }
   });
 
   return join(
     " ",
-    multipleCharacterNumberLiterals,
+    multipleCharacterNumberLiteralsDoc,
   );
 }
 export function printNumberLiteral(
@@ -73,7 +75,7 @@ export function printNumberLiteral(
       return printMultipleCharacterNumberLiteral(path, print);
     default: {
       const exhaustiveCheck: never = numberLiteralKind;
-      throw new Error(
+      throw new InternalParseError(
         "Unreachable code reached, numberLiteralKind == " + exhaustiveCheck,
       );
     }

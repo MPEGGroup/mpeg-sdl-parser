@@ -1,7 +1,7 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ExtendsModifier } from "../ast/node/extends-modifier.ts";
-import { addNonBreakingSeparator } from "./util/print-utils.ts";
+import { addNonBreakingWhitespace } from "./util/print-utils.ts";
 
 export function printExtendsModifier(
   path: AstPath<ExtendsModifier>,
@@ -9,15 +9,15 @@ export function printExtendsModifier(
 ): Doc {
   const mapEntryList = path.node;
 
-  const docs: Doc[] = [];
+  const doc: Doc = [];
 
-  docs.push(path.call(print, "extendsKeyword"));
-  addNonBreakingSeparator(docs);
+  doc.push(path.call(print, "extendsKeyword"));
+  addNonBreakingWhitespace(doc);
 
-  docs.push(path.call(print, "identifier"));
+  doc.push(path.call(print, "identifier"));
 
   if (mapEntryList.parameterValueList !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "parameterValueList" as keyof ExtendsModifier["parameterValueList"],
@@ -25,5 +25,5 @@ export function printExtendsModifier(
     );
   }
 
-  return docs;
+  return doc;
 }

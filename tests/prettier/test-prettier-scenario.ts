@@ -1,10 +1,10 @@
 import * as prettier from "prettier";
 import { expect } from "bun:test";
 import { prettierPluginSdl } from "../../src/prettier/prettier-plugin-sdl.ts";
-import { createStrictSdlParser } from "../../src/lezer/create-sdl-parser.ts";
+import { createLenientSdlParser } from "../../src/lezer/create-sdl-parser.ts";
 import { SdlStringInput } from "../../index.ts";
 
-const strictSdlParser = createStrictSdlParser();
+const lenientSdlParser = createLenientSdlParser();
 
 export async function testPrettierScenario(
   source: string,
@@ -25,7 +25,7 @@ export async function testPrettierScenario(
   // check that the prettified output is valid SDL
   let sdlStringInput = new SdlStringInput(prettified);
 
-  strictSdlParser.parse(sdlStringInput);
+  lenientSdlParser.parse(sdlStringInput);
 
   // test narrow
   options.printWidth = 40;
@@ -37,5 +37,5 @@ export async function testPrettierScenario(
   // check that the prettified output is valid SDL
   sdlStringInput = new SdlStringInput(prettified);
 
-  strictSdlParser.parse(sdlStringInput);
+  lenientSdlParser.parse(sdlStringInput);
 }

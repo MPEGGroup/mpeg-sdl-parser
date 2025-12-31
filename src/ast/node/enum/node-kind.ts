@@ -3,9 +3,7 @@
  */
 export enum NodeKind {
   /** Error placeholder for unexpected node */
-  UNEXPECTED_ERROR = -2,
-  /** Error placeholder for missing node */
-  MISSING_ERROR = -1,
+  UNEXPECTED_ERROR = -1,
   /** Output value node */
   AGGREGATE_OUTPUT_VALUE,
   /** Aligned modifier node */

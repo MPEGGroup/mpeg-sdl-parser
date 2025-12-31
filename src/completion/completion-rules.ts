@@ -69,7 +69,7 @@ function addRulesForParent(
   rules: CompletionRule | CompletionRule[],
 ) {
   if (completionRulesByParentMap.has(parentTokenId)) {
-    throw new Error(
+    throw new InternalParseError(
       `Completion rules for parent ${parentTokenId} already exist`,
     );
   }
@@ -375,7 +375,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;
-      throw new Error(
+      throw new InternalParseError(
         "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
       );
     }

@@ -3,6 +3,7 @@ import type { AbstractCompositeNode } from "../node/abstract-composite-node.ts";
 import type { AbstractNode } from "../node/abstract-node.ts";
 import type { AbstractStatement } from "../node/abstract-statement.ts";
 import { NodeKind } from "../node/enum/node-kind.ts";
+import { TokenKind } from "../node/enum/token-kind.ts";
 import type { MissingError } from "../node/missing-error.ts";
 import type { Token } from "../node/token.ts";
 import type { UnexpectedError } from "../node/unexpected-error.ts";
@@ -36,11 +37,15 @@ export function isUnexpectedError(
 export function isMissingError(
   node: AbstractNode,
 ): node is MissingError {
-  return node?.nodeKind === NodeKind.MISSING_ERROR;
+  return node?.nodeKind === NodeKind.TOKEN &&
+    ((node as Token).tokenKind === TokenKind.ERROR_MISSING_TOKEN);
 }
 
 export function isStatement(
   node: AbstractNode,
 ): node is AbstractStatement {
-  return node?.nodeKind in StatementKind;
+  return node?.nodeKind === NodeKind.STATEMENT &&
+    (Object.values(StatementKind) as number[]).includes(
+      (node as AbstractStatement).statementKind,
+    );
 }

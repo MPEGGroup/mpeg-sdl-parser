@@ -1,5 +1,5 @@
 import { AstPath, type Doc } from "prettier";
-import { addNonBreakingSeparator } from "./util/print-utils.ts";
+import { addNonBreakingWhitespace } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ElementaryType } from "../ast/node/elementary-type.ts";
 
@@ -9,9 +9,9 @@ export function printElementaryType(
 ): Doc {
   const elementaryType = path.node;
 
-  const docs = [];
+  const doc: Doc = [];
   if (elementaryType.unsignedQualifierKeyword) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "unsignedQualifierKeyword" as keyof ElementaryType[
@@ -19,10 +19,10 @@ export function printElementaryType(
         ],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
-  docs.push(path.call(print, "typeKeyword"));
+  doc.push(path.call(print, "typeKeyword"));
 
-  return docs;
+  return doc;
 }

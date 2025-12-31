@@ -32,4 +32,38 @@ describe("Print Switch tests", () => {
         "}\n",
     );
   });
+
+  test("prettified switch with trivia output is as expected", async () => {
+    await testPrettierScenario(
+      "class A { switch (i) {\n    case 0:\n   case 1:\n\n            // nothing\n      break;\n   case 2: \n\n            { // nothing\n      break;\n      }\n    default:\n      i++;\n      //     foo\n  }}\n",
+      "class A {\n" +
+        "  switch (i) {\n" +
+        "    case 0:\n" +
+        "    case 1:\n" +
+        "      // nothing\n" +
+        "      break;\n" +
+        "    case 2: { // nothing\n" +
+        "      break;\n" +
+        "    }\n" +
+        "    default:\n" +
+        "      i++;\n" +
+        "    // foo\n" +
+        "  }\n" +
+        "}\n",
+      "class A {\n" +
+        "  switch (i) {\n" +
+        "    case 0:\n" +
+        "    case 1:\n" +
+        "      // nothing\n" +
+        "      break;\n" +
+        "    case 2: { // nothing\n" +
+        "      break;\n" +
+        "    }\n" +
+        "    default:\n" +
+        "      i++;\n" +
+        "    // foo\n" +
+        "  }\n" +
+        "}\n",
+    );
+  });
 });

@@ -1,7 +1,7 @@
 import { AstPath, type Doc, doc } from "prettier";
 import {
-  addBreakingSeparator,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 import type { ArrayDefinition } from "../ast/node/array-definition.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
@@ -13,41 +13,40 @@ export function printArrayDefinition(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const arrayDefinition = path.node;
-
-  const docs = [];
+  let doc: Doc = [];
 
   if (arrayDefinition.reservedKeyword) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "reservedKeyword" as keyof ArrayDefinition["reservedKeyword"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
   if (arrayDefinition.legacyKeyword) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "legacyKeyword" as keyof ArrayDefinition["legacyKeyword"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
   if (arrayDefinition.alignedModifier !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "alignedModifier" as keyof ArrayDefinition["alignedModifier"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
   if (arrayDefinition.elementaryType !== undefined) {
-    const subDocs = [
+    const subDoc: Doc = [
       path.call(
         print,
         "elementaryType" as keyof ArrayDefinition["elementaryType"],
@@ -57,9 +56,9 @@ export function printArrayDefinition(
         "lengthAttribute" as keyof ArrayDefinition["lengthAttribute"],
       ),
     ];
-    docs.push(subDocs);
+    doc.push(subDoc);
   } else {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "classIdentifier" as keyof ArrayDefinition["classIdentifier"],
@@ -67,7 +66,7 @@ export function printArrayDefinition(
     );
   }
 
-  addBreakingSeparator(docs);
+  doc = addBreakingWhitespace(doc);
 
   const identifierClause = [
     path.call(print, "identifier"),
@@ -90,7 +89,7 @@ export function printArrayDefinition(
 
   identifierClause.push(path.call(print, "semicolonPunctuator"));
 
-  docs.push(identifierClause);
+  doc.push(identifierClause);
 
-  return fill(docs);
+  return fill(doc);
 }

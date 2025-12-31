@@ -1,0 +1,97 @@
+# Missing and unexpected tokens 1
+
+class A{if(a fie==1) {}}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        IfStatement(
+            if
+            OpenParenthesis
+            UnaryExpression(
+                Identifier
+            )
+            Whitespace
+            ⚠
+        )
+        ExpressionStatement(
+            BinaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                RelationalEqual
+                UnaryExpression(
+                    IntegerLiteral
+                )
+            )
+            ⚠(
+                CloseParenthesis
+            )
+            Whitespace
+            ⚠
+        )
+        CompoundStatement(
+            OpenBrace
+            CloseBrace
+        )
+        CloseBrace
+    )
+)
+
+# Missing and unexpected tokens 2
+
+class A{if(a fie==1){}}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        IfStatement(
+            if
+            OpenParenthesis
+            UnaryExpression(
+                Identifier
+            )
+            Whitespace
+            ⚠
+        )
+        ExpressionStatement(
+            BinaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                RelationalEqual
+                UnaryExpression(
+                    IntegerLiteral
+                )
+            )
+            ⚠(
+                CloseParenthesis
+            )
+        )
+        CompoundStatement(
+            OpenBrace
+            CloseBrace
+        )
+        CloseBrace
+    )
+)
+
+# Single invalid token
+
+§
+
+==>
+
+Specification(
+    ⚠
+)

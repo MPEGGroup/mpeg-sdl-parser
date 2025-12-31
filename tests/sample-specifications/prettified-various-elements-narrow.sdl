@@ -6,9 +6,9 @@ class transport_packet {
   bit(1) transport_error_indicator;
   bit(1) payload_unit_start_indicator;
   bit(1) transport_priority;
-  unsigned int(13)
+  unsigned int(13
     // odd but valid comment position
-    PID;
+  ) PID;
   bit(2)* transport_scrambling_control;
   aligned(16) bit(2) adaptation_field_control =
     0x0000.0000;

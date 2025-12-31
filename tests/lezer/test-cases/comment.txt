@@ -43,6 +43,65 @@ Specification(
 )
 
 
+# More leading and trailing comments
+
+class A{// trailing 1
+i++;// trailing 2
+//leading 1
+N=N+// trailing 3
+1;}
+// trailing 4
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        Comment
+        Whitespace
+        ExpressionStatement(
+            UnaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                PostfixIncrement
+            )
+            Semicolon
+        )
+        Comment
+        Whitespace
+        Comment
+        Whitespace
+        ExpressionStatement(
+            AssignmentExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                Assignment
+                BinaryExpression(
+                    UnaryExpression(
+                        Identifier
+                    )
+                    Addition
+                    Comment
+                    Whitespace
+                    UnaryExpression(
+                        IntegerLiteral
+                    )
+                )
+            )
+            Semicolon
+        )
+        CloseBrace
+    )
+    Whitespace
+    Comment
+)
+
+
 # Multiple comments
 
 class A {}
@@ -184,6 +243,93 @@ Specification(
             Whitespace
             Semicolon
         )
+        CloseBrace
+    )
+)
+
+# Comment within binary expression does not appear as child of BinaryExpression
+
+class A{N-
+1//comment comment comment
+;}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        ExpressionStatement(
+            BinaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                Subtraction
+                Whitespace
+                UnaryExpression(
+                    IntegerLiteral
+                )
+            )
+            Comment
+            Whitespace
+            Semicolon
+        )
+        CloseBrace
+    )
+)
+
+# Comment within binary expression slightly shorter
+
+class A{N-
+1//comment comment commen
+;}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        ExpressionStatement(
+            BinaryExpression(
+                UnaryExpression(
+                    Identifier
+                )
+                Subtraction
+                Whitespace
+                UnaryExpression(
+                    IntegerLiteral
+                )
+            )
+            Comment
+            Whitespace
+            Semicolon
+        )
+        CloseBrace
+    )
+)
+
+# Leading comment
+
+class A{
+  // Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée
+}
+
+==>
+
+Specification(
+    ClassDeclaration(
+        class
+        Whitespace
+        Identifier
+        OpenBrace
+        Whitespace
+        Comment
+        Whitespace
         CloseBrace
     )
 )

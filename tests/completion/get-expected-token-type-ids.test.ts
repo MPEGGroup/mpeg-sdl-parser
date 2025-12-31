@@ -38,6 +38,8 @@ describe("getExpectedTokenTypeIds Tests", () => {
 
     const tokenTypeIds = getExpectedTokenTypeIds(cursor);
 
+    tokenTypeIds?.sort((a, b) => a - b);
+
     expect(tokenTypeIds).toEqual([
       TokenTypeId.Multiplication,
       TokenTypeId.Division,
@@ -56,6 +58,6 @@ describe("getExpectedTokenTypeIds Tests", () => {
       TokenTypeId.BitwiseOr,
       TokenTypeId.LogicalAnd,
       TokenTypeId.LogicalOr,
-    ]);
+    ].sort((a, b) => a - b));
   });
 });

@@ -5,7 +5,7 @@ import type { ClassId } from "../ast/node/class-id.ts";
 import type { ClassIdRange } from "../ast/node/class-id-range.ts";
 import { ClassIdKind } from "../ast/node/enum/class-id-kind.ts";
 import type { ExtendedClassIdRange } from "../ast/node/extended-class-id-range.ts";
-import { addCommaSeparatorsToDoc } from "./util/print-utils.ts";
+import { interleaveCommaSeparatorDocs } from "./util/print-utils.ts";
 
 export function printAbstractClassId(
   path: AstPath<AbstractClassId>,
@@ -24,25 +24,27 @@ export function printAbstractClassId(
       ];
     }
     case ClassIdKind.EXTENDED_RANGE: {
-      const extendedClassIdRange = path.node as ExtendedClassIdRange;
-      const docs = [];
+      const doc: Doc = [];
       const outputValuesDoc = (path as AstPath<ExtendedClassIdRange>).map(
         print,
         "classIds",
       );
 
-      docs.push(
-        addCommaSeparatorsToDoc(
+      doc.push(
+        interleaveCommaSeparatorDocs(
           outputValuesDoc,
-          extendedClassIdRange.commaPunctuators,
+          (path as AstPath<ExtendedClassIdRange>).map(
+            print,
+            "commaPunctuators",
+          ),
         ),
       );
 
-      return docs;
+      return doc;
     }
     default: {
       const exhaustiveCheck: never = classIdKind;
-      throw new Error(
+      throw new InternalParseError(
         "Unreachable code reached, classIdKind == " + exhaustiveCheck,
       );
     }

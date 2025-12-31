@@ -2,8 +2,8 @@ import { type AstPath, type Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { StringDefinition } from "../ast/node/string-definition.ts";
 import {
-  addBreakingSeparator,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
@@ -14,61 +14,61 @@ export function printStringDefinition(
 ): Doc {
   const stringDefinition = path.node;
 
-  const subDocs1: Doc[] = [];
+  const subDoc1: Doc = [];
   if (stringDefinition.reservedKeyword) {
-    subDocs1.push(
+    subDoc1.push(
       path.call(
         print,
         "reservedKeyword" as keyof StringDefinition["reservedKeyword"],
       ),
     );
-    addNonBreakingSeparator(subDocs1);
+    addNonBreakingWhitespace(subDoc1);
   }
 
   if (stringDefinition.legacyKeyword) {
-    subDocs1.push(
+    subDoc1.push(
       path.call(
         print,
         "legacyKeyword" as keyof StringDefinition["legacyKeyword"],
       ),
     );
-    addNonBreakingSeparator(subDocs1);
+    addNonBreakingWhitespace(subDoc1);
   }
 
   if (stringDefinition.constKeyword) {
-    subDocs1.push(
+    subDoc1.push(
       path.call(
         print,
         "constKeyword" as keyof StringDefinition["constKeyword"],
       ),
     );
-    addNonBreakingSeparator(subDocs1);
+    addNonBreakingWhitespace(subDoc1);
   }
 
   if (stringDefinition.alignedModifier !== undefined) {
-    subDocs1.push(
+    subDoc1.push(
       path.call(
         print,
         "alignedModifier" as keyof StringDefinition["alignedModifier"],
       ),
     );
-    addNonBreakingSeparator(subDocs1);
+    addNonBreakingWhitespace(subDoc1);
   }
 
-  subDocs1.push(path.call(print, "stringVariableKindToken"));
+  subDoc1.push(path.call(print, "stringVariableKindToken"));
 
-  const docs: Doc[] = [];
+  let doc: Doc[] = [];
 
-  docs.push(subDocs1);
-  addBreakingSeparator(docs);
+  doc.push(subDoc1);
+  doc = addBreakingWhitespace(doc);
 
-  const subDocs2: Doc[] = [];
+  const subDoc2: Doc = [];
 
-  subDocs2.push(path.call(print, "identifier"));
+  subDoc2.push(path.call(print, "identifier"));
 
   if (stringDefinition.assignmentPunctuator !== undefined) {
-    addNonBreakingSeparator(subDocs2);
-    subDocs2.push(
+    addNonBreakingWhitespace(subDoc2);
+    subDoc2.push(
       path.call(
         print,
         "assignmentPunctuator" as keyof StringDefinition[
@@ -76,31 +76,39 @@ export function printStringDefinition(
         ],
       ),
     );
-    docs.push(subDocs2);
+    doc.push(subDoc2);
 
-    addBreakingSeparator(docs);
+    doc = addBreakingWhitespace(doc);
 
-    const stringLiteralDocs = path.call(
+    const stringLiteralsDoc = path.call(
       print,
       "stringLiteral" as keyof StringDefinition["stringLiteral"],
-    ) as Doc[];
-    stringLiteralDocs.forEach((stringLiteralDoc, index) => {
-      if (index > 0) {
-        addBreakingSeparator(docs);
-      }
-      if (index === stringLiteralDocs.length - 1) {
-        docs.push([
-          stringLiteralDoc,
-          path.call(print, "semicolonPunctuator"),
-        ]);
-      } else {
-        docs.push(stringLiteralDoc);
-      }
-    });
+    );
+
+    if (Array.isArray(stringLiteralsDoc)) {
+      stringLiteralsDoc.forEach((stringLiteralDoc, index) => {
+        if (index > 0) {
+          doc = addBreakingWhitespace(doc);
+        }
+        if (index === (stringLiteralsDoc.length - 1)) {
+          doc.push([
+            stringLiteralDoc,
+            path.call(print, "semicolonPunctuator"),
+          ]);
+        } else {
+          doc.push(stringLiteralDoc);
+        }
+      });
+    } else {
+      doc.push([
+        stringLiteralsDoc,
+        path.call(print, "semicolonPunctuator"),
+      ]);
+    }
   } else {
-    subDocs2.push(path.call(print, "semicolonPunctuator"));
-    docs.push(subDocs2);
+    subDoc2.push(path.call(print, "semicolonPunctuator"));
+    doc.push(subDoc2);
   }
 
-  return fill(docs);
+  return fill(doc);
 }

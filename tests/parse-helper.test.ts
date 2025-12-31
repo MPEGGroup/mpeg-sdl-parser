@@ -22,7 +22,7 @@ const strictSdlParser = createStrictSdlParser();
 const lenientSdlParser = createLenientSdlParser();
 
 describe("Parse Helper Tests", () => {
-  test("Test collateParseErrors", async () => {
+  test("Test collateParseErrors - invalid sample specification", async () => {
     const sdlString = await fs.readFile(
       path.join(__dirname, "./sample-specifications/invalid.sdl"),
     ).then((buffer: Buffer) => buffer.toString());
@@ -44,13 +44,25 @@ describe("Parse Helper Tests", () => {
     expect(parseErrors[2].location!.column).toEqual(19);
   });
 
+  test("Test collateParseErrors - invalid elementary type definition", () => {
+    const sdlStringInput = new SdlStringInput(
+      "class A{bit transport_priority;}",
+    );
+    const parseTree = lenientSdlParser.parse(sdlStringInput);
+    const parseErrors = collateParseErrors(parseTree, sdlStringInput);
+
+    expect(parseErrors[0].message).toBe(
+      "SYNTACTIC ERROR: Missing expected node: <LengthAttribute> => { row: 1, column: 13, position: 12 }",
+    );
+  });
+
   test("Test collateParseErrors - no class parameter values in parenthesis fails to parse", () => {
     const sdlStringInput = new SdlStringInput("class A {ClassD d();}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token or node: <UnaryExpression> or <BinaryExpression> or + or - or <LengthofExpression> or <Identifier> or <BinaryLiteral> or <HexadecimalLiteral> or <MultipleCharacterLiteral> or <IntegerLiteral> or <DecimalLiteral> or <FloatingPointLiteral> or ( => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Missing expected token or node: <BinaryExpression> or <UnaryExpression> or - or + or <LengthofExpression> or <Identifier> or <BinaryLiteral> or <DecimalLiteral> or <FloatingPointLiteral> or <HexadecimalLiteral> or <IntegerLiteral> or <MultipleCharacterLiteral> or ( => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -70,7 +82,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected node: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Missing expected node: <BinaryExpression> or <UnaryExpression> => { row: 1, column: 21, position: 20 }",
     );
   });
 
@@ -90,7 +102,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected node: <UnaryExpression> or <BinaryExpression> => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Missing expected node: <BinaryExpression> or <UnaryExpression> => { row: 1, column: 21, position: 20 }",
     );
   });
 

@@ -1,7 +1,7 @@
 import { AstPath, type Doc } from "prettier";
 import {
-  addBreakingSeparator,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ForStatement } from "../ast/node/for-statement.ts";
@@ -11,21 +11,20 @@ export function printForStatement(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const forStatement = path.node;
-  const docs: Doc[] = [];
+  const doc: Doc = [];
+  let subDoc: Doc = [];
 
-  docs.push(path.call(print, "forKeyword"));
-  addNonBreakingSeparator(docs);
+  doc.push(path.call(print, "forKeyword"));
+  addNonBreakingWhitespace(doc);
 
-  const subDocs: Doc[] = [];
-
-  subDocs.push(path.call(print, "openParenthesisPunctuator"));
+  subDoc.push(path.call(print, "openParenthesisPunctuator"));
 
   if (forStatement.expression1 !== undefined) {
-    subDocs.push(
+    subDoc.push(
       path.call(print, "expression1" as keyof ForStatement["expression1"]),
     );
   } else if (forStatement.computedElementaryDefinition !== undefined) {
-    subDocs.push(
+    subDoc.push(
       path.call(
         print,
         "computedElementaryDefinition" as keyof ForStatement[
@@ -34,7 +33,7 @@ export function printForStatement(
       ),
     );
   } else if (forStatement.semicolon1Punctuator !== undefined) {
-    subDocs.push(
+    subDoc.push(
       path.call(
         print,
         "semicolon1Punctuator" as keyof ForStatement["semicolon1Punctuator"],
@@ -43,23 +42,23 @@ export function printForStatement(
   }
 
   if (forStatement.expression2 !== undefined) {
-    addBreakingSeparator(subDocs);
-    subDocs.push(
+    subDoc = addBreakingWhitespace(subDoc);
+    subDoc.push(
       path.call(print, "expression2" as keyof ForStatement["expression2"]),
     );
   }
-  subDocs.push(path.call(print, "semicolon2Punctuator"));
+  subDoc.push(path.call(print, "semicolon2Punctuator"));
   if (forStatement.expression3 !== undefined) {
-    addBreakingSeparator(subDocs);
-    subDocs.push(
+    subDoc = addBreakingWhitespace(subDoc);
+    subDoc.push(
       path.call(print, "expression3" as keyof ForStatement["expression3"]),
     );
   }
-  subDocs.push(path.call(print, "closeParenthesisPunctuator"));
-  addNonBreakingSeparator(subDocs);
+  subDoc.push(path.call(print, "closeParenthesisPunctuator"));
+  addNonBreakingWhitespace(subDoc);
 
-  docs.push(subDocs);
-  docs.push(path.call(print, "statement"));
+  doc.push(subDoc);
+  doc.push(path.call(print, "statement"));
 
-  return docs;
+  return doc;
 }

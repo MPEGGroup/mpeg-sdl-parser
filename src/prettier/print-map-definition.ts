@@ -2,8 +2,8 @@ import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { MapDefinition } from "../ast/node/map-definition.ts";
 import {
-  addBreakingSeparator,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 
 export function printMapDefinition(
@@ -11,34 +11,34 @@ export function printMapDefinition(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const mapDefinition = path.node;
-  const docs = [];
+  let doc: Doc = [];
 
   if (mapDefinition.reservedKeyword) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "reservedKeyword" as keyof MapDefinition["reservedKeyword"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
   if (mapDefinition.legacyKeyword) {
-    docs.push(
+    doc.push(
       path.call(print, "legacyKeyword" as keyof MapDefinition["legacyKeyword"]),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
   if (mapDefinition.elementaryType !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "elementaryType" as keyof MapDefinition["elementaryType"],
       ),
     );
   } else if (mapDefinition.classIdentifier !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "classIdentifier" as keyof MapDefinition["classIdentifier"],
@@ -46,22 +46,22 @@ export function printMapDefinition(
     );
   }
 
-  addBreakingSeparator(docs);
+  doc = addBreakingWhitespace(doc);
 
-  const subDocs: Doc[] = [];
+  const subDoc: Doc = [];
 
-  subDocs.push(path.call(print, "relationalLessThanPunctuator"));
-  subDocs.push(path.call(print, "mapIdentifier"));
-  subDocs.push(path.call(print, "relationalGreaterThanPunctuator"));
+  subDoc.push(path.call(print, "relationalLessThanPunctuator"));
+  subDoc.push(path.call(print, "mapIdentifier"));
+  subDoc.push(path.call(print, "relationalGreaterThanPunctuator"));
 
-  docs.push(subDocs);
+  doc.push(subDoc);
 
-  addBreakingSeparator(docs);
+  doc = addBreakingWhitespace(doc);
 
-  docs.push([
+  doc.push([
     path.call(print, "identifier"),
     path.call(print, "semicolonPunctuator"),
   ]);
 
-  return docs;
+  return doc;
 }

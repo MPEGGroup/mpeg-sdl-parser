@@ -38,15 +38,15 @@ export function printAbstractArrayDimension(
     }
     case ArrayDimensionKind.IMPLICIT: {
       const node = path.node as ImplicitArrayDimension;
-      const docs = [];
+      const doc: Doc = [];
 
-      docs.push(
+      doc.push(
         path.call(print, "openBracketPunctuator"),
       );
-      docs.push("[");
+      doc.push("[");
 
       if (node.rangeStart !== undefined) {
-        docs.push(
+        doc.push(
           path.call(
             print,
             "rangeStart" as keyof ImplicitArrayDimension["rangeStart"],
@@ -55,13 +55,13 @@ export function printAbstractArrayDimension(
       }
 
       if (node.rangeOperator !== undefined) {
-        docs.push(
+        doc.push(
           path.call(
             print,
             "rangeOperator" as keyof ImplicitArrayDimension["rangeOperator"],
           ),
         );
-        docs.push(
+        doc.push(
           path.call(
             print,
             "rangeEnd" as keyof ImplicitArrayDimension["rangeEnd"],
@@ -69,15 +69,15 @@ export function printAbstractArrayDimension(
         );
       }
 
-      docs.push(
+      doc.push(
         path.call(print, "closeBracketPunctuator"),
       );
-      return docs;
+      return doc;
     }
 
     default: {
       const exhaustiveCheck: never = arrayDimensionKind;
-      throw new Error(
+      throw new InternalParseError(
         "Unreachable code reached, arrayDimensionKind == " + exhaustiveCheck,
       );
     }

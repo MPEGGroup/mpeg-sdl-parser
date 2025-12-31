@@ -1,10 +1,8 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import {
-  addIndentedBlock,
   addIndentedStatements,
-  addNonBreakingSeparator,
-  removeLeadingBlankline,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 import type { CaseClause } from "../ast/node/case-clause.ts";
 
@@ -13,45 +11,48 @@ export function printCaseClause(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const caseClause = path.node;
+  let doc: Doc = [];
 
-  const docs: Doc[] = [];
+  doc.push(path.call(print, "caseKeyword"));
+  addNonBreakingWhitespace(doc);
 
-  docs.push(path.call(print, "caseKeyword"));
-  addNonBreakingSeparator(docs);
-
-  docs.push([
+  doc.push([
     path.call(print, "value"),
     path.call(print, "colonPunctuator"),
   ]);
 
-  const statementDocs = [];
+  const statementsDocs: Doc[] = [];
 
   if (caseClause.statements.length > 0) {
-    statementDocs.push(...path.map(print, "statements"));
+    statementsDocs.push(path.map(print, "statements"));
   }
-
   if (caseClause.breakKeyword !== undefined) {
-    statementDocs.push([
+    statementsDocs.push([[
       path.call(print, "breakKeyword" as keyof CaseClause["breakKeyword"]),
       path.call(
         print,
         "semicolonPunctuator" as keyof CaseClause["semicolonPunctuator"],
       ),
-    ]);
+    ]]);
   }
 
   if (caseClause.openBracePunctuator !== undefined) {
-    docs.push(" ");
-    addIndentedBlock(
-      docs,
-      statementDocs,
-      caseClause.openBracePunctuator,
-      caseClause.closeBracePunctuator!,
+    doc.push(" ");
+    doc = addIndentedStatements(
+      doc,
+      statementsDocs,
+      path.call(
+        print,
+        "openBracePunctuator" as keyof CaseClause["openBracePunctuator"],
+      ),
+      path.call(
+        print,
+        "closeBracePunctuator" as keyof CaseClause["closeBracePunctuator"],
+      ),
     );
   } else {
-    removeLeadingBlankline(statementDocs);
-    addIndentedStatements(docs, statementDocs);
+    doc = addIndentedStatements(doc, statementsDocs);
   }
 
-  return docs;
+  return doc;
 }

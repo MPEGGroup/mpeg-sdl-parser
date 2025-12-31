@@ -5,8 +5,9 @@ import { NodeKind } from "../ast/node/enum/node-kind.ts";
 import { StatementKind } from "../ast/node/enum/statement-kind.ts";
 import type { Specification } from "../ast/node/specification.ts";
 import {
-  addIfNoTrailingHardline,
-  removeLeadingBlankline,
+  addTrailingHardline,
+  endsWithHardline,
+  removeLeadingBlanklines,
 } from "./util/print-utils.ts";
 
 const { hardline } = doc.builders;
@@ -14,8 +15,8 @@ const { hardline } = doc.builders;
 export function printSpecification(
   path: AstPath<Specification>,
   print: (path: AstPath<AbstractNode>) => Doc,
-): doc.builders.Doc {
-  const docs: Doc[] = [];
+): Doc {
+  const doc: Doc = [];
   const node = path.node;
   let previousStatementKind: StatementKind | undefined;
 
@@ -30,19 +31,21 @@ export function printSpecification(
         ((statementKind !== previousStatementKind) ||
           (statementKind !== StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION))
       ) {
-        docs.push(hardline);
+        doc.push(hardline);
       }
       previousStatementKind = statementKind;
     }
 
-    const globalDocs = path.call(print, "children", i);
+    let globalDoc = path.call(print, "children", i);
 
-    removeLeadingBlankline(globalDocs);
+    globalDoc = removeLeadingBlanklines(globalDoc);
 
-    docs.push(globalDocs);
+    if (!endsWithHardline(globalDoc)) {
+      globalDoc = addTrailingHardline(globalDoc);
+    }
 
-    addIfNoTrailingHardline(docs, hardline);
+    doc.push(globalDoc);
   }
 
-  return docs;
+  return doc;
 }

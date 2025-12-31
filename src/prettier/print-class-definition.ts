@@ -1,7 +1,7 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ClassDefinition } from "../ast/node/class-definition.ts";
-import { addNonBreakingSeparator } from "./util/print-utils.ts";
+import { addNonBreakingWhitespace } from "./util/print-utils.ts";
 
 export function printClassDefinition(
   path: AstPath<ClassDefinition>,
@@ -9,27 +9,27 @@ export function printClassDefinition(
 ): Doc {
   const classDefinition = path.node;
 
-  const docs = [];
+  const doc: Doc = [];
 
   if (classDefinition.legacyKeyword) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "legacyKeyword" as keyof ClassDefinition["legacyKeyword"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
-  docs.push(path.call(print, "classIdentifier"));
-  addNonBreakingSeparator(docs);
+  doc.push(path.call(print, "classIdentifier"));
+  addNonBreakingWhitespace(doc);
 
-  const identifierDocs = [
+  const identifierDoc = [
     path.call(print, "identifier"),
   ];
 
   if (classDefinition.parameterValueList !== undefined) {
-    identifierDocs.push([
+    identifierDoc.push([
       path.call(
         print,
         "parameterValueList" as keyof ClassDefinition["parameterValueList"],
@@ -37,8 +37,8 @@ export function printClassDefinition(
     ]);
   }
 
-  docs.push(identifierDocs);
-  docs.push(path.call(print, "semicolonPunctuator"));
+  doc.push(identifierDoc);
+  doc.push(path.call(print, "semicolonPunctuator"));
 
-  return docs;
+  return doc;
 }

@@ -1,9 +1,9 @@
 import { type AstPath, type Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import {
-  addBreakingSeparator,
-  addIndentedBlock,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addIndentedStatements,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 import type { ClassDeclaration } from "../ast/node/class-declaration.ts";
 
@@ -14,86 +14,86 @@ export function printClassDeclaration(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const classDeclaration = path.node;
-  const docs: Doc = [];
+  let doc: Doc = [];
 
   if (classDeclaration.alignedModifier !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "alignedModifier" as keyof ClassDeclaration["alignedModifier"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
   if (classDeclaration.expandableModifier !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "expandableModifier" as keyof ClassDeclaration["expandableModifier"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
   if (classDeclaration.abstractKeyword) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "abstractKeyword" as keyof ClassDeclaration["abstractKeyword"],
       ),
     );
-    addNonBreakingSeparator(docs);
+    addNonBreakingWhitespace(doc);
   }
 
-  docs.push(
+  doc.push(
     path.call(print, "classKeyword"),
   );
 
-  addNonBreakingSeparator(docs);
+  addNonBreakingWhitespace(doc);
 
-  const identifierDocs: Doc[] = [];
-  identifierDocs.push(path.call(print, "identifier"));
+  const identifierDoc: Doc = [];
+  identifierDoc.push(path.call(print, "identifier"));
 
   if (classDeclaration.parameterList !== undefined) {
-    identifierDocs.push(
+    identifierDoc.push(
       path.call(
         print,
         "parameterList" as keyof ClassDeclaration["parameterList"],
       ),
     );
   }
-  docs.push(identifierDocs);
-  addBreakingSeparator(docs);
+  doc.push(identifierDoc);
+  doc = addBreakingWhitespace(doc);
 
   if (classDeclaration.extendsModifier !== undefined) {
-    docs.push(fill(
+    doc.push(fill(
       path.call(
         print,
         "extendsModifier" as keyof ClassDeclaration["extendsModifier"],
       ) as Doc[],
     ));
-    addBreakingSeparator(docs);
+    doc = addBreakingWhitespace(doc);
   }
 
   if (classDeclaration.bitModifier !== undefined) {
-    docs.push(fill(
+    doc.push(fill(
       path.call(
         print,
         "bitModifier" as keyof ClassDeclaration["bitModifier"],
       ) as Doc[],
     ));
-    addBreakingSeparator(docs);
+    doc = addBreakingWhitespace(doc);
   }
 
-  const statementDocs = path.map(print, "statements");
+  const statementsDoc = path.map(print, "statements");
 
-  addIndentedBlock(
-    docs,
-    statementDocs,
-    classDeclaration.openBracePunctuator,
-    classDeclaration.closeBracePunctuator,
+  doc = addIndentedStatements(
+    doc,
+    statementsDoc,
+    path.call(print, "openBracePunctuator"),
+    path.call(print, "closeBracePunctuator"),
   );
 
-  return fill(docs);
+  return fill(doc);
 }

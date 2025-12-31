@@ -33,4 +33,39 @@ describe("Print If tests", () => {
         "}\n",
     );
   });
+
+  test("prettified if output without compound if and without compound else statement is as expected", async () => {
+    await testPrettierScenario(
+      "class A{if (i) i++; else i--;}",
+      "class A {\n" +
+        "  if (i)\n" +
+        "    i++;\n" +
+        "  else\n" +
+        "    i--;\n" +
+        "}\n",
+      "class A {\n" +
+        "  if (i)\n" +
+        "    i++;\n" +
+        "  else\n" +
+        "    i--;\n" +
+        "}\n",
+    );
+  });
+
+  test("prettified if output with complex condition", async () => {
+    await testPrettierScenario(
+      "class A{if (adaptation_field_control == 0b01 || adaptation_field_control == 0b11) \n\n{ bit(8) data_byte[N]; }}",
+      "class A {\n" +
+        "  if (adaptation_field_control == 0b01 || adaptation_field_control == 0b11) {\n" +
+        "    bit(8) data_byte[N];\n" +
+        "  }\n" +
+        "}\n",
+      "class A {\n" +
+        "  if (adaptation_field_control == 0b01 ||\n" +
+        "    adaptation_field_control == 0b11) {\n" +
+        "    bit(8) data_byte[N];\n" +
+        "  }\n" +
+        "}\n",
+    );
+  });
 });

@@ -8,14 +8,14 @@ export function printExpandableModifier(
 ): Doc {
   const expandableModifier = path.node;
 
-  const docs: Doc[] = [];
+  const doc: Doc = [];
 
-  docs.push(
+  doc.push(
     path.call(print, "expandableKeyword"),
   );
 
   if (expandableModifier.maxClassSize !== undefined) {
-    docs.push(
+    doc.push(
       [
         path.call(
           print,
@@ -37,5 +37,5 @@ export function printExpandableModifier(
     );
   }
 
-  return docs;
+  return doc;
 }

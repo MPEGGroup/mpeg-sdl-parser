@@ -170,9 +170,11 @@ Generate HTML API Documentation:
 ### Overview
 
 The concrete syntax parser is implemented using
-[Lezer](https://lezer.codemirror.net) using the Lezer grammar defined in
-[sdl.lezer.grammar](grammar/sdl.lezer.grammar). This framework was chosen as it
-provides robust error recovery whilst parsing and integrates well with the web
+[Lezer](https://lezer.codemirror.net) and the Lezer grammar defined in
+[sdl.lezer.grammar](grammar/sdl.lezer.grammar). This framework was chosen as it:
+
+* Provides robust error recovery whilst parsing.
+* Integrates well with the web
 based code editor framework [Codemirror](https://codemirror.net) which is used
 in the [MPEG SDL Editor](https://github.com/MPEGGroup/mpeg-sdl-editor).
 
@@ -204,6 +206,7 @@ classDiagram
   class AbstractNode {
     <<Abstract>>
     nodeKind: NodeKind
+    isCompositeNode: boolean
   }
 
   class AbstractLeafNode {
@@ -249,6 +252,8 @@ classDiagram
 
   AbstractCompositeNode --|> AbstractNode
   AbstractCompositeNode --> "*" AbstractNode : children
+  AbstractCompositeNode --> "0..1" Token : startToken
+  AbstractCompositeNode --> "0..1" Token : endToken
 
   Token --|> AbstractLeafNode
   Token --> Location
@@ -257,7 +262,7 @@ classDiagram
   TraversingVisitor --|> NodeVisitor
   TraversingVisitor --> NodeHandler
 
-  CompositeNodeY "*" --|> AbstractCompositeNode
+  CompositeNodeXYZ "*" --|> AbstractCompositeNode
   Specification --|> AbstractCompositeNode
 ```
 

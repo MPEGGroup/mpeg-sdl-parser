@@ -2,8 +2,8 @@ import { type AstPath, type Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ComputedElementaryTypeDefinition } from "../ast/node/computed-elementary-type-definition.ts";
 import {
-  addBreakingSeparator,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
@@ -13,14 +13,13 @@ export function printComputedElementaryTypeDefinition(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const computedElementaryTypeDefinition = path.node;
+  let doc: Doc = [];
 
-  const docs = [];
-
-  docs.push(path.call(print, "computedKeyword"));
-  addBreakingSeparator(docs);
+  doc.push(path.call(print, "computedKeyword"));
+  doc = addBreakingWhitespace(doc);
 
   if (computedElementaryTypeDefinition.constKeyword) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "constKeyword" as keyof ComputedElementaryTypeDefinition[
@@ -28,17 +27,17 @@ export function printComputedElementaryTypeDefinition(
         ],
       ),
     );
-    addBreakingSeparator(docs);
+    doc = addBreakingWhitespace(doc);
   }
 
-  docs.push(path.call(print, "elementaryType"));
-  addBreakingSeparator(docs);
+  doc.push(path.call(print, "elementaryType"));
+  doc = addBreakingWhitespace(doc);
 
-  docs.push(path.call(print, "identifier"));
+  doc.push(path.call(print, "identifier"));
 
   if (computedElementaryTypeDefinition.value !== undefined) {
-    addNonBreakingSeparator(docs);
-    docs.push(
+    addNonBreakingWhitespace(doc);
+    doc.push(
       path.call(
         print,
         "assignmentOperator" as keyof ComputedElementaryTypeDefinition[
@@ -46,8 +45,8 @@ export function printComputedElementaryTypeDefinition(
         ],
       ),
     );
-    addBreakingSeparator(docs);
-    docs.push(
+    doc = addBreakingWhitespace(doc);
+    doc.push(
       path.call(
         print,
         "value" as keyof ComputedElementaryTypeDefinition["value"],
@@ -55,7 +54,7 @@ export function printComputedElementaryTypeDefinition(
     );
   }
 
-  docs.push(path.call(print, "semicolonPunctuator"));
+  doc.push(path.call(print, "semicolonPunctuator"));
 
-  return fill(docs);
+  return fill(doc);
 }

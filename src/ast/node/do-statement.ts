@@ -11,8 +11,8 @@ import type { Token } from "./token.ts";
 export class DoStatement extends AbstractStatement {
   constructor(
     public readonly doKeyword: RequiredNode<Token>,
-    public readonly whileKeyword: RequiredNode<Token>,
     public readonly compoundStatement: RequiredNode<CompoundStatement>,
+    public readonly whileKeyword: RequiredNode<Token>,
     public readonly openParenthesisPunctuator: RequiredNode<Token>,
     public readonly condition: RequiredNode<
       | AbstractExpression

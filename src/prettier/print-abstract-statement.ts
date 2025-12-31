@@ -1,5 +1,5 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { addIndentedBlock } from "./util/print-utils.ts";
+import { addIndentedStatements } from "./util/print-utils.ts";
 import { printArrayDefinition } from "./print-array-definition.ts";
 import { printDoStatement } from "./print-do-statement.ts";
 import { printForStatement } from "./print-for-statement.ts";
@@ -40,20 +40,16 @@ function printCompoundStatement(
   path: AstPath<CompoundStatement>,
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
-  const compoundStatement = path.node;
+  let doc: Doc = [];
 
-  const docs: Doc = [];
-
-  const statementDocs = path.map(print, "statements");
-
-  addIndentedBlock(
-    docs,
-    statementDocs,
-    compoundStatement.openBracePunctuator,
-    compoundStatement.closeBracePunctuator,
+  const statementsDoc = path.map(print, "statements");
+  doc = addIndentedStatements(
+    doc,
+    statementsDoc,
+    path.call(print, "openBracePunctuator"),
+    path.call(print, "closeBracePunctuator"),
   );
-
-  return docs;
+  return doc;
 }
 
 function printExpressionStatement(
@@ -119,7 +115,7 @@ export function printAbstractStatement(
       return printWhileStatement(path as AstPath<WhileStatement>, print);
     default: {
       const exhaustiveCheck: never = statementKind;
-      throw new Error(
+      throw new InternalParseError(
         "Unreachable code reached, statementKind == " + exhaustiveCheck,
       );
     }

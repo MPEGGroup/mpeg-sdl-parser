@@ -2,8 +2,8 @@ import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { MapDeclaration } from "../ast/node/map-declaration.ts";
 import {
-  addIndentedBlock,
-  addNonBreakingSeparator,
+  addIndentedStatements,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 
 export function printMapDeclaration(
@@ -11,29 +11,29 @@ export function printMapDeclaration(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const mapDeclaration = path.node;
-  const docs = [];
+  const doc: Doc = [];
 
-  docs.push(path.call(print, "mapKeyword"));
+  doc.push(path.call(print, "mapKeyword"));
 
-  addNonBreakingSeparator(docs);
+  addNonBreakingWhitespace(doc);
 
-  docs.push(path.call(print, "identifier"));
+  doc.push(path.call(print, "identifier"));
 
-  addNonBreakingSeparator(docs);
+  addNonBreakingWhitespace(doc);
 
-  const subDocs: Doc[] = [
+  const subDoc: Doc = [
     path.call(print, "openParenthesisPunctuator"),
   ];
 
   if (mapDeclaration.outputElementaryType !== undefined) {
-    subDocs.push(
+    subDoc.push(
       path.call(
         print,
         "outputElementaryType" as keyof MapDeclaration["outputElementaryType"],
       ),
     );
   } else if (mapDeclaration.outputClassIdentifier !== undefined) {
-    subDocs.push(
+    subDoc.push(
       path.call(
         print,
         "outputClassIdentifier" as keyof MapDeclaration[
@@ -43,15 +43,15 @@ export function printMapDeclaration(
     );
   }
 
-  subDocs.push(path.call(print, "closeParenthesisPunctuator"));
+  subDoc.push(path.call(print, "closeParenthesisPunctuator"));
 
-  docs.push(subDocs);
-  addNonBreakingSeparator(docs);
+  doc.push(subDoc);
+  addNonBreakingWhitespace(doc);
 
-  const entrySubDocs: Doc[] = [];
+  const entriesSubDoc: Doc = [];
 
   for (let i = 0; i < mapDeclaration.mapEntries.length; i++) {
-    const entrySubDoc: Doc[] = [];
+    const entrySubDoc: Doc = [];
 
     entrySubDoc.push(path.call(print, "mapEntries", i));
 
@@ -63,14 +63,13 @@ export function printMapDeclaration(
       }
     }
 
-    entrySubDocs.push(entrySubDoc);
+    entriesSubDoc.push(entrySubDoc);
   }
 
-  addIndentedBlock(
-    docs,
-    entrySubDocs,
-    mapDeclaration.openBracePunctuator,
-    mapDeclaration.closeBracePunctuator,
+  return addIndentedStatements(
+    doc,
+    entriesSubDoc,
+    path.call(print, "openBracePunctuator"),
+    path.call(print, "closeBracePunctuator"),
   );
-  return docs;
 }

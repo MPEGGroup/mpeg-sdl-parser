@@ -8,13 +8,13 @@ export function printAlignedModifier(
 ): Doc {
   const alignedModifier = path.node;
 
-  const docs: Doc[] = [];
+  const doc: Doc = [];
 
   const d = path.call(print, "alignedKeyword");
-  docs.push(d);
+  doc.push(d);
 
   if (alignedModifier.openParenthesisPunctuator) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "openParenthesisPunctuator" as keyof AlignedModifier[
@@ -25,7 +25,7 @@ export function printAlignedModifier(
   }
 
   if (alignedModifier.bitCountModifierToken) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "bitCountModifierToken" as keyof AlignedModifier[
@@ -36,7 +36,7 @@ export function printAlignedModifier(
   }
 
   if (alignedModifier.closeParenthesisPunctuator) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "closeParenthesisPunctuator" as keyof AlignedModifier[
@@ -46,5 +46,5 @@ export function printAlignedModifier(
     );
   }
 
-  return docs;
+  return doc;
 }

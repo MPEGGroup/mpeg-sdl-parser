@@ -1,5 +1,5 @@
 import { AstPath, type Doc, doc } from "prettier";
-import { addNonBreakingSeparator } from "./util/print-utils.ts";
+import { addNonBreakingWhitespace } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { Parameter } from "../ast/node/parameter.ts";
 
@@ -8,17 +8,17 @@ export function printParameter(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): doc.builders.Doc {
   const parameter = path.node;
-  const docs = [];
+  const doc: Doc = [];
 
   if (parameter.classIdentifier !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "classIdentifier" as keyof Parameter["classIdentifier"],
       ),
     );
   } else if (parameter.elementaryType !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "elementaryType" as keyof Parameter["elementaryType"],
@@ -26,9 +26,9 @@ export function printParameter(
     );
   }
 
-  addNonBreakingSeparator(docs);
+  addNonBreakingWhitespace(doc);
 
-  docs.push(path.call(print, "identifier"));
+  doc.push(path.call(print, "identifier"));
 
-  return docs;
+  return doc;
 }

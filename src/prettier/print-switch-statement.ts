@@ -1,7 +1,7 @@
 import { AstPath, type Doc } from "prettier";
 import {
-  addIndentedBlock,
-  addNonBreakingSeparator,
+  addIndentedStatements,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { SwitchStatement } from "../ast/node/switch-statement.ts";
@@ -12,38 +12,35 @@ export function printSwitchStatement(
 ): Doc {
   const switchStatement = path.node;
 
-  const docs = [];
+  const doc: Doc = [];
 
-  docs.push(path.call(print, "switchKeyword"));
-  addNonBreakingSeparator(docs);
-
-  docs.push([
+  doc.push(path.call(print, "switchKeyword"));
+  addNonBreakingWhitespace(doc);
+  doc.push([
     path.call(print, "openParenthesisPunctuator"),
     path.call(print, "expression"),
     path.call(print, "closeParenthesisPunctuator"),
   ]);
 
-  addNonBreakingSeparator(docs);
+  addNonBreakingWhitespace(doc);
 
-  const caseDocs: Doc[] = [];
+  const casesDoc: Doc = [];
 
-  caseDocs.push(
+  casesDoc.push(
     ...path.map(print, "caseClauses"),
   );
 
   if (switchStatement.defaultClause !== undefined) {
-    caseDocs.push(path.call(
+    casesDoc.push(path.call(
       print,
       "defaultClause" as keyof SwitchStatement["defaultClause"],
     ));
   }
 
-  addIndentedBlock(
-    docs,
-    caseDocs,
-    switchStatement.openBracePunctuator,
-    switchStatement.closeBracePunctuator,
+  return addIndentedStatements(
+    doc,
+    casesDoc,
+    path.call(print, "openBracePunctuator"),
+    path.call(print, "closeBracePunctuator"),
   );
-
-  return docs;
 }

@@ -1,7 +1,7 @@
 import { AstPath, type Doc, doc } from "prettier";
 import {
-  addBreakingSeparator,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { DoStatement } from "../ast/node/do-statement.ts";
@@ -12,20 +12,20 @@ export function printDoStatement(
   path: AstPath<DoStatement>,
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
-  const docs = [];
+  let doc: Doc = [];
 
-  docs.push(path.call(print, "doKeyword"));
-  addNonBreakingSeparator(docs);
-  docs.push(path.call(print, "compoundStatement"));
-  addNonBreakingSeparator(docs);
-  docs.push(path.call(print, "whileKeyword"));
-  addBreakingSeparator(docs);
-  docs.push([
+  doc.push(path.call(print, "doKeyword"));
+  addNonBreakingWhitespace(doc);
+  doc.push(path.call(print, "compoundStatement"));
+  addNonBreakingWhitespace(doc);
+  doc.push(path.call(print, "whileKeyword"));
+  doc = addBreakingWhitespace(doc);
+  doc.push([
     path.call(print, "openParenthesisPunctuator"),
     path.call(print, "condition"),
     path.call(print, "closeParenthesisPunctuator"),
     path.call(print, "semicolonPunctuator"),
   ]);
 
-  return fill(docs);
+  return fill(doc);
 }

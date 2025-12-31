@@ -2,8 +2,8 @@ import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { BitModifier } from "../ast/node/bit-modifier.ts";
 import {
-  addBreakingSeparator,
-  addNonBreakingSeparator,
+  addBreakingWhitespace,
+  addNonBreakingWhitespace,
 } from "./util/print-utils.ts";
 
 export function printBitModifier(
@@ -11,38 +11,38 @@ export function printBitModifier(
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
   const bitModifier = path.node;
-  const docs = [];
+  let doc: Doc = [];
 
-  docs.push(path.call(print, "colonPunctuator"));
-  addNonBreakingSeparator(docs);
+  doc.push(path.call(print, "colonPunctuator"));
+  addNonBreakingWhitespace(doc);
 
-  const subDocs = [];
+  const subDoc: Doc = [];
 
-  subDocs.push(path.call(print, "bitKeyword"));
-  subDocs.push(path.call(print, "openParenthesisPunctuator"));
-  subDocs.push(path.call(print, "length"));
-  subDocs.push(path.call(print, "closeParenthesisPunctuator"));
-  docs.push(subDocs);
-  addNonBreakingSeparator(docs);
+  subDoc.push(path.call(print, "bitKeyword"));
+  subDoc.push(path.call(print, "openParenthesisPunctuator"));
+  subDoc.push(path.call(print, "length"));
+  subDoc.push(path.call(print, "closeParenthesisPunctuator"));
+  doc.push(subDoc);
+  addNonBreakingWhitespace(doc);
 
   if (bitModifier.identifier !== undefined) {
-    docs.push(
+    doc.push(
       path.call(
         print,
         "identifier" as keyof BitModifier["identifier"],
       ),
     );
-    addNonBreakingSeparator(docs);
-    docs.push(
+    addNonBreakingWhitespace(doc);
+    doc.push(
       path.call(
         print,
         "assignmentOperator" as keyof BitModifier["assignmentOperator"],
       ),
     );
-    addBreakingSeparator(docs);
+    doc = addBreakingWhitespace(doc);
   }
 
-  docs.push(path.call(print, "classId"));
+  doc.push(path.call(print, "classId"));
 
-  return docs;
+  return doc;
 }
