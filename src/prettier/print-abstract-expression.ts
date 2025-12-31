@@ -97,7 +97,6 @@ function printBinaryExpression(
 ): Doc {
   let subDoc: Doc = [];
 
-  // TODO: try to improve this
   subDoc.push(path.call(print, "leftOperand"));
   addNonBreakingWhitespace(subDoc);
   subDoc.push(path.call(print, "binaryOperator"));

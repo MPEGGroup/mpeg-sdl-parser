@@ -125,8 +125,6 @@ function fetchAstNode<T extends AbstractNode>(
   }
 
   // use a node if we already have one from a previous call
-  // TODO: remove me
-  // let node = buildContext.nextNodes.pop() as T | undefined;
   const currentState =
     buildContext.stateStack[buildContext.stateStack.length - 1];
   let node = currentState.nextNode as T | undefined;
@@ -146,7 +144,6 @@ function fetchAstNode<T extends AbstractNode>(
 
     // if the node was required, and we have reached end of siblings, fabricate a MissingError node
     // to satisfy the consumption request for remaining siblings
-    // TODO: try without this?
     if (currentState.isEndOfSiblings) {
       logger.debug(
         currentState.indent +
@@ -230,7 +227,6 @@ function fetchAstNode<T extends AbstractNode>(
     }
   }
 
-  // TODO: remove me
   if (optional) {
     // if it was optional and the node kind did not match
     // store the node for the next call and return undefined
@@ -239,8 +235,6 @@ function fetchAstNode<T extends AbstractNode>(
         `Logic error: buildContext.nextNode should be undefined before storing a node.`,
       );
     }
-    // TODO: remove me
-    // buildContext.nextNodes.push(node);
     currentState.nextNode = node;
 
     return undefined;
