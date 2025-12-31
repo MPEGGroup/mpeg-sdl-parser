@@ -173,10 +173,10 @@ The concrete syntax parser is implemented using
 [Lezer](https://lezer.codemirror.net) and the Lezer grammar defined in
 [sdl.lezer.grammar](grammar/sdl.lezer.grammar). This framework was chosen as it:
 
-* Provides robust error recovery whilst parsing.
-* Integrates well with the web
-based code editor framework [Codemirror](https://codemirror.net) which is used
-in the [MPEG SDL Editor](https://github.com/MPEGGroup/mpeg-sdl-editor).
+- Provides robust error recovery whilst parsing.
+- Integrates well with the web based code editor framework
+  [Codemirror](https://codemirror.net) which is used in the
+  [MPEG SDL Editor](https://github.com/MPEGGroup/mpeg-sdl-editor).
 
 For reference purposes an SDL EBNF grammar is also provided in
 [sdl.ebnf.grammar](grammar/sdl.ebnf.grammar)

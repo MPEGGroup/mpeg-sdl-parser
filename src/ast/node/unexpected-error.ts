@@ -5,7 +5,7 @@ import { NodeKind } from "./enum/node-kind.ts";
 
 export class UnexpectedError extends AbstractCompositeNode {
   constructor(
-    public readonly unexpectedToken : RequiredNode<AbstractNode>,
+    public readonly unexpectedToken: RequiredNode<AbstractNode>,
   ) {
     super(NodeKind.UNEXPECTED_ERROR, [unexpectedToken]);
   }
