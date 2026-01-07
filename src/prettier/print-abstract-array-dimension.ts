@@ -5,6 +5,7 @@ import { ArrayDimensionKind } from "../ast/node/enum/array-dimension-kind.ts";
 import type { ExplicitArrayDimension } from "../ast/node/explicit-array-dimension.ts";
 import type { ImplicitArrayDimension } from "../ast/node/implicit-array-dimension.ts";
 import type { PartialArrayDimension } from "../ast/node/partial-array-dimension.ts";
+import { InternalParseError } from "../parse-error.ts";
 
 export function printAbstractArrayDimension(
   path: AstPath<AbstractArrayDimension>,

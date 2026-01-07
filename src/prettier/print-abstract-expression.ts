@@ -9,6 +9,7 @@ import { ExpressionKind } from "../ast/node/enum/expression-kind.ts";
 import type { LengthofExpression } from "../ast/node/length-of-expression.ts";
 import type { BinaryExpression } from "../ast/node/binary-expression.ts";
 import type { UnaryExpression } from "../ast/node/unary-expression.ts";
+import { InternalParseError } from "../parse-error.ts";
 
 const { fill } = doc.builders;
 type IfBreak = doc.builders.IfBreak;
