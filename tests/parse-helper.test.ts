@@ -62,7 +62,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Expected one of: - ( + <BinaryExpression> <BinaryLiteral> <DecimalLiteral> <FloatingPointLiteral> <HexadecimalLiteral> <Identifier> <IntegerLiteral> <LengthofExpression> <MultipleCharacterLiteral> <UnaryExpression> => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Expected one of: - ( + <BinaryLiteral> <DecimalLiteral> <FloatingPointLiteral> <HexadecimalLiteral> <Identifier> <IntegerLiteral> <LengthofExpression> <MultipleCharacterLiteral> => { row: 1, column: 19, position: 18 }",
     );
   });
 

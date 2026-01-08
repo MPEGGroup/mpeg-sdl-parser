@@ -13,7 +13,6 @@ export const unaryExpressionRules = [
   {
     previous: -1,
     expected: [
-      ...expressionTypes,
       ...unaryOperatorTypes,
       TokenTypeId.LengthofExpression,
       TokenTypeId.Identifier,

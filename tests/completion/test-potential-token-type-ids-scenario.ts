@@ -1,33 +1,33 @@
 import { expect } from "bun:test";
 import { createLenientSdlParser } from "../../src/lezer/create-sdl-parser.ts";
 import { SdlStringInput } from "../../index.ts";
-import { getExpectedTokenTypeIds } from "../../src/completion/get-expected-token-type-ids.ts";
+import { getPotentialTokenTypeIds } from "../../src/completion/get-potential-token-type-ids.ts";
 
 const lenientSdlParser = createLenientSdlParser();
 
-export function testCompletionScenario(
+export function testPotentialTokenTypeIdsScenario(
   source: string,
-  expected: number[],
+  expectedTokenTypeIds: number[],
 ) {
   const sdlStringInput = new SdlStringInput(source);
   const parseTree = lenientSdlParser.parse(sdlStringInput);
   const cursor = parseTree.cursor();
 
-  const actualTokenTypeIds: number[] = [];
   do {
     if (cursor.type.isError) {
-      const tokenTypeIds = getExpectedTokenTypeIds(cursor);
-      if (tokenTypeIds) {
-        actualTokenTypeIds.push(...tokenTypeIds);
-      } else {
-        throw new Error("Expected token type IDs to be defined");
-      }
+      break;
     }
   } while (cursor.next());
 
-  // sort and remove duplicates
+  const actualTokenTypeIds = getPotentialTokenTypeIds(cursor);
+
+  if (!actualTokenTypeIds) {
+    throw new Error("Expected token type IDs to be defined");
+  }
+
+  // sort and remove duplicates as we have potentially collected from multiple error nodes
   actualTokenTypeIds.sort((a, b) => a - b);
   const uniqueActualTokenTypeIds = Array.from(new Set(actualTokenTypeIds));
 
-  expect(uniqueActualTokenTypeIds).toEqual(expected);
+  expect(uniqueActualTokenTypeIds).toEqual(expectedTokenTypeIds);
 }
