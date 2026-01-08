@@ -52,7 +52,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected node: <LengthAttribute> => { row: 1, column: 13, position: 12 }",
+      "SYNTACTIC ERROR: Expected: <LengthAttribute> => { row: 1, column: 13, position: 12 }",
     );
   });
 
@@ -62,7 +62,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token or node: <BinaryExpression> or <UnaryExpression> or - or + or <LengthofExpression> or <Identifier> or <BinaryLiteral> or <DecimalLiteral> or <FloatingPointLiteral> or <HexadecimalLiteral> or <IntegerLiteral> or <MultipleCharacterLiteral> or ( => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Expected one of: - ( + <BinaryExpression> <BinaryLiteral> <DecimalLiteral> <FloatingPointLiteral> <HexadecimalLiteral> <Identifier> <IntegerLiteral> <LengthofExpression> <MultipleCharacterLiteral> <UnaryExpression> => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -72,7 +72,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Unexpected token: computed => { row: 1, column: 17, position: 16 }",
+      "SYNTACTIC ERROR: Unexpected: computed => { row: 1, column: 17, position: 16 }",
     );
   });
 
@@ -82,7 +82,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected node: <BinaryExpression> or <UnaryExpression> => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Expected one of: <BinaryExpression> <UnaryExpression> => { row: 1, column: 21, position: 20 }",
     );
   });
 
@@ -92,7 +92,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: , or ) => { row: 1, column: 20, position: 19 }",
+      "SYNTACTIC ERROR: Expected one of: - , != ) * / & && % + < << <= == > >= >> | || => { row: 1, column: 20, position: 19 }",
     );
   });
 
@@ -102,7 +102,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected node: <BinaryExpression> or <UnaryExpression> => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Expected one of: <BinaryExpression> <UnaryExpression> => { row: 1, column: 21, position: 20 }",
     );
   });
 
@@ -114,7 +114,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      'SYNTACTIC ERROR: Missing expected token: " => { row: 1, column: 29, position: 28 }',
+      'SYNTACTIC ERROR: Expected: " => { row: 1, column: 29, position: 28 }',
     );
   });
 
@@ -126,7 +126,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: u => { row: 1, column: 25, position: 24 }",
+      "SYNTACTIC ERROR: Expected: u => { row: 1, column: 25, position: 24 }",
     );
   });
 
@@ -138,7 +138,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      'SYNTACTIC ERROR: Missing expected token: " => { row: 1, column: 27, position: 26 }',
+      'SYNTACTIC ERROR: Expected: " => { row: 1, column: 27, position: 26 }',
     );
   });
 
@@ -150,7 +150,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: u => { row: 1, column: 34, position: 33 }",
+      "SYNTACTIC ERROR: Expected: u => { row: 1, column: 34, position: 33 }",
     );
   });
 
@@ -162,7 +162,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token or node: const or <AlignedModifier> or utf8string or utf16string or utfstring or base64string => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Expected one of: base64string const utf16string utf8string utfstring <AlignedModifier> => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -174,7 +174,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Unexpected token: u <Identifier> => { row: 1, column: 29, position: 28 }",
+      "SYNTACTIC ERROR: Unexpected: u => { row: 1, column: 29, position: 28 }",
     );
   });
 
@@ -186,7 +186,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: u => { row: 1, column: 27, position: 26 }",
+      "SYNTACTIC ERROR: Expected: u => { row: 1, column: 27, position: 26 }",
     );
   });
 
@@ -198,7 +198,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Unexpected token: 8 <IntegerLiteral> => { row: 1, column: 28, position: 27 }",
+      "SYNTACTIC ERROR: Unexpected: 8 => { row: 1, column: 28, position: 27 }",
     );
   });
 
@@ -210,7 +210,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: 8 or 16 or 32 or 64 or 128 => { row: 1, column: 18, position: 17 }",
+      "SYNTACTIC ERROR: Expected one of: 8 16 32 64 128 => { row: 1, column: 18, position: 17 }",
     );
   });
 
@@ -222,7 +222,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected token: ) => { row: 1, column: 21, position: 20 }",
+      "SYNTACTIC ERROR: Expected: ) => { row: 1, column: 21, position: 20 }",
     );
   });
 
@@ -232,7 +232,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected node: <CompoundStatement> => { row: 1, column: 19, position: 18 }",
+      "SYNTACTIC ERROR: Expected: <CompoundStatement> => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -250,7 +250,7 @@ describe("Parse Helper Tests", () => {
     const parseErrors = collateParseErrors(parseTree, sdlStringInput);
 
     expect(parseErrors[0].message).toBe(
-      "SYNTACTIC ERROR: Missing expected node: <ClassDeclaration> or <MapDeclaration> or <ComputedElementaryTypeDefinition> => { row: 1, column: 1, position: 0 }",
+      "SYNTACTIC ERROR: Unknown token: § => { row: 1, column: 1, position: 0 }",
     );
   });
 

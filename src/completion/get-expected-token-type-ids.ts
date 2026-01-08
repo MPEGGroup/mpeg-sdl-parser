@@ -21,11 +21,14 @@ export function getExpectedTokenTypeIds(
   const parentCursorClone = errorCursor.node.cursor();
   const siblingCursorClone = errorCursor.node.cursor();
 
-  // look for parent token type, ignoring whitespace
+  // look for parent token type, ignoring whitespace and errors
   const parentTokenTypes: NodeType[] = [];
 
   while (parentCursorClone.parent()) {
-    if (parentCursorClone.type.id !== TokenTypeId.Whitespace) {
+    if (
+      (parentCursorClone.type.id !== TokenTypeId.Whitespace) &&
+      !parentCursorClone.type.isError
+    ) {
       parentTokenTypes.unshift(parentCursorClone.type);
       break;
     }
@@ -36,11 +39,14 @@ export function getExpectedTokenTypeIds(
     return undefined;
   }
 
-  // look for previous sibling token types, ignoring whitespace
+  // look for previous sibling token types, ignoring whitespace and errors
   const previousSiblingTokenTypes: NodeType[] = [];
 
   while (siblingCursorClone.prevSibling()) {
-    if (siblingCursorClone.type.id !== TokenTypeId.Whitespace) {
+    if (
+      (siblingCursorClone.type.id !== TokenTypeId.Whitespace) &&
+      !siblingCursorClone.type.isError
+    ) {
       previousSiblingTokenTypes.unshift(siblingCursorClone.type);
     }
   }
@@ -89,5 +95,8 @@ export function getExpectedTokenTypeIds(
     return undefined;
   }
 
-  return expectedTokenTypes;
+  // sort and remove duplicates
+  expectedTokenTypes.sort((a, b) => a - b);
+
+  return Array.from(new Set(expectedTokenTypes));
 }
