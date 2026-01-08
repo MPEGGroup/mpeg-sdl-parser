@@ -33,6 +33,7 @@ import { printStringDefinition } from "./print-string-definition.ts";
 import { printMapDefinition } from "./print-map-definition.ts";
 import { printComputedElementaryTypeDefinition } from "./print-computed-elementary-type-definition.ts";
 import { printElementaryTypeDefinition } from "./print-elementary-type-definition.ts";
+import { InternalParseError } from "../parse-error.ts";
 
 const { fill } = doc.builders;
 

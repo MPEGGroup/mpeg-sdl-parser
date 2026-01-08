@@ -4,7 +4,7 @@ import { type Input } from "@lezer/common";
 import { debugEnabled } from "../util/logger.ts";
 import { getContextTracker } from "./context-tracker.ts";
 import { styleTagsNodePropSource } from "./props/style-tags-node-prop-source.ts";
-import { blockStatementNodePropSource } from "./props/block-statement-node-prop-source.ts";
+import { foldNodePropSource } from "./props/fold-node-prop-source.ts";
 import { primitiveNodePropSource } from "./props/primitive-node-prop-source.ts";
 import { syntacticTokenNodePropSource } from "./props/syntactic-token-node-prop-source.ts";
 import { createParseErrorFromTextAndPosition } from "./create-parse-error-from-text-and-position.ts";
@@ -31,9 +31,9 @@ export function createLenientSdlParser(): LezerParser {
     // Configure the parser with custom node properties
     lenientSdlParser = lenientSdlParser.configure({
       props: [
-        styleTagsNodePropSource,
-        blockStatementNodePropSource,
+        foldNodePropSource,
         primitiveNodePropSource,
+        styleTagsNodePropSource,
         syntacticTokenNodePropSource,
       ],
     });

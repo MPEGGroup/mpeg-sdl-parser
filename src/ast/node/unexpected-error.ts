@@ -1,6 +1,6 @@
-import type { AbstractNode } from "../../../dist/index.js";
 import type { RequiredNode } from "../util/types.ts";
 import { AbstractCompositeNode } from "./abstract-composite-node.ts";
+import type { AbstractNode } from "./abstract-node.ts";
 import { NodeKind } from "./enum/node-kind.ts";
 
 export class UnexpectedError extends AbstractCompositeNode {

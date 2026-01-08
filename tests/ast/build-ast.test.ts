@@ -24,7 +24,7 @@ describe("buildAst Tests", () => {
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     expect(() => buildAst(parseTree, sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Missing expected token: computed => { row: 1, column: 1, position: 0 }",
+      "SYNTACTIC ERROR: Expected: computed => { row: 1, column: 1, position: 0 }",
     );
   });
 
@@ -33,7 +33,7 @@ describe("buildAst Tests", () => {
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     expect(() => buildAst(parseTree, sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Missing expected node: <ClassDeclaration> or <MapDeclaration> or <ComputedElementaryTypeDefinition> => { row: 1, column: 1, position: 0 }",
+      "SYNTACTIC ERROR: Unknown token: § => { row: 1, column: 1, position: 0 }",
     );
   });
 
@@ -49,7 +49,7 @@ describe("buildAst Tests", () => {
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     expect(() => buildAst(parseTree, sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Unexpected token: 1 <IntegerLiteral> => { row: 1, column: 1, position: 0 }",
+      "SYNTACTIC ERROR: Unexpected: 1 => { row: 1, column: 1, position: 0 }",
     );
   });
 
