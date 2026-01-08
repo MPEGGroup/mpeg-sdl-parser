@@ -1,7 +1,6 @@
 import { HierarchicalSearch } from "./hierarchical-map.ts";
 import { alignedModifierRules } from "./rules/aligned-modifier-rules.ts";
 import { parameterValueListRules } from "./rules/parameter-value-list-rules.ts";
-import { specificationRules } from "./rules/specification-rules.ts";
 import { stringDefinitionRules } from "./rules/string-definition-rules.ts";
 import { utfStringLiteralRules } from "./rules/utf-string-literal-rules.ts";
 import { whileStatementRules } from "./rules/while-statement-rules.ts";
@@ -270,9 +269,6 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
         partialArrayDimensionRules,
       );
       break;
-    case TokenTypeId.Specification:
-      addRulesForParent(TokenTypeId.Specification, specificationRules);
-      break;
     case TokenTypeId.StringDefinition:
       addRulesForParent(TokenTypeId.StringDefinition, stringDefinitionRules);
       break;
@@ -373,6 +369,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
     case TokenTypeId.UtfPrefix:
     case TokenTypeId.UtfStringLiteralCharacters:
     case TokenTypeId.Whitespace:
+    case TokenTypeId.Specification:
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;

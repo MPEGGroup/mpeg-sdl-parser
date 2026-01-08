@@ -5,14 +5,14 @@ import { testCompletionScenario } from "./test-completion-scenario.ts";
 import * as TokenTypeId from "../../src/lezer/parser.terms.ts";
 
 describe("getExpectedTokenTypeIds Tests", () => {
-  test("Test missing length attribute", () => {
+  test("Test missing length attribute completion scenario", () => {
     testCompletionScenario(
       "class A { bit b; }",
       [TokenTypeId.LengthAttribute],
     );
   });
 
-  test("Test duplicate identifier", () => {
+  test("Test duplicate identifier completion scenario", () => {
     testCompletionScenario(
       "class A {if (f oo) {bit(8) c;}}",
       [
@@ -37,7 +37,7 @@ describe("getExpectedTokenTypeIds Tests", () => {
     );
   });
 
-  test("Test complex scenario", () => {
+  test("Test complex completion scenario", () => {
     testCompletionScenario(
       "class A {if (a b == 0b01 || c == 0b11) {bit(8) c;}}",
       [
