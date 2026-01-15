@@ -8,7 +8,7 @@ import { NodeKind } from "../../node/enum/node-kind.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { InternalParseError } from "../../../parse-error.ts";
-import type { ElementaryType } from "../../../../dist/index.js";
+import type { ElementaryType } from "../../node/elementary-type.ts";
 
 export function buildMapDefinition(
   buildContext: BuildContext,

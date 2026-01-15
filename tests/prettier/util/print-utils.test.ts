@@ -351,10 +351,9 @@ describe("Print Utils tests", () => {
       ],
     );
     expect(doc).toEqual([
-      indent([
+      indent(
         "{",
-        hardline,
-      ]),
+      ),
       hardline,
       "}",
     ]);
@@ -390,7 +389,7 @@ describe("Print Utils tests", () => {
         hardline,
         ["i", ";"],
         hardline,
-        ["j", ";", ""],
+        ["j", ";"],
       ]),
       hardline,
     ]);
@@ -630,6 +629,22 @@ describe("Print Utils tests", () => {
         "  i++; // Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée\n" +
         "\n" +
         "  // Another comment line with a blank line\n" +
+        "}\n",
+    );
+  });
+
+  test("intentional blank lines", async () => {
+    await testPrettierScenario(
+      "class A{\n\n computed int a;\n\n}",
+      "class A {\n" +
+        // remove blank lines after opening brace
+        "  computed int a;\n" +
+        // remove blank lines before closing brace
+        "}\n",
+      "class A {\n" +
+        // remove blank lines after opening brace
+        "  computed int a;\n" +
+        // remove blank lines before closing brace
         "}\n",
     );
   });

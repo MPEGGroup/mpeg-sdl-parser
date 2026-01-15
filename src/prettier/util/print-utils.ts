@@ -504,14 +504,19 @@ export function addIndentedStatements(
       firstElement = removeTrailingBlankline(firstElement);
       firstElement = removeTrailingHardline(firstElement);
 
-      if (!endsWithHardline(indentedDoc)) {
-        indentedDoc.push(hardline);
+      // check if anything remains
+      if (firstElement !== "") {
+        if (!endsWithHardline(indentedDoc)) {
+          indentedDoc.push(hardline);
+        }
+        indentedDoc.push(firstElement);
       }
-      indentedDoc.push(firstElement);
     }
   }
 
   if (indentedDoc.length > 0) {
+    // remove blank line before closing brace
+    indentedDoc = removeTrailingBlankline(indentedDoc);
     indentedDoc = removeTrailingHardline(indentedDoc);
     doc.push(indent(indentedDoc));
     doc.push(hardline);

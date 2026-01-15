@@ -3,7 +3,8 @@ import { NumberLiteralKind } from "../ast/node/enum/number-literal-kind.ts";
 import type { NumberLiteral } from "../ast/node/number-literal.ts";
 import type { Token } from "../ast/node/token.ts";
 import { isMissingError, isUnexpectedError } from "../ast/util/types.ts";
-import type { AbstractNode } from "../../index.ts";
+import type { AbstractNode } from "../ast/node/abstract-node.ts";
+import { InternalParseError } from "../parse-error.ts";
 
 const { join } = doc.builders;
 
