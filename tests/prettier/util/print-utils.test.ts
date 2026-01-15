@@ -506,6 +506,20 @@ describe("Print Utils tests", () => {
       ifBreak([line, ""], " "),
       ["// hello", hardline],
     ]], hardline], hardline]);
+
+    docs = [["class", "A", ["}"], hardline], hardline];
+    docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
+    expect(docs).toEqual([["class", "A", [[
+      "}",
+      ifBreak([line, ""], " "),
+      ["// hello", hardline],
+    ]], hardline], hardline]);
+
+    docs = [[]];
+    docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
+    expect(docs).toEqual([[
+      ["// hello", hardline],
+    ]]);
   });
 
   test("no trivia comment", async () => {

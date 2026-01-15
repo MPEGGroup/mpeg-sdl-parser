@@ -43,4 +43,12 @@ describe("Print Specification tests", () => {
       "§\n",
     );
   });
+
+  test("prettified specification output is as expected for only a comment", async () => {
+    await testPrettierScenario(
+      "// Start typing your SDL here... <Ctrl+Space> for completions\n",
+      "// Start typing your SDL here... <Ctrl+Space> for completions\n",
+      "// Start typing your SDL here... <Ctrl+Space> for completions\n",
+    );
+  });
 });
