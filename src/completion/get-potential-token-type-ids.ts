@@ -20,6 +20,13 @@ const logger = getLogger("getPotentialTokenTypeIds");
 export function getPotentialTokenTypeIds(
   cursor: TreeCursor,
 ): number[] | undefined {
+
+  // No potential tokens if currently on a comment
+  if (cursor.type.id === TokenTypeId.Comment) {
+    logger.debug("No potential tokens in comments");
+    return undefined;
+  }
+
   // firstly clone the cursor to avoid breaking the traversal of the original cursor
   const parentCursorClone = cursor.node.cursor();
   const siblingCursorClone = cursor.node.cursor();
@@ -42,14 +49,14 @@ export function getPotentialTokenTypeIds(
     parentTokenTypesIds.push(TokenTypeId.Specification);
   }
 
-  // look for previous sibling token types, ignoring whitespace and errors
+  // look for previous sibling token types, ignoring whitespace, errors and comments
   const previousSiblingTokenTypes: NodeType[] = [];
 
   while (siblingCursorClone.prevSibling()) {
     if (
       (siblingCursorClone.type.id !== TokenTypeId.Whitespace) &&
-      !siblingCursorClone.type.isError
-    ) {
+      !siblingCursorClone.type.isError &&
+      (siblingCursorClone.type.id !== TokenTypeId.Comment)) {
       previousSiblingTokenTypes.unshift(siblingCursorClone.type);
     }
   }
@@ -85,8 +92,7 @@ export function getPotentialTokenTypeIds(
       ? [-1, ...previousSiblingTokenTypes.map((type) => type.id)]
       : [-1],
   );
-
-  if (!potentialTokenTypes) {
+  if (!potentialTokenTypes || potentialTokenTypes.length === 0) {
     logger.debug(
       "No expected tokens found for parentTokenTypes: " +
         parentTokenTypesIds.map((id) => nodeTypes[id].name).join(", ") +
@@ -99,5 +105,9 @@ export function getPotentialTokenTypeIds(
   }
 
   // sort and remove duplicates
-  return Array.from(new Set(potentialTokenTypes)).sort((a, b) => a - b);
+  const uniqueSortedTokenTypes = Array.from(new Set(potentialTokenTypes)).sort((a, b) => a - b);
+  logger.debug(
+    `Potential token types: ${uniqueSortedTokenTypes.join(" ")}`
+  );
+  return uniqueSortedTokenTypes;
 }

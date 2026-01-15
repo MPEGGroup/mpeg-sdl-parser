@@ -70,4 +70,20 @@ describe("getPotentialSyntacticTokens Tests", () => {
       ["abstract", "aligned", "class", "computed", "expandable", "map"].sort(),
     );
   });
+
+  test("Test global scope with previous comment potential syntactic token scenario 1", () => {
+    testPotentialSyntacticTokensScenario(
+      "// foo",
+      6,
+      undefined,
+    );
+  });
+
+  test("Test global scope with previous comment potential syntactic token scenario 2", () => {
+    testPotentialSyntacticTokensScenario(
+      "// foo\n ",
+      8,
+      ["abstract", "aligned", "class", "computed", "expandable", "map"].sort(),
+    );
+  });
 });

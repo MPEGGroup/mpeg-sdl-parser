@@ -5,6 +5,10 @@ import * as TokenTypeId from "../../lezer/parser.terms.ts";
 
 export const parameterValueListRules = [
   {
+    previous: -1,
+    expected: TokenTypeId.OpenParenthesis,
+  },
+  {
     previous: TokenTypeId.OpenParenthesis,
     expected: expressionTypes,
   },

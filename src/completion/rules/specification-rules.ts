@@ -10,4 +10,28 @@ export const specificationRules = [
       TokenTypeId.ComputedElementaryTypeDefinition,
     ],
   },
+  {
+    previous: TokenTypeId.ClassDeclaration,
+    expected: [
+      TokenTypeId.ClassDeclaration,
+      TokenTypeId.MapDeclaration,
+      TokenTypeId.ComputedElementaryTypeDefinition,
+    ],
+  },
+  {
+    previous: TokenTypeId.MapDeclaration,
+    expected: [
+      TokenTypeId.ClassDeclaration,
+      TokenTypeId.MapDeclaration,
+      TokenTypeId.ComputedElementaryTypeDefinition,
+    ],
+  },
+  {
+    previous: TokenTypeId.ComputedElementaryTypeDefinition,
+    expected: [
+      TokenTypeId.ClassDeclaration,
+      TokenTypeId.MapDeclaration,
+      TokenTypeId.ComputedElementaryTypeDefinition,
+    ],
+  },
 ];

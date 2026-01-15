@@ -8,7 +8,7 @@ const lenientSdlParser = createLenientSdlParser();
 export function testPotentialSyntacticTokensScenario(
   source: string,
   position: number,
-  expectedSyntacticTokens: string[],
+  expectedSyntacticTokens: string[] | undefined,
 ) {
   const sdlStringInput = new SdlStringInput(source);
   const parseTree = lenientSdlParser.parse(sdlStringInput);
@@ -16,7 +16,7 @@ export function testPotentialSyntacticTokensScenario(
 
   const actualSyntacticTokens = getPotentialSyntacticTokens(lastNode.cursor());
 
-  if (!actualSyntacticTokens) {
+  if (!actualSyntacticTokens && expectedSyntacticTokens) {
     throw new Error("Expected syntactic tokens to be defined");
   }
 

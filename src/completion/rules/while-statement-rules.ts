@@ -5,11 +5,15 @@ import * as TokenTypeId from "../../lezer/parser.terms.ts";
 
 export const whileStatementRules = [
   {
-    previous: [TokenTypeId._while],
-    expected: [TokenTypeId.OpenParenthesis],
+    previous: -1,
+    expected: TokenTypeId._while,
   },
   {
-    previous: [TokenTypeId.OpenParenthesis],
+    previous: TokenTypeId._while,
+    expected: TokenTypeId.OpenParenthesis,
+  },
+  {
+    previous: TokenTypeId.OpenParenthesis,
     expected: expressionTypes,
   },
   {
