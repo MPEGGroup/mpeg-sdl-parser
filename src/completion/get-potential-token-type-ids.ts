@@ -20,7 +20,6 @@ const logger = getLogger("getPotentialTokenTypeIds");
 export function getPotentialTokenTypeIds(
   cursor: TreeCursor,
 ): number[] | undefined {
-
   // No potential tokens if currently on a comment
   if (cursor.type.id === TokenTypeId.Comment) {
     logger.debug("No potential tokens in comments");
@@ -56,7 +55,8 @@ export function getPotentialTokenTypeIds(
     if (
       (siblingCursorClone.type.id !== TokenTypeId.Whitespace) &&
       !siblingCursorClone.type.isError &&
-      (siblingCursorClone.type.id !== TokenTypeId.Comment)) {
+      (siblingCursorClone.type.id !== TokenTypeId.Comment)
+    ) {
       previousSiblingTokenTypes.unshift(siblingCursorClone.type);
     }
   }
@@ -105,9 +105,12 @@ export function getPotentialTokenTypeIds(
   }
 
   // sort and remove duplicates
-  const uniqueSortedTokenTypes = Array.from(new Set(potentialTokenTypes)).sort((a, b) => a - b);
+  const uniqueSortedTokenTypes = Array.from(new Set(potentialTokenTypes)).sort((
+    a,
+    b,
+  ) => a - b);
   logger.debug(
-    `Potential token types: ${uniqueSortedTokenTypes.join(" ")}`
+    `Potential token types: ${uniqueSortedTokenTypes.join(" ")}`,
   );
   return uniqueSortedTokenTypes;
 }

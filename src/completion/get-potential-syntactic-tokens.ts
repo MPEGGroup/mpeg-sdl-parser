@@ -19,7 +19,7 @@ export function getPotentialSyntacticTokens(
 
   if (!potentialTokenTypeIds || (potentialTokenTypeIds.length === 0)) {
     logger.debug(
-      "No potentialTokenTypeIds so no potential syntactic tokens"
+      "No potentialTokenTypeIds so no potential syntactic tokens",
     );
     return undefined;
   }
@@ -38,16 +38,17 @@ export function getPotentialSyntacticTokens(
 
   if (potentialSyntacticTokens.length === 0) {
     logger.debug(
-      "No potential syntactic tokens"
+      "No potential syntactic tokens",
     );
     return undefined;
   }
-  
+
   // sort and remove duplicates
-  const uniqueSortedTokens = Array.from(new Set(potentialSyntacticTokens)).sort();
+  const uniqueSortedTokens = Array.from(new Set(potentialSyntacticTokens))
+    .sort();
 
   logger.debug(
-    `Potential syntactic tokens: ${uniqueSortedTokens.join(" ")}`
+    `Potential syntactic tokens: ${uniqueSortedTokens.join(" ")}`,
   );
   return uniqueSortedTokens;
 }
