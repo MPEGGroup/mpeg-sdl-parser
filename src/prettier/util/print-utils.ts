@@ -85,6 +85,10 @@ export function addTrailingTriviaDoc(
 ): Doc {
   if (Array.isArray(doc)) {
     if (doc.length === 0) {
+      doc = [
+        trailingTriviaDoc,
+      ];
+
       return doc;
     }
 

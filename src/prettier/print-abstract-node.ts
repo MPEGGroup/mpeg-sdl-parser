@@ -204,7 +204,6 @@ export function printAbstractNode(
   }
 
   const trailingTriviaDoc = getTrailingTriviaDoc(node);
-
   if (trailingTriviaDoc) {
     // prevent extra lines at end of specification
     if (
