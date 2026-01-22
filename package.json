@@ -51,7 +51,7 @@
     "@lezer/generator": "1.8.0",
     "@lezer/highlight": "1.2.3",
     "@lezer/lr": "1.4.7",
-    "prettier": "3.8.0"
+    "prettier": "3.8.1"
   },
   "overrides": {
     "@lezer/common": "1.5.0",

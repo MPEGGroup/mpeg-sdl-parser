@@ -5,19 +5,19 @@
     "": {
       "name": "@mpeggroup/mpeg-sdl-parser",
       "dependencies": {
-        "@codemirror/language": "6.12.1",
-        "@codemirror/state": "6.5.4",
-        "@lezer/common": "1.5.0",
-        "@lezer/generator": "1.8.0",
-        "@lezer/highlight": "1.2.3",
-        "@lezer/lr": "1.4.7",
-        "prettier": "3.8.0",
+        "@codemirror/language": "latest",
+        "@codemirror/state": "latest",
+        "@lezer/common": "latest",
+        "@lezer/generator": "latest",
+        "@lezer/highlight": "latest",
+        "@lezer/lr": "latest",
+        "prettier": "latest",
       },
       "devDependencies": {
-        "@types/bun": "1.3.6",
+        "@types/bun": "latest",
       },
       "peerDependencies": {
-        "typescript": "5.9.3",
+        "typescript": "latest",
       },
     },
   },
@@ -51,7 +51,7 @@
 
     "crelt": ["crelt@1.0.6", "", {}, "sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g=="],
 
-    "prettier": ["prettier@3.8.0", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-yEPsovQfpxYfgWNhCfECjG5AQaO+K3dp6XERmOepyPDVqcJm+bjyCVO3pmU+nAPe0N5dDvekfGezt/EIiRe1TA=="],
+    "prettier": ["prettier@3.8.1", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg=="],
 
     "style-mod": ["style-mod@4.1.3", "", {}, "sha512-i/n8VsZydrugj3Iuzll8+x/00GH2vnYsk1eomD8QiRrSAeW6ItbCQDtfXCeJHd0iwiNagqjQkvpvREEPtW3IoQ=="],
 
