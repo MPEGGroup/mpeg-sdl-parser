@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { NumberLiteral } from "../../node/number-literal.ts";
 import { BitModifier } from "../../node/bit-modifier.ts";
@@ -61,7 +61,7 @@ export function buildBitModifier(
     if (assignmentOperator) {
       children.push(assignmentOperator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected assignment operator '=' after bit modifier identifier.",
       );
     }

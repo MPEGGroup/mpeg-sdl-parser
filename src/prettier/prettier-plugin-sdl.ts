@@ -10,7 +10,7 @@ import {
   type RequiredNode,
 } from "../ast/util/types.ts";
 import type { Token } from "../ast/node/token.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 import { NodeKind } from "../ast/node/enum/node-kind.ts";
 
 const languages: SupportLanguage[] = [
@@ -34,7 +34,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       let token: Token;
       if (isCompositeNode(node)) {
         if (!node.startToken) {
-          throw new InternalParseError(
+          throw new InternalScannerError(
             "Composite node does not have a start token.",
           );
         }
@@ -42,7 +42,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       } else if (isToken(node)) {
         token = node;
       } else {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           "Unsupported node for prettierPluginSdl: " + NodeKind[node.nodeKind],
         );
       }
@@ -55,7 +55,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       let token: Token;
       if (isCompositeNode(node)) {
         if (!node.endToken) {
-          throw new InternalParseError(
+          throw new InternalScannerError(
             "Composite node does not have an end token.",
           );
         }
@@ -63,7 +63,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       } else if (isToken(node)) {
         token = node;
       } else {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           "Unsupported node for prettierPluginSdl: " + NodeKind[node.nodeKind],
         );
       }

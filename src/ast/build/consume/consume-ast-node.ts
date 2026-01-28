@@ -44,7 +44,7 @@ import { buildSwitchStatement } from "../node/build-switch-statement.ts";
 import { buildUnaryExpression } from "../node/build-unary-expression.ts";
 import { buildUtfStringLiteral } from "../node/build-utf-string-literal.ts";
 import { buildWhileStatement } from "../node/build-while-statement.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import { buildUnexpectedError } from "../node/build-unexpected-error.ts";
 import type { BuildContext } from "../util/build-context.ts";
@@ -74,7 +74,7 @@ function consumeArrayDimension(
   );
 
   if (arrayDimensionKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No arrayDimensionKind mapping found for token type id: ${parentTypeId} (${parentTypeName})`,
     );
   }
@@ -88,7 +88,7 @@ function consumeArrayDimension(
       return buildPartialArrayDimension(buildContext);
     default: {
       const exhaustiveCheck: never = arrayDimensionKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, arrayDimensionKind == " +
           exhaustiveCheck,
       );
@@ -106,7 +106,7 @@ function consumeClassId(
   );
 
   if (classIdKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No classIdKind mapping found for token type id: ${parentTypeId} (${parentTypeName})`,
     );
   }
@@ -119,7 +119,7 @@ function consumeClassId(
       return buildExtendedClassIdRange(buildContext);
     default: {
       const exhaustiveCheck: never = classIdKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, classIdKind == " +
           exhaustiveCheck,
       );
@@ -137,7 +137,7 @@ function consumeExpression(
   );
 
   if (expressionKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No expressionKind mapping found for token type id: ${parentTypeId} (${parentTypeName})`,
     );
   }
@@ -150,7 +150,7 @@ function consumeExpression(
       return buildLengthofExpression(buildContext);
     default: {
       const exhaustiveCheck: never = expressionKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, expressionKind == " +
           exhaustiveCheck,
       );
@@ -168,7 +168,7 @@ function consumeStatement(
   );
 
   if (statementKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No statementKind mapping found for token type id: ${parentTypeId} (${parentTypeName})`,
     );
   }
@@ -207,7 +207,7 @@ function consumeStatement(
       return buildWhileStatement(buildContext);
     default: {
       const exhaustiveCheck: never = statementKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, statementKind == " +
           exhaustiveCheck,
       );
@@ -225,7 +225,7 @@ function consumeStringLiteral(
   );
 
   if (stringLiteralKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No stringLiteralKind mapping found for token type id: ${parentTypeId} (${parentTypeName})`,
     );
   }
@@ -236,7 +236,7 @@ function consumeStringLiteral(
       return buildUtfStringLiteral(buildContext);
     default: {
       const exhaustiveCheck: never = stringLiteralKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, stringLiteralKind == " +
           exhaustiveCheck,
       );
@@ -260,7 +260,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
   }
 
   if (nodeKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No nodeKind mapping found for token type id: ${parentTypeId} (${parentTypeName})`,
     );
   }
@@ -277,7 +277,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
   buildContext.stateStack.push(childStack);
 
   if (!cursor.firstChild()) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Expected AST node to have children: ${NodeKind[nodeKind]}`,
     );
   }
@@ -360,12 +360,12 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
     // These are node types that should be handled by other consumers
     case NodeKind.IDENTIFIER:
     case NodeKind.TOKEN:
-      throw new InternalParseError(
+      throw new InternalScannerError(
         `consumeAstNode cannot consume node of kind: ${NodeKind[nodeKind]}`,
       );
     default: {
       const exhaustiveCheck: never = nodeKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, nodeKind == " + exhaustiveCheck,
       );
     }
@@ -376,7 +376,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
     consumeWhiteSpaceAndMissingErrors(buildContext);
 
     if (!childStack.isEndOfSiblings) {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         `Expected to have consumed all child nodes of ${
           NodeKind[nodeKind]
         }, but some remain.`,
@@ -387,7 +387,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
   buildContext.stateStack.pop();
 
   if (!cursor.parent()) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Expected to move cursor back to parent of ${
         NodeKind[nodeKind]
       }, but failed.`,

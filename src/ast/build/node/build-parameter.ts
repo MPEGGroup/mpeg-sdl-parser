@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { ElementaryType } from "../../node/elementary-type.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import { Parameter } from "../../node/parameter.ts";
@@ -28,7 +28,7 @@ export function buildParameter(
     if (elementaryType) {
       children.push(elementaryType);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Parameter must have either a class identifier or an elementary type.",
       );
     }

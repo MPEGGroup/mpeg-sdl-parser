@@ -7,7 +7,7 @@ import type { Token } from "../../node/token.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import type { OptionalNode } from "../../util/types.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { ElementaryType } from "../../node/elementary-type.ts";
 
 export function buildMapDefinition(
@@ -49,7 +49,7 @@ export function buildMapDefinition(
     if (classIdentifier) {
       children.push(classIdentifier);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected either an elementary type or a class identifier in map definition",
       );
     }

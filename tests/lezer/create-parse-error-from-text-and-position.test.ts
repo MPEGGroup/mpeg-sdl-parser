@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { Text } from "@codemirror/state";
-import { SyntacticParseError } from "../../src/parse-error.ts";
-import { createParseErrorFromTextAndPosition } from "../../src/lezer/create-parse-error-from-text-and-position.ts";
+import { SyntaxError } from "../../src/scanner-error.ts";
+import { createSyntaxErrorFromTextAndPosition } from "../../src/lezer/create-syntax-error-from-text-and-position.ts";
 
 // Minimal mock for @codemirror/state Text
 class MockText {
@@ -60,70 +60,70 @@ class MockText {
   }
 }
 
-describe("createParseErrorFromTextAndPosition Tests", () => {
-  test("creates a SyntacticParseError with correct location and errorLine", () => {
+describe("createSyntaxErrorFromTextAndPosition Tests", () => {
+  test("creates a SyntaxError with correct location and errorLine", () => {
     const text = new MockText("foo\nbar\nbaz");
     // Position 5 is in line 2 ("bar"), column 1
-    const err = createParseErrorFromTextAndPosition(
+    const err = createSyntaxErrorFromTextAndPosition(
       text as unknown as Text,
       4,
     );
 
-    expect(err).toBeInstanceOf(SyntacticParseError);
+    expect(err).toBeInstanceOf(SyntaxError);
     expect(err.location).toEqual({ row: 2, column: 1, position: 4 });
     expect(err.errorLine).toBe("bar");
-    expect(err.preceedingLines).toEqual(["foo"]);
-    expect(err.message).toContain("Parse error");
+    expect(err.precedingLines).toEqual(["foo"]);
+    expect(err.message).toContain("SYNTAX ERROR:");
   });
 
-  test("creates a SyntacticParseError handling position at start of text", () => {
+  test("creates a SyntaxError handling position at start of text", () => {
     const text = new MockText("abc\ndef");
-    const err = createParseErrorFromTextAndPosition(
+    const err = createSyntaxErrorFromTextAndPosition(
       text as unknown as Text,
       0,
     );
 
     expect(err.location).toEqual({ row: 1, column: 1, position: 0 });
     expect(err.errorLine).toBe("abc");
-    expect(err.preceedingLines).toEqual([]);
+    expect(err.precedingLines).toEqual([]);
   });
 
-  test("creates a SyntacticParseError handling position at start of a later line", () => {
+  test("creates a SyntaxError handling position at start of a later line", () => {
     const text = new MockText("abc\ndef\nghi");
     // Position 4 is start of line 2 ("def")
-    const err = createParseErrorFromTextAndPosition(
+    const err = createSyntaxErrorFromTextAndPosition(
       text as unknown as Text,
       4,
     );
 
     expect(err.location).toEqual({ row: 2, column: 1, position: 4 });
     expect(err.errorLine).toBe("def");
-    expect(err.preceedingLines).toEqual(["abc"]);
+    expect(err.precedingLines).toEqual(["abc"]);
   });
 
-  test("creates a SyntacticParseError including up to two preceding lines", () => {
+  test("creates a SyntaxError including up to two preceding lines", () => {
     const text = new MockText("a\nb\nc\nd");
     // Position 6 is in line 4 ("d")
-    const err = createParseErrorFromTextAndPosition(
+    const err = createSyntaxErrorFromTextAndPosition(
       text as unknown as Text,
       6,
     );
 
     expect(err.location?.row).toBe(4);
     expect(err.errorLine).toBe("d");
-    expect(err.preceedingLines).toEqual(["b", "c"]);
+    expect(err.precedingLines).toEqual(["b", "c"]);
   });
 
-  test("creates a SyntacticParseError handling position at last line", () => {
+  test("creates a SyntaxError handling position at last line", () => {
     const text = new MockText("x\ny\nz");
     // Position 4 is in line 3 ("z")
-    const err = createParseErrorFromTextAndPosition(
+    const err = createSyntaxErrorFromTextAndPosition(
       text as unknown as Text,
       4,
     );
 
     expect(err.location?.row).toBe(3);
     expect(err.errorLine).toBe("z");
-    expect(err.preceedingLines).toEqual(["x", "y"]);
+    expect(err.precedingLines).toEqual(["x", "y"]);
   });
 });

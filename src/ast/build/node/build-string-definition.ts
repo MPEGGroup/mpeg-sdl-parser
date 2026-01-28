@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { Identifier } from "../../node/identifier.ts";
 import { StringDefinition } from "../../node/string-definition.ts";
@@ -78,7 +78,7 @@ export function buildStringDefinition(
     if (stringLiteral) {
       children.push(stringLiteral);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected string literal after assignment operator in string definition",
         (assignmentPunctuator as Token).location,
       );

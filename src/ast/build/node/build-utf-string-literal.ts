@@ -4,7 +4,7 @@ import { StringLiteralKind } from "../../node/enum/string-literal-kind.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import { Token } from "../../node/token.ts";
 import { fetchOneToManyList } from "../util/fetch-node.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { getLocationFromTextPosition } from "../../../util/location-utils.ts";
 import type { TreeCursor } from "@lezer/common";
 import { Text } from "@codemirror/state";
@@ -28,7 +28,7 @@ function getStringValueFromLiteralText(
     FOUR_HEXADECIMAL_UNIVERSAL_CHARACTER_NAME_REGEX,
     (match) => {
       if (!match.startsWith("\\u")) {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `Missing prefix "\\u" in universal character name: ${match}`,
           getLocationFromTextPosition(text, cursor.from),
         );
@@ -37,7 +37,7 @@ function getStringValueFromLiteralText(
       const codePoint = parseInt(match.substring(2), 16);
 
       if (isNaN(codePoint)) {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `Unable to convert universal character name: ${codePoint} to code point number`,
           getLocationFromTextPosition(text, cursor.from),
         );
@@ -51,7 +51,7 @@ function getStringValueFromLiteralText(
     EIGHT_HEXADECIMAL_UNIVERSAL_CHARACTER_NAME_REGEX,
     (match) => {
       if (!match.startsWith("\\U")) {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `Missing prefix "\\U" in universal character name: ${match}`,
           getLocationFromTextPosition(text, cursor.from),
         );
@@ -60,7 +60,7 @@ function getStringValueFromLiteralText(
       const codePoint = parseInt(match.substring(2), 16);
 
       if (isNaN(codePoint)) {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `Unable to convert universal character name: ${match} to code point number`,
           getLocationFromTextPosition(text, cursor.from),
         );

@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import { AlignedModifier } from "../../node/aligned-modifier.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
@@ -45,7 +45,7 @@ export function buildAlignedModifier(
     if (bitCountModifierToken) {
       children.push(bitCountModifierToken);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected alignment bit count modifier token after 'aligned('",
         (openParenthesisPunctuator as Token).location,
       );
@@ -59,7 +59,7 @@ export function buildAlignedModifier(
     if (closeParenthesisPunctuator) {
       children.push(closeParenthesisPunctuator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected closing parenthesis ')' after alignment bit count modifier",
         (bitCountModifierToken as Token).location,
       );

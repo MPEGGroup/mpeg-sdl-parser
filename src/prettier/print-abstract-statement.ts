@@ -33,7 +33,7 @@ import { printStringDefinition } from "./print-string-definition.ts";
 import { printMapDefinition } from "./print-map-definition.ts";
 import { printComputedElementaryTypeDefinition } from "./print-computed-elementary-type-definition.ts";
 import { printElementaryTypeDefinition } from "./print-elementary-type-definition.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 
 const { fill } = doc.builders;
 
@@ -116,7 +116,7 @@ export function printAbstractStatement(
       return printWhileStatement(path as AstPath<WhileStatement>, print);
     default: {
       const exhaustiveCheck: never = statementKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, statementKind == " + exhaustiveCheck,
       );
     }

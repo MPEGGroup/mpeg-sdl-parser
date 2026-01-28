@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import { Token } from "../../node/token.ts";
 import { syntacticTokenNodeProp } from "../../../lezer/props/syntactic-token-node-prop-source.ts";
@@ -12,7 +12,7 @@ export function buildToken(
   const tokenKind = tokenKindByTokenTypeId.get(cursor.type.id);
 
   if (tokenKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No TokenKind mapping found for token type id: ${cursor.type.id} (${cursor.type.name})`,
     );
   }

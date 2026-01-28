@@ -16,7 +16,7 @@ import {
   fetchZeroToManyList,
 } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { OptionalNode, ZeroToManyList } from "../../util/types.ts";
 import { ArrayDimensionKind } from "../../node/enum/array-dimension-kind.ts";
 
@@ -68,7 +68,7 @@ export function buildArrayDefinition(
       children.push(lengthAttribute);
     } else {
       // If an elementary type is present, a length attribute must be present
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected LengthAttribute node after ElementaryType node",
       );
     }

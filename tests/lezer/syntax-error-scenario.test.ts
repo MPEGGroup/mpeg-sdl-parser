@@ -5,18 +5,18 @@ import { SdlStringInput } from "../../src/lezer/sdl-string-input.ts";
 
 const sdlParser = createStrictSdlParser();
 
-describe("Invalid Syntax Tests", () => {
+describe("Syntax Error Scenario Tests", () => {
   test("Empty declarations parses", () => {
     const sdlStringInput = new SdlStringInput("");
 
     sdlParser.parse(sdlStringInput);
   });
 
-  test("Declarations with single invalud token fails to parse", () => {
+  test("Declarations with single invalid token fails to parse", () => {
     const sdlStringInput = new SdlStringInput("§");
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 1, position: 0 }",
+      "SYNTAX ERROR: => { row: 1, column: 1, position: 0 }",
     );
   });
 
@@ -24,7 +24,7 @@ describe("Invalid Syntax Tests", () => {
     const sdlStringInput = new SdlStringInput("class A {ClassD d();}");
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 19, position: 18 }",
+      "SYNTAX ERROR: => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -32,7 +32,7 @@ describe("Invalid Syntax Tests", () => {
     const sdlStringInput = new SdlStringInput("class A {ClassD computed d;}");
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 17, position: 16 }",
+      "SYNTAX ERROR: => { row: 1, column: 17, position: 16 }",
     );
   });
 
@@ -40,7 +40,7 @@ describe("Invalid Syntax Tests", () => {
     const sdlStringInput = new SdlStringInput("class A {ClassD d(3,);}");
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 21, position: 20 }",
+      "SYNTAX ERROR: => { row: 1, column: 21, position: 20 }",
     );
   });
 
@@ -50,7 +50,7 @@ describe("Invalid Syntax Tests", () => {
     );
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 25, position: 24 }",
+      "SYNTAX ERROR: => { row: 1, column: 25, position: 24 }",
     );
 
     sdlStringInput = new SdlStringInput(
@@ -58,7 +58,7 @@ describe("Invalid Syntax Tests", () => {
     );
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 34, position: 33 }",
+      "SYNTAX ERROR: => { row: 1, column: 34, position: 33 }",
     );
   });
 
@@ -68,7 +68,7 @@ describe("Invalid Syntax Tests", () => {
     );
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 19, position: 18 }",
+      "SYNTAX ERROR: => { row: 1, column: 19, position: 18 }",
     );
   });
 
@@ -78,7 +78,7 @@ describe("Invalid Syntax Tests", () => {
     );
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 29, position: 28 }",
+      "SYNTAX ERROR: => { row: 1, column: 29, position: 28 }",
     );
   });
 
@@ -88,7 +88,7 @@ describe("Invalid Syntax Tests", () => {
     );
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 27, position: 26 }",
+      "SYNTAX ERROR: => { row: 1, column: 27, position: 26 }",
     );
   });
 
@@ -98,7 +98,7 @@ describe("Invalid Syntax Tests", () => {
     );
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 28, position: 27 }",
+      "SYNTAX ERROR: => { row: 1, column: 28, position: 27 }",
     );
   });
 
@@ -108,7 +108,7 @@ describe("Invalid Syntax Tests", () => {
     );
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Parse error => { row: 1, column: 18, position: 17 }",
+      "SYNTAX ERROR: => { row: 1, column: 18, position: 17 }",
     );
   });
 });

@@ -19,21 +19,21 @@ const lenientSdlParser = createLenientSdlParser();
 const strictSdlParser = createStrictSdlParser();
 
 describe("buildAst Tests", () => {
-  test("Parse tree with parse error of missing token SyntacticParseError fails with non-lenient AST", () => {
+  test("Parse tree with parse error of missing token SyntaxError fails with non-lenient AST", () => {
     const sdlStringInput = new SdlStringInput("int i;");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     expect(() => buildAst(parseTree, sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Expected: computed => { row: 1, column: 1, position: 0 }",
+      "SYNTAX ERROR: Expected: computed => { row: 1, column: 1, position: 0 }",
     );
   });
 
-  test("Parse tree with parse error of missing expected node SyntacticParseError fails with non-lenient AST", () => {
+  test("Parse tree with parse error of missing expected node SyntaxError fails with non-lenient AST", () => {
     const sdlStringInput = new SdlStringInput("§");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     expect(() => buildAst(parseTree, sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Unknown token: § => { row: 1, column: 1, position: 0 }",
+      "SYNTAX ERROR: Unknown token: § => { row: 1, column: 1, position: 0 }",
     );
   });
 
@@ -44,23 +44,23 @@ describe("buildAst Tests", () => {
     buildAst(parseTree, sdlStringInput);
   });
 
-  test("Parse tree with parse error of unexpected token SyntacticParseError fails with non-lenient AST", () => {
+  test("Parse tree with parse error of unexpected token SyntaxError fails with non-lenient AST", () => {
     const sdlStringInput = new SdlStringInput("1");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     expect(() => buildAst(parseTree, sdlStringInput)).toThrow(
-      "SYNTACTIC ERROR: Unexpected: 1 => { row: 1, column: 1, position: 0 }",
+      "SYNTAX ERROR: Unexpected: 1 => { row: 1, column: 1, position: 0 }",
     );
   });
 
-  test("Parse tree with parse error of token SyntacticParseError works with lenient AST", () => {
+  test("Parse tree with parse error of token SyntaxError works with lenient AST", () => {
     const sdlStringInput = new SdlStringInput("int i;");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
     buildAst(parseTree, sdlStringInput, true);
   });
 
-  test("Parse tree with parse error of missing expected node SyntacticParseError works with lenient AST", () => {
+  test("Parse tree with parse error of missing expected node SyntaxError works with lenient AST", () => {
     const sdlStringInput = new SdlStringInput("§");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 
@@ -74,7 +74,7 @@ describe("buildAst Tests", () => {
     buildAst(parseTree, sdlStringInput, true);
   });
 
-  test("Parse tree with parse error of unexpected node SyntacticParseError works with lenient AST", () => {
+  test("Parse tree with parse error of unexpected node SyntaxError works with lenient AST", () => {
     const sdlStringInput = new SdlStringInput("1");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
 

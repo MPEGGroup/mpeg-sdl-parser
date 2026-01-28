@@ -1,10 +1,10 @@
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import type { BuildContext } from "../util/build-context.ts";
-import { createParseErrorFromTextAndCursor } from "../../../lezer/create-parse-error-from-text-and-cursor.ts";
+import { createSyntaxErrorFromTextAndCursor } from "../../../lezer/create-syntax-error-from-text-and-cursor.ts";
 import { primitiveNodeProp } from "../../../lezer/props/primitive-node-prop-source.ts";
 import { buildToken } from "../node/build-token.ts";
 import { consumeTrivia } from "./consume-trivia.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import getLogger from "../../../util/logger.ts";
 import { buildMissingError } from "../node/build-missing-error.ts";
 import { consumePrimitive } from "./consume-primitive.ts";
@@ -41,7 +41,7 @@ function determineNodeScenario(
   const isError = cursor.type.isError;
 
   if (isError && !lenient) {
-    throw createParseErrorFromTextAndCursor(text, cursor);
+    throw createSyntaxErrorFromTextAndCursor(text, cursor);
   }
 
   // Check if current sytax node is a terminal token by attempting to move to first child
@@ -107,7 +107,7 @@ export function consumeAbstractNode(
   if (currentState.isEndOfSiblings) {
     if (leadingTrivia.length > 0) {
       if (buildContext.unconsumedTrivia) {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `Expected no unconsumed trivia, but found some.`,
         );
       }
@@ -150,7 +150,7 @@ export function consumeAbstractNode(
       const nodeKind = nodeKindByTokenTypeId.get(cursor.type.id);
 
       if (nodeKind === undefined) {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `No nodeKind mapping found for token type id: ${cursor.type.id} (${cursor.type.name})`,
         );
       }
@@ -159,14 +159,14 @@ export function consumeAbstractNode(
       if (nodeKind == NodeKind.SPECIFICATION) {
         return new Specification([]);
       } else {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `Expected node to have at least one child: ${NodeKind[nodeKind]}`,
         );
       }
     }
     default: {
       const exhaustiveCheck: never = nodeScenario;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, nodeScenario == " + exhaustiveCheck,
       );
     }

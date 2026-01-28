@@ -8,7 +8,7 @@ export const stringDefinitionRules = [
       TokenTypeId.Identifier,
       TokenTypeId.Assignment,
     ],
-    expected: TokenTypeId.UtfPrefix,
+    expected: TokenTypeId.UtfStringLiteral,
   },
   {
     previous: [
@@ -16,7 +16,7 @@ export const stringDefinitionRules = [
       TokenTypeId.Identifier,
       TokenTypeId.Assignment,
     ],
-    expected: TokenTypeId.UtfPrefix,
+    expected: TokenTypeId.UtfStringLiteral,
   },
   {
     previous: [
@@ -24,7 +24,7 @@ export const stringDefinitionRules = [
       TokenTypeId.Identifier,
       TokenTypeId.Assignment,
     ],
-    expected: TokenTypeId.UtfPrefix,
+    expected: TokenTypeId.UtfStringLiteral,
   },
   {
     previous: [
@@ -32,7 +32,7 @@ export const stringDefinitionRules = [
       TokenTypeId.Identifier,
       TokenTypeId.Assignment,
     ],
-    expected: TokenTypeId.DoubleQuote,
+    expected: TokenTypeId.Base64StringLiteral,
   },
   {
     previous: TokenTypeId.reserved,
@@ -44,5 +44,60 @@ export const stringDefinitionRules = [
       TokenTypeId.utfstring,
       TokenTypeId.base64string,
     ],
+  },
+  {
+    previous: TokenTypeId._const,
+    expected: [
+      TokenTypeId.AlignedModifier,
+      TokenTypeId.utf8string,
+      TokenTypeId.utf16string,
+      TokenTypeId.utfstring,
+      TokenTypeId.base64string,
+    ],
+  },
+  {
+    previous: TokenTypeId.AlignedModifier,
+    expected: [
+      TokenTypeId.utf8string,
+      TokenTypeId.utf16string,
+      TokenTypeId.utfstring,
+      TokenTypeId.base64string,
+    ],
+  },
+  {
+    previous: [
+      TokenTypeId.utf8string,
+      TokenTypeId.Identifier,
+    ],
+    expected: TokenTypeId.Semicolon,
+  },
+  {
+    previous: [
+      TokenTypeId.utf16string,
+      TokenTypeId.Identifier,
+    ],
+    expected: TokenTypeId.Semicolon,
+  },
+  {
+    previous: [
+      TokenTypeId.utfstring,
+      TokenTypeId.Identifier,
+    ],
+    expected: TokenTypeId.Semicolon,
+  },
+  {
+    previous: [
+      TokenTypeId.base64string,
+      TokenTypeId.Identifier,
+    ],
+    expected: TokenTypeId.Semicolon,
+  },
+  {
+    previous: TokenTypeId.Base64StringLiteral,
+    expected: TokenTypeId.Semicolon,
+  },
+  {
+    previous: TokenTypeId.UtfStringLiteral,
+    expected: TokenTypeId.Semicolon,
   },
 ];

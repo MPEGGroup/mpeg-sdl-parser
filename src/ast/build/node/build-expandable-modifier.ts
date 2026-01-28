@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { NumberLiteral } from "../../node/number-literal.ts";
 import { ExpandableModifier } from "../../node/expandable-modifier.ts";
@@ -38,7 +38,7 @@ export function buildExpandableModifier(
     if (maxClassSize) {
       children.push(maxClassSize);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "ExpandableModifier missing required maxClassSize NumberLiteral",
         (openParenthesisPunctuator as Token).location,
       );
@@ -51,7 +51,7 @@ export function buildExpandableModifier(
     if (closedParenthesisPunctuator) {
       children.push(closedParenthesisPunctuator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "ExpandableModifier missing required closedParenthesisPunctuator Token",
         (openParenthesisPunctuator as Token).location,
       );

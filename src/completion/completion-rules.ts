@@ -42,7 +42,7 @@ import { mapDeclarationRules } from "./rules/map-declaration-rules.ts";
 import { mapEntryRules } from "./rules/map-entry-rules.ts";
 import { aggregateOutputValueRules } from "./rules/aggregate-output-value-rules.ts";
 import { elementaryTypeOutputValueRules } from "./rules/elementary-type-output-value-rules.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 import { specificationRules } from "./rules/specification-rules.ts";
 import { tokenIdToSyntaxStringMapping } from "../lezer/props/syntactic-token-node-prop-source.ts";
 
@@ -80,7 +80,7 @@ function addRulesForParent(
   rules: CompletionRule | CompletionRule[],
 ) {
   if (completionRulesByParentMap.has(parentTokenId)) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Completion rules for parent token ${
         nodeTypes[parentTokenId].name
       } already exist`,
@@ -390,7 +390,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
       );
     }

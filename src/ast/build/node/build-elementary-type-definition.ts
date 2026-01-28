@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { AbstractExpression } from "../../node/abstract-expression.ts";
 import { ElementaryTypeDefinition } from "../../node/elementary-type-definition.ts";
 import type { ElementaryType } from "../../node/elementary-type.ts";
@@ -106,7 +106,7 @@ export function buildElementaryTypeDefinition(
     if (value !== undefined) {
       children.push(value);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected value for elementary type definition after assignment operator",
         (assignmentOperator as Token).location,
       );
@@ -129,7 +129,7 @@ export function buildElementaryTypeDefinition(
       if (endValue !== undefined) {
         children.push(endValue);
       } else {
-        throw new InternalParseError(
+        throw new InternalScannerError(
           "Expected end value for elementary type definition after range operator",
           (rangeOperator as Token).location,
         );

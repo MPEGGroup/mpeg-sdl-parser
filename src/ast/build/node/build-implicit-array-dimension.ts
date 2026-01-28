@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { Identifier } from "../../node/identifier.ts";
 import { ImplicitArrayDimension } from "../../node/implicit-array-dimension.ts";
@@ -42,7 +42,7 @@ export function buildImplicitArrayDimension(
     if (rangeOperator) {
       children.push(rangeOperator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected range operator after range start in implicit array dimension",
       );
     }
@@ -55,7 +55,7 @@ export function buildImplicitArrayDimension(
     if (rangeStart) {
       children.push(rangeStart);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected range end after range operator in implicit array dimension",
       );
     }

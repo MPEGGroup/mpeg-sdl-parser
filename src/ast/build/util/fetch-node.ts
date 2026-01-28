@@ -3,7 +3,7 @@ import type { BuildContext } from "./build-context.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import { consumeAbstractNode } from "../consume/consume-abstract-node.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { Token } from "../../node/token.ts";
 import {
   isMissingError,
@@ -87,7 +87,7 @@ function getRequestLogMessage(
         message += `, ${ClassIdKind[requestedSubKind]}`;
         break;
       default:
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `requestedSubKind matching not implemented for node kind: ${nodeKindStr}`,
         );
     }
@@ -119,7 +119,7 @@ function fetchAstNode<T extends AbstractNode>(
   requestedSubKind?: number[] | number,
 ): T | undefined {
   if (Array.isArray(requestedNodeKind) && (requestedSubKind !== undefined)) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Cannot specify multiple requestedNodeKind when specifying requestedSubKind.`,
     );
   }
@@ -158,7 +158,7 @@ function fetchAstNode<T extends AbstractNode>(
       return new MissingError(location) as unknown as T;
     }
     // if the node was required, throw an error
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Required node of kind ${
         Array.isArray(requestedNodeKind)
           ? requestedNodeKind
@@ -210,7 +210,7 @@ function fetchAstNode<T extends AbstractNode>(
         subKind = (node as unknown as ClassId).classIdKind;
         break;
       default:
-        throw new InternalParseError(
+        throw new InternalScannerError(
           `SubKind matching not implemented for node kind: ${
             NodeKind[node.nodeKind]
           }`,
@@ -231,7 +231,7 @@ function fetchAstNode<T extends AbstractNode>(
     // if it was optional and the node kind did not match
     // store the node for the next call and return undefined
     if (currentState.nextNode) {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         `Logic error: buildContext.nextNode should be undefined before storing a node.`,
       );
     }
@@ -240,7 +240,7 @@ function fetchAstNode<T extends AbstractNode>(
     return undefined;
   }
 
-  throw new InternalParseError(
+  throw new InternalScannerError(
     "Logic error: should have returned a node by now.",
   );
 }

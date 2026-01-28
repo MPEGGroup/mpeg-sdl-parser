@@ -63,7 +63,7 @@ import { printCaseClause } from "./print-case-clause.ts";
 import { printDefaultClause } from "./print-default-clause.ts";
 import { printToken } from "./print-token.ts";
 import { StatementKind } from "../ast/node/enum/statement-kind.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 
 export function printAbstractNode(
   path: AstPath<RequiredNode<AbstractNode>>,
@@ -197,7 +197,7 @@ export function printAbstractNode(
       break;
     default: {
       const exhaustiveCheck: never = nodeKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, nodeKind == " + exhaustiveCheck,
       );
     }

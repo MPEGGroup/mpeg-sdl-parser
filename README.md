@@ -68,7 +68,7 @@ Now you can add the module to your project:
 import {
   SdlStringInput,
   createLenientSdlParser,
-  collateParseErrors,
+  collateSyntaxErrors,
   buildAst,
   dispatchNodeHandler,
   prettyPrint
@@ -76,7 +76,7 @@ import {
 
 // Create a Lezer based SDL concrete syntax parser.
 // This will create a lenient parser which recovers from parse errors and places error nodes in the parse tree.
-// A strict parser which will throw a `SyntacticParseError` can be created with `createStrictSdlParser()`.
+// A strict parser which will throw a `SyntaxError` can be created with `createStrictSdlParser()`.
 const parser = await createLenientSdlParser();
 
 // Prepare the SDL input
@@ -91,14 +91,14 @@ do {
   console.log(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
 } while (cursor.next());
 
-// Print any parsing errors by collating any error nodes in the parse tree
-const parseErrors = collateParseErrors(sdlParseTree, sdlStringInput);
+// Print any syntax errors by collating any error nodes in the parse tree
+const syntaxErrors = collateSyntaxErrors(sdlParseTree, sdlStringInput);
 
-console.log(JSON.stringify(parseErrors);
+console.log(JSON.stringify(syntaxErrors);
 
 // Build an Abstract Syntax Tree (AST) of the SDL specification from the concrete parse tree
 // The third argument sets `lenient = true`. If this is not set or is `false`
-// a `SyntacticParseError` will be thrown if the sdlParseTree contains parsing errors.
+// a `SyntaxError` will be thrown if the sdlParseTree contains parsing errors.
 const specification = buildAst(sdlParseTree, sdlStringInput, true);
 
 // Define a simple AST Node handler
@@ -118,6 +118,17 @@ class MyNodeHandler implements NodeHandler {
 
 // Dispatch the handler to visit all nodes in the AST
 dispatchNodeHandler(specification, new MyNodeHandler());
+
+// Create an SDL semantic analyser
+// This will create a lenient analyser which recovers from semantic errors and stores them in the analysis results.
+// A strict analyser which will throw a `SemanticError` can be created with `createStrictSdlAnalyser()`.
+const analyser = await createLenientSdlAnalyser();
+
+// Analyse the AST
+const analysisResult = analyser.analyse(specification);
+
+// Print any semantic errors from the AST analysis
+console.log(JSON.stringify(analysisResult.semanticErrors);
 
 // Pretty print the specification (retaining comments and handling parse errors)
 let prettifiedSpecification = await prettyPrint(specification, sdlStringInput)

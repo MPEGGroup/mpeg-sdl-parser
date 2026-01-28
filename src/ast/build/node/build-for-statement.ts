@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { AbstractStatement } from "../../node/abstract-statement.ts";
 import type { AbstractExpression } from "../../node/abstract-expression.ts";
@@ -46,7 +46,7 @@ export function buildForStatement(
     if (semicolon1Punctuator) {
       children.push(semicolon1Punctuator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected semicolon after first expression in for statement",
       );
     }
@@ -63,7 +63,7 @@ export function buildForStatement(
     if (computedElementaryTypeDefinition) {
       children.push(computedElementaryTypeDefinition);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected either an expression or a computed elementary type definition in for statement",
       );
     }

@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import { AbstractStatement } from "../../node/abstract-statement.ts";
 import { DefaultClause } from "../../node/default-clause.ts";
@@ -58,7 +58,7 @@ export function buildDefaultClause(
     if (closeBracePunctuator) {
       children.push(closeBracePunctuator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected close brace '}' to match open brace",
         (openBracePunctuator as Token).location,
       );

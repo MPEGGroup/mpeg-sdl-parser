@@ -1,6 +1,6 @@
 import { NumberLiteral } from "../../node/number-literal.ts";
 import { NumberLiteralKind } from "../../node/enum/number-literal-kind.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { Token } from "../../node/token.ts";
 
 const DOT_SEPARATOR_REGEX = /\./g;
@@ -11,14 +11,14 @@ export function buildHexadecimalLiteral(
   const literalText = token.text;
 
   if (!literalText.startsWith("0x")) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Missing hexadecimal literal prefix '0x': ${literalText}`,
       token.location,
     );
   }
 
   if (literalText.length === 2) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Missing hexadecimal literal value after prefix '0x'`,
       token.location,
     );
