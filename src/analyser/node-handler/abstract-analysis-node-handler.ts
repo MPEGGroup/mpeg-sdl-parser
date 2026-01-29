@@ -16,7 +16,7 @@ const logger = getLogger("AbstractAnalysisNodeHandler");
  * either strict or lenient mode.
  */
 export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
-  constructor(public readonly strictMode: boolean) {}
+  constructor(public readonly strict: boolean) {}
 
   abstract doBeforeVisit(node: AbstractCompositeNode): void;
 
@@ -24,9 +24,14 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   abstract doAfterVisit(node: AbstractCompositeNode): void;
 
+  /**
+   * If the node is an unexpected node, throw an error in strict mode or ignore in lenient mode.
+   *
+   * @param node the leaf node to visit
+   */
   beforeVisit(node: AbstractCompositeNode): void {
     if (node.nodeKind === NodeKind.UNEXPECTED_ERROR) {
-      if (this.strictMode) {
+      if (this.strict) {
         throw new SemanticError(
           "UNEXPECTED_ERROR node encountered",
           node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
@@ -37,17 +42,18 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
       logger.debug("Ignoring UNEXPECTED_ERROR node in lenient mode.");
     }
 
+    logger.debug("About to doBeforeVisit node: " + NodeKind[node.nodeKind]);
     this.doBeforeVisit(node);
   }
 
   /**
-   * If the node is an error node, throw an error in strict mode or ignore in lenient mode.
+   * If the node is an error token or unexpected node, throw an error in strict mode or ignore in lenient mode.
    *
    * @param node the leaf node to visit
    */
   visit(node: AbstractLeafNode): void {
     if (node.nodeKind === NodeKind.UNEXPECTED_ERROR) {
-      if (this.strictMode) {
+      if (this.strict) {
         throw new SemanticError(
           "UNEXPECTED_ERROR node encountered",
           node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
@@ -62,7 +68,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
       const token = node as Token;
 
       if (token.tokenKind === TokenKind.ERROR_UNKNOWN_TOKEN) {
-        if (this.strictMode) {
+        if (this.strict) {
           throw new SemanticError(
             "ERROR_UNKNOWN_TOKEN encountered",
             token.location,
@@ -76,7 +82,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
       }
 
       if (token.tokenKind === TokenKind.ERROR_MISSING_TOKEN) {
-        if (this.strictMode) {
+        if (this.strict) {
           throw new SemanticError(
             "ERROR_MISSING_TOKEN encountered",
             token.location,
@@ -90,11 +96,14 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
       }
     }
 
+    logger.debug("About to doVisit node: " + NodeKind[node.nodeKind]);
+
     this.doVisit(node);
   }
 
   afterVisit(node: AbstractCompositeNode): void {
     // Nothing to do here for error nodes as they are handled in visit()
+    logger.debug("About to doAfterVisit node: " + NodeKind[node.nodeKind]);
     this.doAfterVisit(node);
   }
 }

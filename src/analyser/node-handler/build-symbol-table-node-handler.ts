@@ -1,6 +1,7 @@
 import type { AbstractCompositeNode } from "../../ast/node/abstract-composite-node.ts";
 import type { AbstractLeafNode } from "../../ast/node/abstract-leaf-node.ts";
 import type { SemanticError } from "../../scanner-error.ts";
+import type { Symbol } from "../symbol.ts";
 import { SymbolTable } from "../symbol-table.ts";
 import { NodeKind } from "../../ast/node/enum/node-kind.ts";
 import { StatementKind } from "../../ast/node/enum/statement-kind.ts";
@@ -16,40 +17,72 @@ import type { ClassDefinition } from "../../ast/node/class-definition.ts";
 import type { MapDefinition } from "../../ast/node/map-definition.ts";
 import type { ForStatement } from "../../ast/node/for-statement.ts";
 import type { AbstractStatement } from "../../ast/node/abstract-statement.ts";
-import type { Identifier } from "../../ast/node/identifier.ts";
-import type { ElementaryType } from "../../ast/node/elementary-type.ts";
-import { SemanticError as SemanticErrorClass } from "../../scanner-error.ts";
+import {
+  InternalScannerError,
+  SemanticError as SemanticErrorClass,
+} from "../../scanner-error.ts";
 import { SymbolKind } from "../enum/symbol-kind.ts";
 import { AbstractAnalysisNodeHandler } from "./abstract-analysis-node-handler.ts";
-
-function isIdentifier(node: unknown): node is Identifier {
-  return node !== null &&
-    typeof node === "object" &&
-    "nodeKind" in node &&
-    (node as { nodeKind: NodeKind }).nodeKind === NodeKind.IDENTIFIER;
-}
-
-function isElementaryType(node: unknown): node is ElementaryType {
-  return node !== null &&
-    typeof node === "object" &&
-    "nodeKind" in node &&
-    (node as { nodeKind: NodeKind }).nodeKind === NodeKind.ELEMENTARY_TYPE;
-}
+import type { SymbolAttributes } from "../symbol.ts";
+import {
+  getElementaryTypeKind,
+  getRequiredElementaryType,
+  getRequiredIdentifier,
+  getRequiredToken,
+  getStringVariableKind,
+} from "../util/symbol-table-utils.ts";
+import { isElementaryType, isIdentifier } from "../../ast/util/types.ts";
 
 export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
   public readonly symbolTable: SymbolTable = new SymbolTable();
 
-  constructor(strictMode: boolean) {
-    super(strictMode);
+  constructor(strict: boolean) {
+    super(strict);
   }
 
   doBeforeVisit(node: AbstractCompositeNode): void {
-    if (node.nodeKind === NodeKind.STATEMENT) {
-      const statement = node as AbstractStatement;
-      this.handleStatementBeforeVisit(statement);
-    } else if (node.nodeKind === NodeKind.PARAMETER) {
-      this.handleParameter(node as Parameter);
+    const nodeKind = node.nodeKind;
+
+    switch (nodeKind) {
+      case NodeKind.STATEMENT:
+        this.handleStatementBeforeVisit(node as AbstractStatement);
+        break;
+      case NodeKind.PARAMETER:
+        this.handleParameter(node as Parameter);
+        break;
+      case NodeKind.UNEXPECTED_ERROR:
+      case NodeKind.AGGREGATE_OUTPUT_VALUE:
+      case NodeKind.ALIGNED_MODIFIER:
+      case NodeKind.ARRAY_DIMENSION:
+      case NodeKind.ARRAY_ELEMENT_ACCESS:
+      case NodeKind.BIT_MODIFIER:
+      case NodeKind.CASE_CLAUSE:
+      case NodeKind.CLASS_ID:
+      case NodeKind.CLASS_MEMBER_ACCESS:
+      case NodeKind.DEFAULT_CLAUSE:
+      case NodeKind.ELEMENTARY_TYPE:
+      case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
+      case NodeKind.EXPANDABLE_MODIFIER:
+      case NodeKind.EXPRESSION:
+      case NodeKind.EXTENDS_MODIFIER:
+      case NodeKind.IDENTIFIER:
+      case NodeKind.LENGTH_ATTRIBUTE:
+      case NodeKind.MAP_ENTRY:
+      case NodeKind.NUMBER_LITERAL:
+      case NodeKind.PARAMETER_LIST:
+      case NodeKind.PARAMETER_VALUE_LIST:
+      case NodeKind.SPECIFICATION:
+      case NodeKind.STRING_LITERAL:
+      case NodeKind.TOKEN:
+        // These nodes are handled as part of statements
+        break;
+      default: {
+        const exhaustiveCheck: never = nodeKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, nodeKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
@@ -58,14 +91,52 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   }
 
   doAfterVisit(node: AbstractCompositeNode): void {
-    if (node.nodeKind === NodeKind.STATEMENT) {
-      const statement = node as AbstractStatement;
-      this.handleStatementAfterVisit(statement);
+    const nodeKind = node.nodeKind;
+
+    switch (nodeKind) {
+      case NodeKind.STATEMENT:
+        this.handleStatementAfterVisit(node as AbstractStatement);
+        break;
+      case NodeKind.UNEXPECTED_ERROR:
+      case NodeKind.AGGREGATE_OUTPUT_VALUE:
+      case NodeKind.ALIGNED_MODIFIER:
+      case NodeKind.ARRAY_DIMENSION:
+      case NodeKind.ARRAY_ELEMENT_ACCESS:
+      case NodeKind.BIT_MODIFIER:
+      case NodeKind.CASE_CLAUSE:
+      case NodeKind.CLASS_ID:
+      case NodeKind.CLASS_MEMBER_ACCESS:
+      case NodeKind.DEFAULT_CLAUSE:
+      case NodeKind.ELEMENTARY_TYPE:
+      case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
+      case NodeKind.EXPANDABLE_MODIFIER:
+      case NodeKind.EXPRESSION:
+      case NodeKind.EXTENDS_MODIFIER:
+      case NodeKind.IDENTIFIER:
+      case NodeKind.LENGTH_ATTRIBUTE:
+      case NodeKind.MAP_ENTRY:
+      case NodeKind.NUMBER_LITERAL:
+      case NodeKind.PARAMETER:
+      case NodeKind.PARAMETER_LIST:
+      case NodeKind.PARAMETER_VALUE_LIST:
+      case NodeKind.SPECIFICATION:
+      case NodeKind.STRING_LITERAL:
+      case NodeKind.TOKEN:
+        // These nodes are handled as part of statements
+        break;
+      default: {
+        const exhaustiveCheck: never = nodeKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, nodeKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
   private handleStatementBeforeVisit(statement: AbstractStatement): void {
-    switch (statement.statementKind) {
+    const statementKind = statement.statementKind;
+
+    switch (statementKind) {
       case StatementKind.CLASS_DECLARATION:
         this.handleClassDeclaration(statement as ClassDeclaration);
         break;
@@ -107,13 +178,24 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       case StatementKind.WHILE:
       case StatementKind.DO:
       case StatementKind.SWITCH:
-        this.symbolTable.enterScope(StatementKind[statement.statementKind]);
+        this.symbolTable.enterScope(StatementKind[statementKind]);
         break;
+      case StatementKind.EXPRESSION:
+        // No action needed before visiting expression statements
+        break;
+      default: {
+        const exhaustiveCheck: never = statementKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, statementKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
   private handleStatementAfterVisit(statement: AbstractStatement): void {
-    switch (statement.statementKind) {
+    const statementKind = statement.statementKind;
+
+    switch (statementKind) {
       case StatementKind.CLASS_DECLARATION:
       case StatementKind.MAP_DECLARATION:
       case StatementKind.FOR:
@@ -124,372 +206,563 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       case StatementKind.SWITCH:
         this.symbolTable.exitScope();
         break;
+      case StatementKind.ELEMENTARY_TYPE_DEFINITION:
+      case StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION:
+      case StatementKind.ARRAY_DEFINITION:
+      case StatementKind.COMPUTED_ARRAY_DEFINITION:
+      case StatementKind.STRING_DEFINITION:
+      case StatementKind.CLASS_DEFINITION:
+      case StatementKind.MAP_DEFINITION:
+      case StatementKind.EXPRESSION:
+        // No action needed after visiting these statements
+        break;
+      default: {
+        const exhaustiveCheck: never = statementKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, statementKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
-  private handleClassDeclaration(classDecl: ClassDeclaration): void {
-    const identifier = classDecl.identifier;
-    if (!isIdentifier(identifier)) {
-      return;
-    }
-
-    const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const success = this.symbolTable.defineGlobal({
-      name,
-      kind: SymbolKind.CLASS,
-      location,
-      declarationNode: classDecl,
-    });
+  private defineSymbol(symbol: Symbol) {
+    const success = this.symbolTable.define(symbol);
 
     if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Class '${name}' is already declared`,
-          location,
-        ),
+      const error = new SemanticErrorClass(
+        `Variable: '${symbol.name}' is already declared in scope: ${this.symbolTable.getCurrentScope().name}`,
+        symbol.location,
       );
-    }
 
-    this.symbolTable.enterScope(name);
+      if (this.strict) {
+        throw error;
+      }
+
+      this.semanticErrors.push(error);
+    }
   }
 
-  private handleMapDeclaration(mapDecl: MapDeclaration): void {
-    const identifier = mapDecl.identifier;
-    if (!isIdentifier(identifier)) {
-      return;
-    }
-
-    const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const success = this.symbolTable.defineGlobal({
-      name,
-      kind: SymbolKind.MAP,
-      location,
-      declarationNode: mapDecl,
-    });
+  private defineGlobalSymbol(symbol: Symbol) {
+    const success = this.symbolTable.defineGlobal(symbol);
 
     if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Map '${name}' is already declared`,
-          location,
-        ),
+      const error = new SemanticErrorClass(
+        `Variable: '${symbol.name}' is already declared in global scope`,
+        symbol.location,
       );
-    }
 
-    this.symbolTable.enterScope(name);
-  }
+      if (this.strict) {
+        throw error;
+      }
 
-  private handleParameter(param: Parameter): void {
-    const identifier = param.identifier;
-    if (!isIdentifier(identifier)) {
-      return;
-    }
-
-    const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const symbolAttributes: SymbolAttributes = {};
-    if (isElementaryType(param.elementaryType)) {
-      symbolAttributes.elementaryType = param.elementaryType;
-    } else if (isIdentifier(param.classIdentifier)) {
-      symbolAttributes.classReference = param.classIdentifier.name;
-    }
-
-    const success = this.symbolTable.define({
-      name,
-      kind: SymbolKind.PARAMETER,
-      attributes: symbolAttributes,
-      location,
-    });
-
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Parameter '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
+      this.semanticErrors.push(error);
     }
   }
 
   private handleElementaryTypeDefinition(
-    elemTypeDef: ElementaryTypeDefinition,
+    elementaryTypeDefinition: ElementaryTypeDefinition,
   ): void {
-    const identifier = elemTypeDef.identifier;
-    if (!isIdentifier(identifier)) {
+    const identifier = getRequiredIdentifier(
+      elementaryTypeDefinition.identifier,
+      elementaryTypeDefinition,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    const elementaryType = getRequiredElementaryType(
+      elementaryTypeDefinition.elementaryType,
+      elementaryTypeDefinition,
+      this.strict,
+    );
+
+    if (!elementaryType) {
+      return;
+    }
+
+    const elementaryTypeKind = getElementaryTypeKind(
+      elementaryType,
+      this.strict,
+    );
+
+    if (elementaryTypeKind === undefined) {
       return;
     }
 
     const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const symbolAttributes: SymbolAttributes = {
-      isConst: !!elemTypeDef.constKeyword,
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
+      isConst: !!elementaryTypeDefinition.constKeyword,
+      elementaryTypeKind,
     };
 
-    if (isElementaryType(elemTypeDef.elementaryType)) {
-      symbolAttributes.elementaryType = elemTypeDef.elementaryType;
-    }
-
-    const success = this.symbolTable.define({
+    this.defineSymbol({
+      node: elementaryTypeDefinition,
       name,
       kind: SymbolKind.VARIABLE,
-      attributes: symbolAttributes,
+      attributes,
       location,
     });
-
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Variable '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
-    }
   }
 
   private handleComputedElementaryTypeDefinition(
-    compElemTypeDef: ComputedElementaryTypeDefinition,
+    computedElementaryTypeDefinition: ComputedElementaryTypeDefinition,
   ): void {
-    const identifier = compElemTypeDef.identifier;
-    if (!isIdentifier(identifier)) {
+    const identifier = getRequiredIdentifier(
+      computedElementaryTypeDefinition.identifier,
+      computedElementaryTypeDefinition,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    const elementaryType = getRequiredElementaryType(
+      computedElementaryTypeDefinition.elementaryType,
+      computedElementaryTypeDefinition,
+      this.strict,
+    );
+
+    if (!elementaryType) {
+      return;
+    }
+
+    const elementaryTypeKind = getElementaryTypeKind(
+      elementaryType,
+      this.strict,
+    );
+
+    if (elementaryTypeKind === undefined) {
       return;
     }
 
     const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const symbolAttributes: SymbolAttributes = {
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
+      isConst: !!computedElementaryTypeDefinition.constKeyword,
+      elementaryTypeKind,
       isComputed: true,
-      isConst: !!compElemTypeDef.constKeyword,
     };
 
-    if (isElementaryType(compElemTypeDef.elementaryType)) {
-      symbolAttributes.elementaryType = compElemTypeDef.elementaryType;
-    }
-
-    const success = this.symbolTable.define({
+    this.defineSymbol({
+      node: computedElementaryTypeDefinition,
       name,
       kind: SymbolKind.VARIABLE,
-      attributes: symbolAttributes,
+      attributes,
       location,
     });
-
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Variable '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
-    }
   }
 
-  private handleArrayDefinition(arrayDef: ArrayDefinition): void {
-    const identifier = arrayDef.identifier;
-    if (!isIdentifier(identifier)) {
+  private handleArrayDefinition(arrayDefinition: ArrayDefinition): void {
+    const identifier = getRequiredIdentifier(
+      arrayDefinition.identifier,
+      arrayDefinition,
+      this.strict,
+    );
+
+    if (!identifier) {
       return;
     }
 
     const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const symbolAttributes: SymbolAttributes = {
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
       isArray: true,
     };
 
-    if (isElementaryType(arrayDef.elementaryType)) {
-      symbolAttributes.elementaryType = arrayDef.elementaryType;
-    } else if (isIdentifier(arrayDef.classIdentifier)) {
-      symbolAttributes.classReference = arrayDef.classIdentifier.name;
+    if (isElementaryType(arrayDefinition.elementaryType)) {
+      const elementaryTypeKind = getElementaryTypeKind(
+        arrayDefinition.elementaryType,
+        this.strict,
+      );
+
+      if (elementaryTypeKind) {
+        attributes.elementaryTypeKind = elementaryTypeKind;
+      }
+    } else if (isIdentifier(arrayDefinition.classIdentifier)) {
+      attributes.classReference = arrayDefinition.classIdentifier.name;
     }
 
-    const success = this.symbolTable.define({
+    // check that at least one of elementaryType or classIdentifier is present
+    if (!attributes.elementaryTypeKind && !attributes.classReference) {
+      const error = new SemanticErrorClass(
+        `Array definition must have either an elementary type or a class identifier`,
+        identifier.startToken!.location,
+      );
+
+      if (this.strict) {
+        throw error;
+      }
+
+      this.semanticErrors.push(error);
+      return;
+    }
+
+    this.defineSymbol({
+      node: arrayDefinition,
       name,
       kind: SymbolKind.VARIABLE,
-      attributes: symbolAttributes,
+      attributes,
       location,
     });
-
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Variable '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
-    }
   }
 
   private handleComputedArrayDefinition(
-    compArrayDef: ComputedArrayDefinition,
+    computedArrayDefinition: ComputedArrayDefinition,
   ): void {
-    const identifier = compArrayDef.identifier;
-    if (!isIdentifier(identifier)) {
+    const identifier = getRequiredIdentifier(
+      computedArrayDefinition.identifier,
+      computedArrayDefinition,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    const elementaryType = getRequiredElementaryType(
+      computedArrayDefinition.elementaryType,
+      computedArrayDefinition,
+      this.strict,
+    );
+
+    if (!elementaryType) {
+      return;
+    }
+
+    const elementaryTypeKind = getElementaryTypeKind(
+      elementaryType,
+      this.strict,
+    );
+
+    if (elementaryTypeKind === undefined) {
       return;
     }
 
     const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const symbolAttributes: SymbolAttributes = {
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
       isArray: true,
-      isComputed: true,
+      elementaryTypeKind,
     };
 
-    if (isElementaryType(compArrayDef.elementaryType)) {
-      symbolAttributes.elementaryType = compArrayDef.elementaryType;
-    }
-
-    const success = this.symbolTable.define({
+    this.defineSymbol({
+      node: computedArrayDefinition,
       name,
       kind: SymbolKind.VARIABLE,
-      attributes: symbolAttributes,
+      attributes,
       location,
     });
-
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Variable '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
-    }
   }
 
-  private handleStringDefinition(stringDef: StringDefinition): void {
-    const identifier = stringDef.identifier;
-    if (!isIdentifier(identifier)) {
+  private handleStringDefinition(stringDefinition: StringDefinition): void {
+    const identifier = getRequiredIdentifier(
+      stringDefinition.identifier,
+      stringDefinition,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    const stringVariableKindToken = getRequiredToken(
+      stringDefinition.stringVariableKindToken,
+      stringDefinition,
+      this.strict,
+    );
+
+    if (!stringVariableKindToken) {
+      return;
+    }
+
+    const stringVariableKind = getStringVariableKind(
+      stringVariableKindToken,
+      this.strict,
+    );
+
+    if (!stringVariableKind) {
       return;
     }
 
     const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const symbolAttributes: SymbolAttributes = {
-      isConst: !!stringDef.constKeyword,
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
+      isString: true,
+      isConst: !!stringDefinition.constKeyword,
+      stringVariableKind,
     };
 
-    const success = this.symbolTable.define({
+    this.defineSymbol({
+      node: stringDefinition,
       name,
       kind: SymbolKind.VARIABLE,
-      attributes: symbolAttributes,
+      attributes,
       location,
     });
-
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Variable '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
-    }
   }
 
-  private handleClassDefinition(classDef: ClassDefinition): void {
-    const identifier = classDef.identifier;
-    if (!isIdentifier(identifier)) {
+  private handleClassDeclaration(classDeclaration: ClassDeclaration): void {
+    const identifier = getRequiredIdentifier(
+      classDeclaration.identifier,
+      classDeclaration,
+      this.strict,
+    );
+
+    if (!identifier) {
       return;
     }
 
     const name = identifier.name;
-    const location = identifier.startToken?.location;
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {};
 
-    const symbolAttributes: SymbolAttributes = {};
-    if (isIdentifier(classDef.classIdentifier)) {
-      symbolAttributes.classReference = classDef.classIdentifier.name;
-    }
-
-    const success = this.symbolTable.define({
+    this.defineGlobalSymbol({
+      node: classDeclaration,
       name,
-      kind: SymbolKind.VARIABLE,
-      attributes: symbolAttributes,
+      kind: SymbolKind.CLASS,
+      attributes,
       location,
     });
 
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Variable '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
-    }
+    this.symbolTable.enterScope(name);
   }
 
-  private handleMapDefinition(mapDef: MapDefinition): void {
-    const identifier = mapDef.identifier;
-    if (!isIdentifier(identifier)) {
+  private handleMapDeclaration(mapDeclaration: MapDeclaration): void {
+    const identifier = getRequiredIdentifier(
+      mapDeclaration.identifier,
+      mapDeclaration,
+      this.strict,
+    );
+
+    if (!identifier) {
       return;
     }
 
     const name = identifier.name;
-    const location = identifier.startToken?.location;
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {};
 
-    const symbolAttributes: SymbolAttributes = {};
-    if (isElementaryType(mapDef.elementaryType)) {
-      symbolAttributes.elementaryType = mapDef.elementaryType;
-    } else if (isIdentifier(mapDef.classIdentifier)) {
-      symbolAttributes.classReference = mapDef.classIdentifier.name;
+    if (isElementaryType(mapDeclaration.outputElementaryType)) {
+      const elementaryTypeKind = getElementaryTypeKind(
+        mapDeclaration.outputElementaryType,
+        this.strict,
+      );
+
+      if (elementaryTypeKind) {
+        attributes.elementaryTypeKind = elementaryTypeKind;
+      }
+    } else if (isIdentifier(mapDeclaration.outputClassIdentifier)) {
+      attributes.classReference = mapDeclaration.outputClassIdentifier.name;
     }
 
-    const success = this.symbolTable.define({
+    // check that at least one of elementaryType or classIdentifier is present
+    if (!attributes.elementaryTypeKind && !attributes.classReference) {
+      const error = new SemanticErrorClass(
+        `Map declaration must have either an elementary type or a class identifier`,
+        identifier.startToken!.location,
+      );
+
+      if (this.strict) {
+        throw error;
+      }
+
+      this.semanticErrors.push(error);
+      return;
+    }
+
+    this.defineGlobalSymbol({
+      node: mapDeclaration,
       name,
-      kind: SymbolKind.VARIABLE,
-      attributes: symbolAttributes,
+      kind: SymbolKind.MAP,
+      attributes,
       location,
     });
 
-    if (!success) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Variable '${name}' is already declared in this scope`,
-          location,
-        ),
-      );
-    }
+    this.symbolTable.enterScope(name);
   }
 
-  private handleForStatementBefore(forStmt: ForStatement): void {
+  private handleClassDefinition(classDefinition: ClassDefinition): void {
+    const identifier = getRequiredIdentifier(
+      classDefinition.identifier,
+      classDefinition,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    const classIdentifier = getRequiredIdentifier(
+      classDefinition.classIdentifier,
+      classDefinition,
+      this.strict,
+    );
+
+    if (!classIdentifier) {
+      return;
+    }
+
+    const name = identifier.name;
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
+      classReference: classIdentifier.name,
+    };
+
+    this.defineSymbol({
+      node: classDefinition,
+      name,
+      kind: SymbolKind.VARIABLE,
+      attributes,
+      location,
+    });
+  }
+
+  private handleMapDefinition(mapDefinition: MapDefinition): void {
+    const identifier = getRequiredIdentifier(
+      mapDefinition.identifier,
+      mapDefinition,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    const mapIdentifier = getRequiredIdentifier(
+      mapDefinition.mapIdentifier,
+      mapDefinition,
+      this.strict,
+    );
+
+    if (!mapIdentifier) {
+      return;
+    }
+
+    const name = identifier.name;
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
+      mapReference: mapIdentifier.name,
+    };
+
+    if (isElementaryType(mapDefinition.elementaryType)) {
+      const elementaryTypeKind = getElementaryTypeKind(
+        mapDefinition.elementaryType,
+        this.strict,
+      );
+
+      if (elementaryTypeKind) {
+        attributes.elementaryTypeKind = elementaryTypeKind;
+      }
+    } else if (isIdentifier(mapDefinition.classIdentifier)) {
+      attributes.classReference = mapDefinition.classIdentifier.name;
+    }
+
+    // check that at least one of elementaryType or classIdentifier is present
+    if (!attributes.elementaryTypeKind && !attributes.classReference) {
+      const error = new SemanticErrorClass(
+        `Map definition must have either an elementary type or a class identifier`,
+        identifier.startToken!.location,
+      );
+
+      if (this.strict) {
+        throw error;
+      }
+
+      this.semanticErrors.push(error);
+      return;
+    }
+
+    this.defineSymbol({
+      node: mapDefinition,
+      name,
+      kind: SymbolKind.VARIABLE,
+      attributes,
+      location,
+    });
+  }
+
+  private handleParameter(parameter: Parameter): void {
+    const identifier = getRequiredIdentifier(
+      parameter.identifier,
+      parameter,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    const name = identifier.name;
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {};
+
+    if (isElementaryType(parameter.elementaryType)) {
+      const elementaryTypeKind = getElementaryTypeKind(
+        parameter.elementaryType,
+        this.strict,
+      );
+
+      if (elementaryTypeKind) {
+        attributes.elementaryTypeKind = elementaryTypeKind;
+      }
+    } else if (isIdentifier(parameter.classIdentifier)) {
+      attributes.classReference = parameter.classIdentifier.name;
+    }
+
+    // check that at least one of elementaryType or classIdentifier is present
+    if (!attributes.elementaryTypeKind && !attributes.classReference) {
+      const error = new SemanticErrorClass(
+        `Parameter must have either an elementary type or a class identifier`,
+        identifier.startToken!.location,
+      );
+
+      if (this.strict) {
+        throw error;
+      }
+
+      this.semanticErrors.push(error);
+      return;
+    }
+
+    this.defineSymbol({
+      node: parameter,
+      name,
+      kind: SymbolKind.PARAMETER,
+      attributes,
+      location,
+    });
+  }
+
+  private handleForStatementBefore(_forStatement: ForStatement): void {
     this.symbolTable.enterScope("FOR");
 
-    if (forStmt.computedElementaryDefinition) {
-      const compElemDef = forStmt.computedElementaryDefinition;
-      const identifier = compElemDef.identifier;
-      if (isIdentifier(identifier)) {
-        const name = identifier.name;
-        const location = identifier.startToken?.location;
+    // TODO: implement loop variable symbol definition
+    // if (forStatement.computedElementaryDefinition) {
+    //   const compElemDef = forStatement.computedElementaryDefinition;
+    //   const identifier = compElemDef.identifier;
 
-        const symbolAttributes: SymbolAttributes = {
-          isComputed: true,
-        };
+    // const name = identifier.name;
+    // const location = identifier.startToken!.location;
 
-        if (isElementaryType(compElemDef.elementaryType)) {
-          symbolAttributes.elementaryType = compElemDef.elementaryType;
-        }
+    //     const symbolAttributes: SymbolAttributes = {
+    //       isComputed: true,
+    //     };
 
-        const success = this.symbolTable.define({
-          name,
-          kind: SymbolKind.LOOP_VARIABLE,
-          attributes: symbolAttributes,
-          location,
-        });
+    //     if (isElementaryType(compElemDef.elementaryType)) {
+    //       symbolAttributes.elementaryType = compElemDef.elementaryType;
+    //     }
 
-        if (!success) {
-          this.semanticErrors.push(
-            new SemanticErrorClass(
-              `Loop variable '${name}' is already declared in this scope`,
-              location,
-            ),
-          );
-        }
-      }
-    }
+    // this.defineSymbol({
+    //       node: forStatement,
+    //       name,
+    //       kind: SymbolKind.LOOP_VARIABLE,
+    //       attributes: symbolAttributes,
+    //       location,
+    //     });
+    //   }
   }
 }

@@ -1,12 +1,17 @@
+import { ElementaryTypeKind } from "../ast/node/enum/elementary-type-kind.ts";
+import { StringVariableKind } from "../ast/node/enum/string-variable-kind.ts";
 import { InternalScannerError } from "../scanner-error.ts";
 import { SymbolKind } from "./enum/symbol-kind.ts";
 import type { Symbol } from "./symbol.ts";
+import getLogger from "../util/logger.ts";
+
+const logger = getLogger("SymbolTable");
 
 export interface Scope {
   symbols: Map<string, Symbol>;
   parent?: Scope;
   children: Scope[];
-  scopeName?: string;
+  name?: string;
 }
 
 export class SymbolTable {
@@ -18,18 +23,18 @@ export class SymbolTable {
     this.globalScope = {
       symbols: new Map(),
       children: [],
-      scopeName: "global",
+      name: "global",
     };
     this.currentScope = this.globalScope;
     this.scopeStack.push(this.globalScope);
   }
 
-  enterScope(scopeName?: string): void {
+  enterScope(name?: string): void {
     const newScope: Scope = {
       symbols: new Map(),
       parent: this.currentScope,
       children: [],
-      scopeName,
+      name,
     };
     this.currentScope.children.push(newScope);
     this.scopeStack.push(newScope);
@@ -51,7 +56,11 @@ export class SymbolTable {
     if (this.currentScope.symbols.has(symbol.name)) {
       return false;
     }
+
     this.currentScope.symbols.set(symbol.name, symbol);
+
+    logger.debug(`Defined symbol: ${symbol.name} in scope: ${this.currentScope.name ?? "anonymous"}`);
+
     return true;
   }
 
@@ -59,14 +68,19 @@ export class SymbolTable {
     if (this.globalScope.symbols.has(symbol.name)) {
       return false;
     }
+
     this.globalScope.symbols.set(symbol.name, symbol);
+
+    logger.debug(`Defined global symbol: ${symbol.name}`);
     return true;
   }
 
   lookup(name: string): Symbol | undefined {
     let scope: Scope | undefined = this.currentScope;
+
     while (scope) {
       const symbol = scope.symbols.get(name);
+
       if (symbol) {
         return symbol;
       }
@@ -83,14 +97,18 @@ export class SymbolTable {
     return this.globalScope.symbols.get(name);
   }
 
+  // TODO: why this?
   lookupClass(name: string): Symbol | undefined {
     const symbol = this.globalScope.symbols.get(name);
+
     if (symbol && symbol.kind === SymbolKind.CLASS) {
       return symbol;
     }
+
     return undefined;
   }
 
+  // TODO: why this?
   lookupMap(name: string): Symbol | undefined {
     const symbol = this.globalScope.symbols.get(name);
     if (symbol && symbol.kind === SymbolKind.MAP) {
@@ -111,15 +129,11 @@ export class SymbolTable {
     return this.scopeStack.length;
   }
 
-  getCurrentScopeName(): string | undefined {
-    return this.currentScope.scopeName;
-  }
-
   toString(): string {
     const lines: string[] = [];
     const formatScope = (scope: Scope, indent: number): void => {
       const prefix = "  ".repeat(indent);
-      const scopeLabel = scope.scopeName ?? "anonymous";
+      const scopeLabel = scope.name ?? "anonymous";
 
       lines.push(`${prefix}[${scopeLabel}]`);
 
@@ -128,32 +142,40 @@ export class SymbolTable {
         let typeStr = "";
 
         if (symbol.attributes) {
+          const attributes = symbol.attributes;
           const parts: string[] = [];
 
-          if (symbol.attributes.isConst) {
-            parts.push("const");
-          }
-
-          if (symbol.attributes.isComputed) {
+          if (attributes.isComputed) {
             parts.push("computed");
           }
 
-          if (symbol.attributes.elementaryType) {
-            const typeKeyword = symbol.attributes.elementaryType.typeKeyword;
-
-            if ("text" in typeKeyword) {
-              parts.push(typeKeyword.text);
-            }
-          } else if (symbol.attributes.classReference) {
-            parts.push(symbol.attributes.classReference);
+          if (attributes.isConst) {
+            parts.push("const");
           }
 
-          if (symbol.attributes.isArray) {
+          if (attributes.stringVariableKind) {
+            parts.push(StringVariableKind[attributes.stringVariableKind]);
+          }
+
+          if (attributes.elementaryTypeKind !== undefined) {
+            parts.push(ElementaryTypeKind[attributes.elementaryTypeKind]);
+          }
+
+          if (attributes.classReference) {
+            parts.push(attributes.classReference);
+          }
+
+          if (attributes.mapReference) {
+            parts.push(attributes.mapReference);
+          }
+
+          if (attributes.isArray) {
             parts.push("[]");
           }
-          typeStr = parts.length > 0 ? `: ${parts.join(" ")}` : "";
+
+          typeStr = parts.length > 0 ? ` ${parts.join(" ")}` : "";
         }
-        lines.push(`${prefix}  ${name} (${kindName})${typeStr}`);
+        lines.push(`${prefix}  ${name} ${kindName}${typeStr}`);
       }
 
       for (const child of scope.children) {

@@ -48,7 +48,7 @@ describe("createSdlAnalyser Tests", () => {
 
     expect(() => sdlAnalyser.analyse(specificationWithErrors as Specification))
       .toThrow(
-        "SEMANTIC ERROR: ERROR_MISSING_TOKEN encountered => { row: 1, column: 13, position: 12 }",
+        "SEMANTIC ERROR: Required identifier property is a Token node: ERROR_MISSING_TOKEN",
       );
   });
 });

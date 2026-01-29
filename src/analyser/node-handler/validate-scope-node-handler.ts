@@ -19,6 +19,7 @@ import type { LengthofExpression } from "../../ast/node/length-of-expression.ts"
 import { SemanticError as SemanticErrorClass } from "../../scanner-error.ts";
 import { AbstractAnalysisNodeHandler } from "./abstract-analysis-node-handler.ts";
 
+// TODO: move to types
 function isIdentifier(node: unknown): node is Identifier {
   return node !== null &&
     typeof node === "object" &&
@@ -30,8 +31,8 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
   private scopeStack: string[] = [];
 
-  constructor(public readonly symbolTable: SymbolTable, strictMode: boolean) {
-    super(strictMode);
+  constructor(public readonly symbolTable: SymbolTable, strict: boolean) {
+    super(strict);
   }
 
   doBeforeVisit(node: AbstractCompositeNode): void {

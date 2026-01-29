@@ -18,6 +18,7 @@ import type { Token } from "../../ast/node/token.ts";
 import { SemanticError as SemanticErrorClass } from "../../scanner-error.ts";
 import { AbstractAnalysisNodeHandler } from "./abstract-analysis-node-handler.ts";
 
+// TODO: move to types
 function isIdentifier(node: unknown): node is Identifier {
   return node !== null &&
     typeof node === "object" &&
@@ -25,6 +26,7 @@ function isIdentifier(node: unknown): node is Identifier {
     (node as { nodeKind: NodeKind }).nodeKind === NodeKind.IDENTIFIER;
 }
 
+// TODO: move to types
 function isToken(node: unknown): node is Token {
   return node !== null &&
     typeof node === "object" &&
@@ -36,8 +38,8 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
   private scopeStack: string[] = [];
 
-  constructor(public readonly symbolTable: SymbolTable, strictMode: boolean) {
-    super(strictMode);
+  constructor(public readonly symbolTable: SymbolTable, strict: boolean) {
+    super(strict);
   }
 
   doBeforeVisit(node: AbstractCompositeNode): void {

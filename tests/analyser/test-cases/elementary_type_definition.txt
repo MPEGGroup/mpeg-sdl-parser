@@ -5,9 +5,9 @@ class A{int(3) a;}
 ==>
 
 [global]
-  A (CLASS)
+  A CLASS
   [A]
-    a (VARIABLE): int
+    a VARIABLE INTEGER
 
 # Legacy, const, aligned, lookahead value range
 
@@ -16,9 +16,9 @@ class A{legacy const aligned(8) unsigned int(7)* a=3..i;}
 ==>
 
 [global]
-  A (CLASS)
+  A CLASS
   [A]
-    a (VARIABLE): const int
+    a VARIABLE const UNSIGNED_INTEGER
 
 # Default aligned
 
@@ -27,9 +27,9 @@ class A {aligned int(2) a;}
 ==>
 
 [global]
-  A (CLASS)
+  A CLASS
   [A]
-    a (VARIABLE): int
+    a VARIABLE INTEGER
 
 # Explicit aligned bit count
 
@@ -38,6 +38,6 @@ class A {aligned(16) int(2) a;}
 ==>
 
 [global]
-  A (CLASS)
+  A CLASS
   [A]
-    a (VARIABLE): int
+    a VARIABLE INTEGER

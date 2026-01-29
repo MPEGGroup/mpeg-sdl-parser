@@ -2,18 +2,27 @@ import { describe, expect, test } from "bun:test";
 import { SymbolTable } from "../../src/analyser/symbol-table.ts";
 import { SymbolKind } from "../../src/analyser/enum/symbol-kind.ts";
 import { type Symbol } from "../../src/analyser/symbol.ts";
+import { TokenKind } from "../../src/ast/node/enum/token-kind.ts";
+import { Token } from "../../src/ast/node/token.ts";
+import { Identifier } from "../../dist/index.js";
 
 describe("Symbol Table Tests", () => {
+  const node = new Identifier(
+    "foo",
+    new Token(TokenKind.IDENTIFIER, "foo", { row: 1, column: 1, position: 0 }),
+  );
+
   test("Test symbol table creation", () => {
     const table = new SymbolTable();
 
     expect(table.getScopeDepth()).toBe(1);
-    expect(table.getCurrentScopeName()).toBe("global");
+    expect(table.getCurrentScope().name).toBe("global");
   });
 
   test("Define and lookup symbol in global scope", () => {
     const table = new SymbolTable();
     const symbol: Symbol = {
+      node,
       name: "MyClass",
       kind: SymbolKind.CLASS,
       attributes: {},
@@ -28,12 +37,14 @@ describe("Symbol Table Tests", () => {
   test("Prevent duplicate symbol definition", () => {
     const table = new SymbolTable();
     const symbol1: Symbol = {
+      node,
       name: "MyClass",
       kind: SymbolKind.CLASS,
       attributes: {},
       location: { row: 1, column: 1, position: 0 },
     };
     const symbol2: Symbol = {
+      node,
       name: "MyClass",
       kind: SymbolKind.MAP,
       attributes: {},
@@ -53,17 +64,18 @@ describe("Symbol Table Tests", () => {
     table.enterScope("inner");
 
     expect(table.getScopeDepth()).toBe(2);
-    expect(table.getCurrentScopeName()).toBe("inner");
+    expect(table.getCurrentScope().name).toBe("inner");
 
     table.exitScope();
 
     expect(table.getScopeDepth()).toBe(1);
-    expect(table.getCurrentScopeName()).toBe("global");
+    expect(table.getCurrentScope().name).toBe("global");
   });
 
   test("Lookup traverses parent scopes", () => {
     const table = new SymbolTable();
     const globalSymbol: Symbol = {
+      node,
       name: "globalVar",
       kind: SymbolKind.VARIABLE,
       attributes: {},
@@ -75,6 +87,7 @@ describe("Symbol Table Tests", () => {
     table.enterScope("inner");
 
     const innerSymbol: Symbol = {
+      node,
       name: "innerVar",
       kind: SymbolKind.VARIABLE,
       attributes: {},
@@ -93,12 +106,14 @@ describe("Symbol Table Tests", () => {
     const table = new SymbolTable();
 
     table.define({
+      node,
       name: "MyClass",
       kind: SymbolKind.CLASS,
       attributes: {},
       location: { row: 1, column: 1, position: 0 },
     });
     table.define({
+      node,
       name: "MyMap",
       kind: SymbolKind.MAP,
       attributes: {},
@@ -113,12 +128,14 @@ describe("Symbol Table Tests", () => {
     const table = new SymbolTable();
 
     table.define({
+      node,
       name: "MyClass",
       kind: SymbolKind.CLASS,
       attributes: {},
       location: { row: 1, column: 1, position: 0 },
     });
     table.define({
+      node,
       name: "MyMap",
       kind: SymbolKind.MAP,
       attributes: {},
@@ -133,12 +150,14 @@ describe("Symbol Table Tests", () => {
     const table = new SymbolTable();
 
     table.define({
+      node,
       name: "MyClass",
       kind: SymbolKind.CLASS,
       attributes: {},
       location: { row: 1, column: 1, position: 0 },
     });
     table.define({
+      node,
       name: "MyMap",
       kind: SymbolKind.MAP,
       attributes: {},
@@ -148,14 +167,15 @@ describe("Symbol Table Tests", () => {
     const output = table.toString();
 
     expect(output).toContain("[global]");
-    expect(output).toContain("MyClass (CLASS)");
-    expect(output).toContain("MyMap (MAP)");
+    expect(output).toContain("MyClass CLASS");
+    expect(output).toContain("MyMap MAP");
   });
 
   test("toString includes nested scopes", () => {
     const table = new SymbolTable();
 
     table.define({
+      node,
       name: "GlobalClass",
       kind: SymbolKind.CLASS,
       attributes: {},
@@ -163,6 +183,7 @@ describe("Symbol Table Tests", () => {
     });
     table.enterScope("MyClass");
     table.define({
+      node,
       name: "param1",
       kind: SymbolKind.PARAMETER,
       attributes: {},
@@ -172,15 +193,16 @@ describe("Symbol Table Tests", () => {
     const output = table.toString();
 
     expect(output).toContain("[global]");
-    expect(output).toContain("GlobalClass (CLASS)");
+    expect(output).toContain("GlobalClass CLASS");
     expect(output).toContain("[MyClass]");
-    expect(output).toContain("param1 (PARAMETER)");
+    expect(output).toContain("param1 PARAMETER");
   });
 
   test("toString includes type information", () => {
     const table = new SymbolTable();
 
     table.define({
+      node,
       name: "myVar",
       kind: SymbolKind.VARIABLE,
       attributes: {
@@ -193,6 +215,6 @@ describe("Symbol Table Tests", () => {
 
     const output = table.toString();
 
-    expect(output).toContain("myVar (VARIABLE): const SomeClass []");
+    expect(output).toContain("myVar VARIABLE const SomeClass []");
   });
 });

@@ -1,19 +1,22 @@
-import type { ClassDeclaration } from "../ast/node/class-declaration.ts";
-import type { ElementaryType } from "../ast/node/elementary-type.ts";
-import type { MapDeclaration } from "../ast/node/map-declaration.ts";
 import type { SymbolKind } from "./enum/symbol-kind.ts";
 import type { Location } from "../location.ts";
+import type { ElementaryTypeKind } from "../ast/node/enum/elementary-type-kind.ts";
+import type { AbstractCompositeNode } from "../ast/node/abstract-composite-node.ts";
+import type { StringVariableKind } from "../ast/node/enum/string-variable-kind.ts";
 
 export interface SymbolAttributes {
-  // TODO: Why not enum?
-  elementaryType?: ElementaryType;
-  // TODO: Why not reference to ClassDeclaration?
-  // TODO: Need to account for scope here?
-  classReference?: string;
-  isArray?: boolean;
-  // TODO: isString?
   isComputed?: boolean;
   isConst?: boolean;
+  isString?: boolean;
+  isArray?: boolean;
+
+  elementaryTypeKind?: ElementaryTypeKind;
+  stringVariableKind?: StringVariableKind;
+
+  // For array of class types, Map class output type or Class definition
+  classReference?: string;
+  // For Map definition
+  mapReference?: string;
 }
 
 export interface Symbol {
@@ -21,6 +24,5 @@ export interface Symbol {
   kind: SymbolKind;
   attributes: SymbolAttributes;
   location: Location;
-  // TODO: why is this used?
-  declarationNode?: ClassDeclaration | MapDeclaration;
+  node: AbstractCompositeNode;
 }
