@@ -24,7 +24,11 @@ export function createLenientSdlAnalyser(): SdlAnalyser {
  */
 export function createStrictSdlAnalyser(): SdlAnalyser {
   if (!strictSdlAnalyser) {
-    strictSdlAnalyser = createLenientSdlAnalyser().configure({
+    strictSdlAnalyser = new SdlAnalyser();
+
+    // Configure the parser with default checks
+    strictSdlAnalyser = strictSdlAnalyser.configure({
+      checks: [],
       strict: true,
     });
   }

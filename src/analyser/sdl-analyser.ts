@@ -3,13 +3,14 @@ import { dispatchNodeHandler } from "../parse-helper.ts";
 import type { SemanticError } from "../scanner-error.ts";
 import { BuildSymbolTableNodeHandler } from "./node-handler/build-symbol-table-node-handler.ts";
 import type { Check } from "./check.ts";
-import { SymbolTable } from "./symbol-table.ts";
 import { ValidateScopeNodeHandler } from "./node-handler/validate-scope-node-handler.ts";
 import { ValidateTypeNodeHandler } from "./node-handler/validate-type-node-handler.ts";
+import type { SymbolTable } from "./symbol-table.ts";
 
 export interface SdlAnalysisResult {
   semanticErrors: Array<SemanticError>;
   specification: Specification;
+  symbolTable: SymbolTable;
 }
 
 export class SdlAnalyser {
@@ -29,16 +30,24 @@ export class SdlAnalyser {
   }
 
   analyse(specification: Specification): SdlAnalysisResult {
-    const symbolTable = new SymbolTable();
-    const buildSymbolTableNodeHandler = new BuildSymbolTableNodeHandler(symbolTable);
+    const buildSymbolTableNodeHandler = new BuildSymbolTableNodeHandler(
+      this.strict,
+    );
 
     dispatchNodeHandler(specification, buildSymbolTableNodeHandler);
 
-    const scopeValidationNodeHandler = new ValidateScopeNodeHandler(symbolTable);
+    const symbolTable = buildSymbolTableNodeHandler.symbolTable;
+    const scopeValidationNodeHandler = new ValidateScopeNodeHandler(
+      symbolTable,
+      this.strict,
+    );
 
     dispatchNodeHandler(specification, scopeValidationNodeHandler);
 
-    const typeValidationNodeHandler = new ValidateTypeNodeHandler(symbolTable);
+    const typeValidationNodeHandler = new ValidateTypeNodeHandler(
+      symbolTable,
+      this.strict,
+    );
 
     dispatchNodeHandler(specification, typeValidationNodeHandler);
 
@@ -48,6 +57,7 @@ export class SdlAnalyser {
         ...typeValidationNodeHandler.semanticErrors,
       ],
       specification,
+      symbolTable,
     };
   }
 }
