@@ -1,0 +1,43 @@
+# Simple
+
+class A{int(3) a;}
+
+==>
+
+[global]
+  A (CLASS)
+  [A]
+    a (VARIABLE): int
+
+# Legacy, const, aligned, lookahead value range
+
+class A{legacy const aligned(8) unsigned int(7)* a=3..i;}
+
+==>
+
+[global]
+  A (CLASS)
+  [A]
+    a (VARIABLE): const int
+
+# Default aligned
+
+class A {aligned int(2) a;}
+
+==>
+
+[global]
+  A (CLASS)
+  [A]
+    a (VARIABLE): int
+
+# Explicit aligned bit count
+
+class A {aligned(16) int(2) a;}
+
+==>
+
+[global]
+  A (CLASS)
+  [A]
+    a (VARIABLE): int
