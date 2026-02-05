@@ -1,0 +1,35 @@
+# First expression is expression
+
+class A {for (i=1;i<9;i++) {j++;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# First expression is computed elementary type definition
+
+class A {for (computed int i=1;i<9;i++) {j++;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# First expression is empty
+
+class A {for (;i<9;i++) {j++;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER

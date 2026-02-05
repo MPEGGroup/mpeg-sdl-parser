@@ -1,0 +1,23 @@
+# Reserved with elementary type output
+
+class A {reserved unsigned int<Offsets> offset;}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Legacy with class output
+
+class A {legacy B<MapB> b;}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER

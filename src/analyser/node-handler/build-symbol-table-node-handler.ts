@@ -31,7 +31,11 @@ import {
   getRequiredToken,
   getStringVariableKind,
 } from "../util/symbol-table-utils.ts";
-import { isElementaryType, isIdentifier } from "../../ast/util/types.ts";
+import {
+  isComputedElementaryTypeDefinition,
+  isElementaryType,
+  isIdentifier,
+} from "../../ast/util/types.ts";
 
 export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
@@ -51,31 +55,31 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       case NodeKind.PARAMETER:
         this.handleParameter(node as Parameter);
         break;
+      case NodeKind.BIT_MODIFIER:
+      case NodeKind.CASE_CLAUSE:
+      case NodeKind.DEFAULT_CLAUSE:
+        break;
+      case NodeKind.IDENTIFIER:
+      case NodeKind.EXPRESSION:
+      case NodeKind.NUMBER_LITERAL:
       case NodeKind.UNEXPECTED_ERROR:
       case NodeKind.AGGREGATE_OUTPUT_VALUE:
       case NodeKind.ALIGNED_MODIFIER:
       case NodeKind.ARRAY_DIMENSION:
       case NodeKind.ARRAY_ELEMENT_ACCESS:
-      case NodeKind.BIT_MODIFIER:
-      case NodeKind.CASE_CLAUSE:
       case NodeKind.CLASS_ID:
+      case NodeKind.EXTENDS_MODIFIER:
       case NodeKind.CLASS_MEMBER_ACCESS:
-      case NodeKind.DEFAULT_CLAUSE:
       case NodeKind.ELEMENTARY_TYPE:
       case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
       case NodeKind.EXPANDABLE_MODIFIER:
-      case NodeKind.EXPRESSION:
-      case NodeKind.EXTENDS_MODIFIER:
-      case NodeKind.IDENTIFIER:
       case NodeKind.LENGTH_ATTRIBUTE:
       case NodeKind.MAP_ENTRY:
-      case NodeKind.NUMBER_LITERAL:
       case NodeKind.PARAMETER_LIST:
       case NodeKind.PARAMETER_VALUE_LIST:
       case NodeKind.SPECIFICATION:
       case NodeKind.STRING_LITERAL:
       case NodeKind.TOKEN:
-        // These nodes are handled as part of statements
         break;
       default: {
         const exhaustiveCheck: never = nodeKind;
@@ -97,16 +101,17 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       case NodeKind.STATEMENT:
         this.handleStatementAfterVisit(node as AbstractStatement);
         break;
+      case NodeKind.CASE_CLAUSE:
+      case NodeKind.DEFAULT_CLAUSE:
+        break;
       case NodeKind.UNEXPECTED_ERROR:
       case NodeKind.AGGREGATE_OUTPUT_VALUE:
       case NodeKind.ALIGNED_MODIFIER:
       case NodeKind.ARRAY_DIMENSION:
       case NodeKind.ARRAY_ELEMENT_ACCESS:
       case NodeKind.BIT_MODIFIER:
-      case NodeKind.CASE_CLAUSE:
       case NodeKind.CLASS_ID:
       case NodeKind.CLASS_MEMBER_ACCESS:
-      case NodeKind.DEFAULT_CLAUSE:
       case NodeKind.ELEMENTARY_TYPE:
       case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
       case NodeKind.EXPANDABLE_MODIFIER:
@@ -122,7 +127,6 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       case NodeKind.SPECIFICATION:
       case NodeKind.STRING_LITERAL:
       case NodeKind.TOKEN:
-        // These nodes are handled as part of statements
         break;
       default: {
         const exhaustiveCheck: never = nodeKind;
@@ -174,14 +178,13 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
         this.handleForStatementBefore(statement as ForStatement);
         break;
       case StatementKind.COMPOUND:
-      case StatementKind.IF:
       case StatementKind.WHILE:
       case StatementKind.DO:
       case StatementKind.SWITCH:
         this.symbolTable.enterScope(StatementKind[statementKind]);
         break;
       case StatementKind.EXPRESSION:
-        // No action needed before visiting expression statements
+      case StatementKind.IF:
         break;
       default: {
         const exhaustiveCheck: never = statementKind;
@@ -200,12 +203,12 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       case StatementKind.MAP_DECLARATION:
       case StatementKind.FOR:
       case StatementKind.COMPOUND:
-      case StatementKind.IF:
       case StatementKind.WHILE:
       case StatementKind.DO:
       case StatementKind.SWITCH:
         this.symbolTable.exitScope();
         break;
+      case StatementKind.IF:
       case StatementKind.ELEMENTARY_TYPE_DEFINITION:
       case StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION:
       case StatementKind.ARRAY_DEFINITION:
@@ -379,7 +382,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
         this.strict,
       );
 
-      if (elementaryTypeKind) {
+      if (elementaryTypeKind !== undefined) {
         attributes.elementaryTypeKind = elementaryTypeKind;
       }
     } else if (isIdentifier(arrayDefinition.classIdentifier)) {
@@ -387,7 +390,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if (!attributes.elementaryTypeKind && !attributes.classReference) {
+    if ((attributes.elementaryTypeKind === undefined) && !attributes.classReference) {
       const error = new SemanticErrorClass(
         `Array definition must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
@@ -484,7 +487,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       this.strict,
     );
 
-    if (!stringVariableKind) {
+    if (stringVariableKind === undefined) {
       return;
     }
 
@@ -552,7 +555,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
         this.strict,
       );
 
-      if (elementaryTypeKind) {
+      if (elementaryTypeKind !== undefined) {
         attributes.elementaryTypeKind = elementaryTypeKind;
       }
     } else if (isIdentifier(mapDeclaration.outputClassIdentifier)) {
@@ -654,7 +657,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
         this.strict,
       );
 
-      if (elementaryTypeKind) {
+      if (elementaryTypeKind !== undefined) {
         attributes.elementaryTypeKind = elementaryTypeKind;
       }
     } else if (isIdentifier(mapDefinition.classIdentifier)) {
@@ -706,7 +709,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
         this.strict,
       );
 
-      if (elementaryTypeKind) {
+      if (elementaryTypeKind !== undefined) {
         attributes.elementaryTypeKind = elementaryTypeKind;
       }
     } else if (isIdentifier(parameter.classIdentifier)) {
@@ -714,7 +717,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if (!attributes.elementaryTypeKind && !attributes.classReference) {
+    if ((attributes.elementaryTypeKind === undefined) && !attributes.classReference) {
       const error = new SemanticErrorClass(
         `Parameter must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
@@ -731,38 +734,63 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     this.defineSymbol({
       node: parameter,
       name,
-      kind: SymbolKind.PARAMETER,
+      kind: SymbolKind.VARIABLE,
       attributes,
       location,
     });
   }
 
-  private handleForStatementBefore(_forStatement: ForStatement): void {
+  private handleForStatementBefore(forStatement: ForStatement): void {
     this.symbolTable.enterScope("FOR");
 
-    // TODO: implement loop variable symbol definition
-    // if (forStatement.computedElementaryDefinition) {
-    //   const compElemDef = forStatement.computedElementaryDefinition;
-    //   const identifier = compElemDef.identifier;
+    const compElemDef = forStatement.computedElementaryDefinition;
 
-    // const name = identifier.name;
-    // const location = identifier.startToken!.location;
+    if (!isComputedElementaryTypeDefinition(compElemDef)) {
+      return;
+    }
 
-    //     const symbolAttributes: SymbolAttributes = {
-    //       isComputed: true,
-    //     };
+    const identifier = getRequiredIdentifier(
+      compElemDef.identifier,
+      compElemDef,
+      this.strict,
+    );
 
-    //     if (isElementaryType(compElemDef.elementaryType)) {
-    //       symbolAttributes.elementaryType = compElemDef.elementaryType;
-    //     }
+    if (!identifier) {
+      return;
+    }
 
-    // this.defineSymbol({
-    //       node: forStatement,
-    //       name,
-    //       kind: SymbolKind.LOOP_VARIABLE,
-    //       attributes: symbolAttributes,
-    //       location,
-    //     });
-    //   }
+    const elementaryType = getRequiredElementaryType(
+      compElemDef.elementaryType,
+      compElemDef,
+      this.strict,
+    );
+
+    if (!elementaryType) {
+      return;
+    }
+
+    const elementaryTypeKind = getElementaryTypeKind(
+      elementaryType,
+      this.strict,
+    );
+
+    if (elementaryTypeKind === undefined) {
+      return;
+    }
+
+    const name = identifier.name;
+    const location = identifier.startToken!.location;
+    const attributes: SymbolAttributes = {
+      isComputed: true,
+      elementaryTypeKind,
+    };
+
+    this.defineSymbol({
+      node: forStatement,
+      name,
+      kind: SymbolKind.VARIABLE,
+      attributes,
+      location,
+    });
   }
 }

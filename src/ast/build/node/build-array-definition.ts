@@ -28,7 +28,7 @@ export function buildArrayDefinition(
   const reservedKeyword = fetchOptionalNode<Token>(
     buildContext,
     NodeKind.TOKEN,
-    TokenKind.OPEN_BRACE,
+    TokenKind.RESERVED,
   );
   if (reservedKeyword) {
     children.push(reservedKeyword);

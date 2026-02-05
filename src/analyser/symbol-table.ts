@@ -59,7 +59,11 @@ export class SymbolTable {
 
     this.currentScope.symbols.set(symbol.name, symbol);
 
-    logger.debug(`Defined symbol: ${symbol.name} in scope: ${this.currentScope.name ?? "anonymous"}`);
+    logger.debug(
+      `Defined symbol: ${symbol.name} in scope: ${
+        this.currentScope.name ?? "anonymous"
+      }`,
+    );
 
     return true;
   }
@@ -75,6 +79,7 @@ export class SymbolTable {
     return true;
   }
 
+  // TODO: support SDL specific scoping rules
   lookup(name: string): Symbol | undefined {
     let scope: Scope | undefined = this.currentScope;
 
@@ -89,31 +94,33 @@ export class SymbolTable {
     return undefined;
   }
 
+  // TODO: support SDL specific scoping rules
   lookupInCurrentScope(name: string): Symbol | undefined {
     return this.currentScope.symbols.get(name);
   }
 
+  // TODO: support SDL specific scoping rules
   lookupGlobal(name: string): Symbol | undefined {
     return this.globalScope.symbols.get(name);
   }
 
-  // TODO: why this?
   lookupClass(name: string): Symbol | undefined {
     const symbol = this.globalScope.symbols.get(name);
 
-    if (symbol && symbol.kind === SymbolKind.CLASS) {
+    if (symbol && (symbol.kind === SymbolKind.CLASS)) {
       return symbol;
     }
 
     return undefined;
   }
 
-  // TODO: why this?
   lookupMap(name: string): Symbol | undefined {
     const symbol = this.globalScope.symbols.get(name);
-    if (symbol && symbol.kind === SymbolKind.MAP) {
+
+    if (symbol && (symbol.kind === SymbolKind.MAP)) {
       return symbol;
     }
+
     return undefined;
   }
 

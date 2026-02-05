@@ -185,7 +185,7 @@ describe("Symbol Table Tests", () => {
     table.define({
       node,
       name: "param1",
-      kind: SymbolKind.PARAMETER,
+      kind: SymbolKind.VARIABLE,
       attributes: {},
       location: { row: 2, column: 1, position: 10 },
     });
@@ -195,7 +195,7 @@ describe("Symbol Table Tests", () => {
     expect(output).toContain("[global]");
     expect(output).toContain("GlobalClass CLASS");
     expect(output).toContain("[MyClass]");
-    expect(output).toContain("param1 PARAMETER");
+    expect(output).toContain("param1 VARIABLE");
   });
 
   test("toString includes type information", () => {

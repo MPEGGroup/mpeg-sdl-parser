@@ -1,0 +1,38 @@
+# Simple
+
+class A {int(3) a[3];}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER []
+
+# Reserved multiple dimensions with mixed explicit and partial dimensions
+
+class MyClass{}
+class A {reserved MyClass a[3][[2]];}
+
+==>
+
+[global]
+  MyClass CLASS
+  A CLASS
+  [MyClass]
+  [A]
+    a VARIABLE MyClass []
+
+# Implicit dimension
+
+class MyClass{}
+class A {MyClass a[1..3];}
+
+==>
+
+[global]
+  MyClass CLASS
+  A CLASS
+  [MyClass]
+  [A]
+    a VARIABLE MyClass []

@@ -19,7 +19,7 @@ export function buildImplicitArrayDimension(
   const openBracketPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
-    TokenKind.OPEN_BRACE,
+    TokenKind.OPEN_BRACKET,
   );
   children.push(openBracketPunctuator);
   const rangeStart = fetchOptionalNode<
@@ -52,8 +52,8 @@ export function buildImplicitArrayDimension(
       buildContext,
       [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
     );
-    if (rangeStart) {
-      children.push(rangeStart);
+    if (rangeEnd) {
+      children.push(rangeEnd);
     } else {
       throw new InternalScannerError(
         "Expected range end after range operator in implicit array dimension",

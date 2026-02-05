@@ -1,0 +1,26 @@
+# Simple
+
+class A {{utf8string foo;utf8string bar;}}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    [COMPOUND]
+      foo VARIABLE UTF8STRING
+      bar VARIABLE UTF8STRING
+
+# Nested compound statements
+
+class A {{utf8string foo;{ utf8string bar1;utf8string bar2;}}}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    [COMPOUND]
+      foo VARIABLE UTF8STRING
+      [COMPOUND]
+      bar VARIABLE UTF8STRING

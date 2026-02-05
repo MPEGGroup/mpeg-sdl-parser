@@ -24,7 +24,6 @@ export function printAbstractArrayDimension(
     case ArrayDimensionKind.PARTIAL: {
       return [
         path.call(print, "openBracketPunctuator"),
-        path.call(print, "openBracketPunctuator"),
         (path as AstPath<PartialArrayDimension>).call(
           print,
           "innerOpenBracketPunctuator",
@@ -44,7 +43,6 @@ export function printAbstractArrayDimension(
       doc.push(
         path.call(print, "openBracketPunctuator"),
       );
-      doc.push("[");
 
       if (node.rangeStart !== undefined) {
         doc.push(

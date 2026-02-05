@@ -1,0 +1,35 @@
+# Simple class declaration
+
+class A{}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+
+# Single parameter with single id
+
+class A(int a) {}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# All features
+
+class C{}
+aligned(8) expandable(20) abstract class A (int a, B b) extends C(1, d) : bit(3) id=1..2,5 {}
+
+==>
+
+[global]
+  C CLASS
+  A CLASS
+  [C]
+  [A]
+    a VARIABLE INTEGER
+    b VARIABLE B

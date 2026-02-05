@@ -1,6 +1,7 @@
 import type { AbstractCompositeNode } from "../node/abstract-composite-node.ts";
 import type { AbstractNode } from "../node/abstract-node.ts";
 import type { AbstractStatement } from "../node/abstract-statement.ts";
+import type { ComputedElementaryTypeDefinition } from "../node/computed-elementary-type-definition.ts";
 import type { Identifier } from "../node/identifier.ts";
 import { NodeKind } from "../node/enum/node-kind.ts";
 import { TokenKind } from "../node/enum/token-kind.ts";
@@ -9,6 +10,8 @@ import type { Token } from "../node/token.ts";
 import type { UnexpectedError } from "../node/unexpected-error.ts";
 import { StatementKind } from "../node/enum/statement-kind.ts";
 import type { ElementaryType } from "../node/elementary-type.ts";
+import type { AbstractExpression } from "../node/abstract-expression.ts";
+import type { NumberLiteral } from "../../../dist/index.js";
 
 export type OptionalNode<T> = T | UnexpectedError | undefined;
 
@@ -62,4 +65,24 @@ export function isElementaryType(
   node: AbstractNode | undefined,
 ): node is ElementaryType {
   return node?.nodeKind === NodeKind.ELEMENTARY_TYPE;
+}
+
+export function isAbstractExpression(
+  node: AbstractNode | undefined,
+): node is AbstractExpression {
+  return node?.nodeKind === NodeKind.EXPRESSION;
+}
+
+export function isNumberLiteral(
+  node: AbstractNode | undefined,
+): node is NumberLiteral {
+  return node?.nodeKind === NodeKind.NUMBER_LITERAL;
+}
+
+export function isComputedElementaryTypeDefinition(
+  node: AbstractNode | undefined,
+): node is ComputedElementaryTypeDefinition {
+  return node?.nodeKind === NodeKind.STATEMENT &&
+    (node as AbstractStatement).statementKind ===
+      StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION;
 }

@@ -1,0 +1,11 @@
+# Simple
+
+class A {while (i<9) {i++;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER

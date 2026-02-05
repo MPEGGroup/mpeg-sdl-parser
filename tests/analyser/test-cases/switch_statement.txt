@@ -1,0 +1,59 @@
+# Single case
+
+class A {switch(i){case 1:break;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Single case with braces
+
+class A {switch(i){case 1:{break;}}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Multiple cases and default
+
+class A {switch(i){case 1:break;case 2:{i++;break;}default:i--;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Multiple cases with no break and default
+
+class A {switch(i){case 1:i++;case 2:i++;default:i--;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Multiple cases with no break and no expression and default
+
+class A {switch(i){case 1:case 2:i++;default:i--;}}
+
+==>
+
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER

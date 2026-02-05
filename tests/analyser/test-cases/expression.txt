@@ -1,0 +1,120 @@
+# Number literal with unary plus operator
+
+class A {+1;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Identifier with unary negation operator
+
+class A {-i;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Lengthof operator with unary negation
+
+class A {-lengthof(i);}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Postfix operator
+
+class A {i++;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Class member access expression
+
+class A {a.b;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Class member access expression - multiple
+
+class A {a.b.c;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Array element access expression
+
+class A {a[1];}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Array element access expression multiple
+
+class A {a[1][2];}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Class member access expression with postfix operator
+
+class A {a.b++;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Array element access expression with postfix operator
+
+class A {a[1]++;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Class member and array element access expression - multiple mixed
+
+class A {a[1][2].b.c[3];}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER

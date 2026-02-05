@@ -7,9 +7,12 @@ import { TokenKind } from "../../ast/node/enum/token-kind.ts";
 import type { Identifier } from "../../ast/node/identifier.ts";
 import type { Token } from "../../ast/node/token.ts";
 import {
+  isAbstractExpression,
   isElementaryType,
   isIdentifier,
+  isNumberLiteral,
   isToken,
+  type RequiredNode,
 } from "../../ast/util/types.ts";
 import { SemanticError } from "../../scanner-error.ts";
 import getLogger from "../../util/logger.ts";
@@ -27,7 +30,7 @@ const logger = getLogger("SymbolTableUtils");
  * @return the node as an Identifier or undefined
  */
 export function getRequiredIdentifier(
-  node: AbstractNode,
+  node: RequiredNode<AbstractNode>,
   parentNode: AbstractNode,
   strict: boolean,
 ): Identifier | undefined {
@@ -84,7 +87,7 @@ export function getRequiredIdentifier(
  * @return the node as an Token or undefined
  */
 export function getRequiredToken(
-  node: AbstractNode,
+  node: RequiredNode<AbstractNode>,
   parentNode: AbstractNode,
   strict: boolean,
 ): Token | undefined {
@@ -132,7 +135,7 @@ export function getRequiredToken(
  * @return the node as an ElementaryType or undefined
  */
 export function getRequiredElementaryType(
-  node: AbstractNode,
+  node: RequiredNode<AbstractNode>,
   parentNode: AbstractNode,
   strict: boolean,
 ): ElementaryType | undefined {
@@ -215,7 +218,7 @@ export function getElementaryTypeKind(
           elementaryType.unsignedQualifierKeyword.location,
         );
       } else {
-        logger.error(
+        logger.debug(
           `Ignoring invalid elementary type unsigned qualifier token kind: ${
             TokenKind[elementaryType.unsignedQualifierKeyword.tokenKind]
           } in lenient mode.`,
@@ -309,5 +312,57 @@ export function getStringVariableKind(
         );
         return undefined;
       }
+  }
+}
+
+/**
+ * Converts the given node to a required Operand.
+ * If the node is undefined or not an AbstractExpression, Identifier or
+ * NumberLiteral, it throws a SemanticError in strict mode.
+ * In lenient mode, it logs a debug message and returns undefined.
+ *
+ * @param node the node to convert
+ * @param parentNode the parent node for error location context
+ * @param strict whether to operate in strict mode
+ * @return the node or undefined
+ */
+export function getRequiredOperand(
+  node: RequiredNode<AbstractNode>,
+  parentNode: AbstractNode,
+  strict: boolean,
+): AbstractNode | undefined {
+  if (node === undefined) {
+    if (strict) {
+      throw new SemanticError(
+        "Required operand property is missing",
+        parentNode.leadingTrivia
+          ? parentNode.leadingTrivia[0].location
+          : undefined,
+      );
+    } else {
+      logger.debug(
+        "Ignoring missing required operand property in lenient mode.",
+      );
+    }
+    return undefined;
+  }
+
+  if (
+    isAbstractExpression(node) || isIdentifier(node) || isNumberLiteral(node)
+  ) {
+    return node;
+  }
+
+  if (strict) {
+    throw new SemanticError(
+      "Required operand property is not an AbstractExpression, Identifier or NumberLiteral node: " +
+        NodeKind[node.nodeKind],
+      node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
+    );
+  } else {
+    logger.debug(
+      "Ignoring invalid required operand property in lenient mode.",
+    );
+    return undefined;
   }
 }

@@ -1,6 +1,5 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-
 exports[`Prettier Plugin SDL tests prettified output is as expected 1`] = `
 "// repeated packets in bitstream
 //
@@ -86,7 +85,12 @@ class odd2(int a) {
   }
   for (; j > 0; j--) {
   }
-} // until EOF
+}
+
+class A {
+  MyClass a[1..3];
+  reserved MyClass b[3][[2]];
+} // end of file
 "
 `;
 

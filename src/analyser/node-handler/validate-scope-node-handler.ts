@@ -16,16 +16,17 @@ import type { BinaryExpression } from "../../ast/node/binary-expression.ts";
 import type { AbstractExpression } from "../../ast/node/abstract-expression.ts";
 import type { AbstractStatement } from "../../ast/node/abstract-statement.ts";
 import type { LengthofExpression } from "../../ast/node/length-of-expression.ts";
-import { SemanticError as SemanticErrorClass } from "../../scanner-error.ts";
+import {
+  InternalScannerError,
+  SemanticError as SemanticErrorClass,
+} from "../../scanner-error.ts";
 import { AbstractAnalysisNodeHandler } from "./abstract-analysis-node-handler.ts";
-
-// TODO: move to types
-function isIdentifier(node: unknown): node is Identifier {
-  return node !== null &&
-    typeof node === "object" &&
-    "nodeKind" in node &&
-    (node as { nodeKind: NodeKind }).nodeKind === NodeKind.IDENTIFIER;
-}
+import type { MapDeclaration } from "../../../dist/index.js";
+import {
+  getRequiredIdentifier,
+  getRequiredOperand,
+} from "../util/symbol-table-utils.ts";
+import { isIdentifier } from "../../ast/util/types.ts";
 
 export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
@@ -36,34 +37,108 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
   }
 
   doBeforeVisit(node: AbstractCompositeNode): void {
-    if (node.nodeKind === NodeKind.STATEMENT) {
-      const statement = node as AbstractStatement;
-      this.handleStatementBeforeVisit(statement);
-    } else if (node.nodeKind === NodeKind.EXTENDS_MODIFIER) {
-      this.validateExtendsModifier(node as ExtendsModifier);
-    } else if (node.nodeKind === NodeKind.EXPRESSION) {
-      this.validateExpression(node as AbstractExpression);
+    const nodeKind = node.nodeKind;
+
+    switch (nodeKind) {
+      case NodeKind.STATEMENT:
+        this.handleStatementBeforeVisit(node as AbstractStatement);
+        break;
+      case NodeKind.EXTENDS_MODIFIER:
+        this.validateExtendsModifier(node as ExtendsModifier);
+        break;
+      case NodeKind.EXPRESSION:
+        this.validateExpression(node as AbstractExpression);
+        break;
+      case NodeKind.CLASS_MEMBER_ACCESS:
+      case NodeKind.ARRAY_ELEMENT_ACCESS:
+      case NodeKind.ARRAY_DIMENSION:
+      case NodeKind.PARAMETER_VALUE_LIST:
+        break;
+      case NodeKind.EXPANDABLE_MODIFIER:
+      case NodeKind.PARAMETER:
+      case NodeKind.UNEXPECTED_ERROR:
+      case NodeKind.AGGREGATE_OUTPUT_VALUE:
+      case NodeKind.ALIGNED_MODIFIER:
+      case NodeKind.BIT_MODIFIER:
+      case NodeKind.CASE_CLAUSE:
+      case NodeKind.CLASS_ID:
+      case NodeKind.DEFAULT_CLAUSE:
+      case NodeKind.ELEMENTARY_TYPE:
+      case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
+      case NodeKind.IDENTIFIER:
+      case NodeKind.LENGTH_ATTRIBUTE:
+      case NodeKind.MAP_ENTRY:
+      case NodeKind.NUMBER_LITERAL:
+      case NodeKind.PARAMETER_LIST:
+      case NodeKind.SPECIFICATION:
+      case NodeKind.STRING_LITERAL:
+      case NodeKind.TOKEN:
+        break;
+      default: {
+        const exhaustiveCheck: never = nodeKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, nodeKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
   doVisit(_node: AbstractLeafNode): void {
-    // Leaf nodes are validated in the context of their parent composite nodes
+    // Leaf nodes don't define symbols
   }
 
   doAfterVisit(node: AbstractCompositeNode): void {
-    if (node.nodeKind === NodeKind.STATEMENT) {
-      const statement = node as AbstractStatement;
-      this.handleStatementAfterVisit(statement);
+    const nodeKind = node.nodeKind;
+
+    switch (nodeKind) {
+      case NodeKind.STATEMENT:
+        this.handleStatementAfterVisit(node as AbstractStatement);
+        break;
+      case NodeKind.LENGTH_ATTRIBUTE:
+        break;
+      case NodeKind.UNEXPECTED_ERROR:
+      case NodeKind.AGGREGATE_OUTPUT_VALUE:
+      case NodeKind.ALIGNED_MODIFIER:
+      case NodeKind.ARRAY_DIMENSION:
+      case NodeKind.ARRAY_ELEMENT_ACCESS:
+      case NodeKind.BIT_MODIFIER:
+      case NodeKind.CASE_CLAUSE:
+      case NodeKind.CLASS_ID:
+      case NodeKind.CLASS_MEMBER_ACCESS:
+      case NodeKind.DEFAULT_CLAUSE:
+      case NodeKind.ELEMENTARY_TYPE:
+      case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
+      case NodeKind.EXPANDABLE_MODIFIER:
+      case NodeKind.EXPRESSION:
+      case NodeKind.EXTENDS_MODIFIER:
+      case NodeKind.IDENTIFIER:
+      case NodeKind.MAP_ENTRY:
+      case NodeKind.NUMBER_LITERAL:
+      case NodeKind.PARAMETER:
+      case NodeKind.PARAMETER_LIST:
+      case NodeKind.PARAMETER_VALUE_LIST:
+      case NodeKind.SPECIFICATION:
+      case NodeKind.STRING_LITERAL:
+      case NodeKind.TOKEN:
+        break;
+      default: {
+        const exhaustiveCheck: never = nodeKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, nodeKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
   private handleStatementBeforeVisit(statement: AbstractStatement): void {
-    switch (statement.statementKind) {
+    const statementKind = statement.statementKind;
+
+    switch (statementKind) {
       case StatementKind.CLASS_DECLARATION:
         this.enterClassScope(statement as ClassDeclaration);
         break;
       case StatementKind.MAP_DECLARATION:
-        this.enterMapScope();
+        this.enterMapScope(statement as MapDeclaration);
         break;
       case StatementKind.CLASS_DEFINITION:
         this.validateClassDefinition(statement as ClassDefinition);
@@ -74,139 +149,204 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
       case StatementKind.ARRAY_DEFINITION:
         this.validateArrayDefinition(statement as ArrayDefinition);
         break;
-      case StatementKind.FOR:
-      case StatementKind.COMPOUND:
-      case StatementKind.IF:
+      case StatementKind.ELEMENTARY_TYPE_DEFINITION:
+      case StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION:
+        break;
+      case StatementKind.SWITCH:
       case StatementKind.WHILE:
       case StatementKind.DO:
-      case StatementKind.SWITCH:
-        this.scopeStack.push(StatementKind[statement.statementKind]);
-        break;
-    }
-  }
-
-  private handleStatementAfterVisit(statement: AbstractStatement): void {
-    switch (statement.statementKind) {
-      case StatementKind.CLASS_DECLARATION:
-      case StatementKind.MAP_DECLARATION:
       case StatementKind.FOR:
       case StatementKind.COMPOUND:
-      case StatementKind.IF:
-      case StatementKind.WHILE:
-      case StatementKind.DO:
-      case StatementKind.SWITCH:
-        this.scopeStack.pop();
+        this.scopeStack.push(StatementKind[statementKind]);
         break;
-    }
-  }
-
-  private enterClassScope(classDecl: ClassDeclaration): void {
-    const identifier = classDecl.identifier;
-    if (isIdentifier(identifier)) {
-      this.scopeStack.push(identifier.name);
-    }
-  }
-
-  private enterMapScope(): void {
-    this.scopeStack.push("MAP");
-  }
-
-  private validateExtendsModifier(extendsModifier: ExtendsModifier): void {
-    const identifier = extendsModifier.identifier;
-    if (!isIdentifier(identifier)) {
-      return;
-    }
-
-    const name = identifier.name;
-    const location = identifier.startToken?.location;
-
-    const classSymbol = this.symbolTable.lookupClass(name);
-    if (!classSymbol) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Extended class '${name}' is not declared`,
-          location,
-        ),
-      );
-    }
-  }
-
-  private validateClassDefinition(classDef: ClassDefinition): void {
-    const classIdentifier = classDef.classIdentifier;
-    if (!isIdentifier(classIdentifier)) {
-      return;
-    }
-
-    const name = classIdentifier.name;
-    const location = classIdentifier.startToken?.location;
-
-    const classSymbol = this.symbolTable.lookupClass(name);
-    if (!classSymbol) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Class '${name}' is not declared`,
-          location,
-        ),
-      );
-    }
-  }
-
-  private validateMapDefinition(mapDef: MapDefinition): void {
-    const mapIdentifier = mapDef.mapIdentifier;
-    if (!isIdentifier(mapIdentifier)) {
-      return;
-    }
-
-    const name = mapIdentifier.name;
-    const location = mapIdentifier.startToken?.location;
-
-    const mapSymbol = this.symbolTable.lookupMap(name);
-    if (!mapSymbol) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Map '${name}' is not declared`,
-          location,
-        ),
-      );
-    }
-
-    if (isIdentifier(mapDef.classIdentifier)) {
-      const className = mapDef.classIdentifier.name;
-      const classLocation = mapDef.classIdentifier.startToken?.location;
-      const classSymbol = this.symbolTable.lookupClass(className);
-      if (!classSymbol) {
-        this.semanticErrors.push(
-          new SemanticErrorClass(
-            `Class '${className}' is not declared`,
-            classLocation,
-          ),
+      case StatementKind.IF:
+      case StatementKind.EXPRESSION:
+        break;
+      case StatementKind.COMPUTED_ARRAY_DEFINITION:
+      case StatementKind.STRING_DEFINITION:
+        break;
+      default: {
+        const exhaustiveCheck: never = statementKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, statementKind == " + exhaustiveCheck,
         );
       }
     }
   }
 
-  private validateArrayDefinition(arrayDef: ArrayDefinition): void {
-    const classIdentifier = arrayDef.classIdentifier;
-    if (!isIdentifier(classIdentifier)) {
-      return;
-    }
+  private handleStatementAfterVisit(statement: AbstractStatement): void {
+    const statementKind = statement.statementKind;
 
-    const name = classIdentifier.name;
-    const location = classIdentifier.startToken?.location;
-
-    const classSymbol = this.symbolTable.lookupClass(name);
-    if (!classSymbol) {
-      this.semanticErrors.push(
-        new SemanticErrorClass(
-          `Class '${name}' is not declared`,
-          location,
-        ),
-      );
+    switch (statementKind) {
+      case StatementKind.CLASS_DECLARATION:
+      case StatementKind.MAP_DECLARATION:
+      case StatementKind.FOR:
+      case StatementKind.COMPOUND:
+      case StatementKind.WHILE:
+      case StatementKind.DO:
+      case StatementKind.SWITCH:
+        this.scopeStack.pop();
+        break;
+      case StatementKind.IF:
+      case StatementKind.ELEMENTARY_TYPE_DEFINITION:
+      case StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION:
+      case StatementKind.ARRAY_DEFINITION:
+      case StatementKind.COMPUTED_ARRAY_DEFINITION:
+      case StatementKind.STRING_DEFINITION:
+      case StatementKind.CLASS_DEFINITION:
+      case StatementKind.MAP_DEFINITION:
+      case StatementKind.EXPRESSION:
+        // No action needed after visiting these statements
+        break;
+      default: {
+        const exhaustiveCheck: never = statementKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, statementKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
+  private enterClassScope(classDeclaration: ClassDeclaration): void {
+    const identifier = getRequiredIdentifier(
+      classDeclaration.identifier,
+      classDeclaration,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    this.scopeStack.push(identifier.name);
+  }
+
+  private enterMapScope(mapDeclaration: MapDeclaration): void {
+    const identifier = getRequiredIdentifier(
+      mapDeclaration.identifier,
+      mapDeclaration,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    this.scopeStack.push(identifier.name);
+  }
+
+  private checkClassReference(classIdentifier: Identifier): void {
+    const name = classIdentifier.name;
+    const classSymbol = this.symbolTable.lookupClass(name);
+
+    if (!classSymbol) {
+      const error = new SemanticErrorClass(
+        `Class '${name}' is not declared`,
+        classIdentifier.startToken!.location,
+      );
+
+      if (this.strict) {
+        throw error;
+      }
+
+      this.semanticErrors.push(error);
+    }
+  }
+
+  private checkMapReference(mapIdentifier: Identifier): void {
+    const name = mapIdentifier.name;
+    const mapSymbol = this.symbolTable.lookupMap(name);
+
+    if (!mapSymbol) {
+      const error = new SemanticErrorClass(
+        `Map '${name}' is not declared`,
+        mapIdentifier.startToken!.location,
+      );
+
+      if (this.strict) {
+        throw error;
+      }
+
+      this.semanticErrors.push(error);
+    }
+  }
+
+  private validateClassDefinition(classDefinition: ClassDefinition): void {
+    const classIdentifier = getRequiredIdentifier(
+      classDefinition.classIdentifier,
+      classDefinition,
+      this.strict,
+    );
+
+    if (!classIdentifier) {
+      return;
+    }
+
+    this.checkClassReference(classIdentifier);
+  }
+
+  private validateMapDefinition(mapDefinition: MapDefinition): void {
+    const mapIdentifier = getRequiredIdentifier(
+      mapDefinition.mapIdentifier,
+      mapDefinition,
+      this.strict,
+    );
+
+    if (!mapIdentifier) {
+      return;
+    }
+
+    this.checkMapReference(mapIdentifier);
+
+    if (isIdentifier(mapDefinition.classIdentifier)) {
+      const classIdentifier = getRequiredIdentifier(
+        mapDefinition.classIdentifier,
+        mapDefinition,
+        this.strict,
+      );
+
+      if (!classIdentifier) {
+        return;
+      }
+
+      this.checkClassReference(classIdentifier);
+    }
+  }
+
+  private validateArrayDefinition(arrayDefinition: ArrayDefinition): void {
+    if (isIdentifier(arrayDefinition.classIdentifier)) {
+      const classIdentifier = getRequiredIdentifier(
+        arrayDefinition.classIdentifier,
+        arrayDefinition,
+        this.strict,
+      );
+
+      if (!classIdentifier) {
+        return;
+      }
+
+      this.checkClassReference(classIdentifier);
+    }
+  }
+
+  private validateExtendsModifier(extendsModifier: ExtendsModifier): void {
+    const identifier = getRequiredIdentifier(
+      extendsModifier.identifier,
+      extendsModifier,
+      this.strict,
+    );
+
+    if (!identifier) {
+      return;
+    }
+
+    this.checkClassReference(identifier);
+  }
+
   private validateExpression(expression: AbstractExpression): void {
-    switch (expression.expressionKind) {
+    const expressionKind = expression.expressionKind;
+
+    switch (expressionKind) {
       case ExpressionKind.UNARY:
         this.validateUnaryExpression(expression as UnaryExpression);
         break;
@@ -216,11 +356,22 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
       case ExpressionKind.LENGTHOF:
         this.validateLengthofExpression(expression as LengthofExpression);
         break;
+      default: {
+        const exhaustiveCheck: never = expressionKind;
+        throw new InternalScannerError(
+          "Unreachable code reached, expressionKind == " + exhaustiveCheck,
+        );
+      }
     }
   }
 
   private validateUnaryExpression(unaryExpr: UnaryExpression): void {
-    const operand = unaryExpr.operand;
+    const operand = getRequiredOperand(
+      unaryExpr.operand,
+      unaryExpr,
+      this.strict,
+    );
+
     if (!operand) {
       return;
     }
@@ -228,12 +379,21 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     if (isIdentifier(operand)) {
       this.validateIdentifierReference(operand);
     }
+
     // Nested expressions will be visited recursively by the traversal
   }
 
   private validateBinaryExpression(binaryExpr: BinaryExpression): void {
-    const leftOperand = binaryExpr.leftOperand;
-    const rightOperand = binaryExpr.rightOperand;
+    const leftOperand = getRequiredOperand(
+      binaryExpr.leftOperand,
+      binaryExpr,
+      this.strict,
+    );
+    const rightOperand = getRequiredOperand(
+      binaryExpr.rightOperand,
+      binaryExpr,
+      this.strict,
+    );
 
     if (isIdentifier(leftOperand)) {
       this.validateIdentifierReference(leftOperand);
@@ -242,11 +402,17 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     if (isIdentifier(rightOperand)) {
       this.validateIdentifierReference(rightOperand);
     }
+
     // Nested expressions will be visited recursively by the traversal
   }
 
   private validateLengthofExpression(lengthofExpr: LengthofExpression): void {
-    const operand = lengthofExpr.operand;
+    const operand = getRequiredOperand(
+      lengthofExpr.operand,
+      lengthofExpr,
+      this.strict,
+    );
+
     if (!operand) {
       return;
     }
@@ -259,8 +425,8 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
   private validateIdentifierReference(identifier: Identifier): void {
     const name = identifier.name;
     const location = identifier.startToken?.location;
-
     const symbol = this.symbolTable.lookup(name);
+
     if (!symbol) {
       const classSymbol = this.symbolTable.lookupClass(name);
       const mapSymbol = this.symbolTable.lookupMap(name);

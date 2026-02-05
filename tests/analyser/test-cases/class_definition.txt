@@ -1,0 +1,32 @@
+# Simple
+
+class A {ClassA a;}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Legacy and one parameter value
+
+class A {legacy ClassB b(3);}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
+
+# Multiple parameter values
+
+class A {ClassC c(i, 3);}
+
+==>
+
+[global]
+  A CLASS
+  [A]
+    a VARIABLE INTEGER
