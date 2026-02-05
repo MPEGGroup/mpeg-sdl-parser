@@ -7,7 +7,8 @@ class A {computed int a;}
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+    a VARIABLE computed INTEGER
+
 
 # Const and value
 
@@ -18,4 +19,4 @@ class A {computed const int a=3;}
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+    a VARIABLE computed const INTEGER

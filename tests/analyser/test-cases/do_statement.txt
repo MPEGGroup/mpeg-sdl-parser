@@ -7,4 +7,5 @@ class A {do {i++;} while (i<3);}
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+    [DO]
+      [COMPOUND]

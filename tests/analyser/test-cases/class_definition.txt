@@ -1,32 +1,43 @@
 # Simple
 
+class ClassA {}
 class A {ClassA a;}
 
 ==>
 
 [global]
+  ClassA CLASS
   A CLASS
+  [ClassA]
   [A]
-    a VARIABLE INTEGER
+    a VARIABLE ClassA
+
 
 # Legacy and one parameter value
 
+class ClassB {}
 class A {legacy ClassB b(3);}
 
 ==>
 
 [global]
+  ClassB CLASS
   A CLASS
+  [ClassB]
   [A]
-    a VARIABLE INTEGER
+    b VARIABLE ClassB
+
 
 # Multiple parameter values
 
+class ClassC {}
 class A {ClassC c(i, 3);}
 
 ==>
 
 [global]
+  ClassC CLASS
   A CLASS
+  [ClassC]
   [A]
-    a VARIABLE INTEGER
+    c VARIABLE ClassC

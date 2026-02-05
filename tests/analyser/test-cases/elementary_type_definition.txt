@@ -9,6 +9,7 @@ class A{int(3) a;}
   [A]
     a VARIABLE INTEGER
 
+
 # Legacy, const, aligned, lookahead value range
 
 class A{legacy const aligned(8) unsigned int(7)* a=3..i;}
@@ -20,6 +21,7 @@ class A{legacy const aligned(8) unsigned int(7)* a=3..i;}
   [A]
     a VARIABLE const UNSIGNED_INTEGER
 
+
 # Default aligned
 
 class A {aligned int(2) a;}
@@ -30,6 +32,7 @@ class A {aligned int(2) a;}
   A CLASS
   [A]
     a VARIABLE INTEGER
+
 
 # Explicit aligned bit count
 

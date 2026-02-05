@@ -4,11 +4,13 @@ class A {if(i==1){i++;}else if(i==2){i--;}else{j++;}}
 
 ==>
 
-
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+    [COMPOUND]
+    [COMPOUND]
+    [COMPOUND]
+
 
 # No braces and no else if clause
 
@@ -17,11 +19,10 @@ class A {if(i==1)i++;else j++;}
 ==>
 
 
-
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+
 
 # Two if statements
 
@@ -30,8 +31,6 @@ class A{if(x)1;if(y)2;}
 ==>
 
 
-
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER

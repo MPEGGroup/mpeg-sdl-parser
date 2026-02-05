@@ -9,6 +9,7 @@ class A {int(3) a[3];}
   [A]
     a VARIABLE INTEGER []
 
+
 # Reserved multiple dimensions with mixed explicit and partial dimensions
 
 class MyClass{}
@@ -22,6 +23,7 @@ class A {reserved MyClass a[3][[2]];}
   [MyClass]
   [A]
     a VARIABLE MyClass []
+
 
 # Implicit dimension
 

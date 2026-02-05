@@ -1,23 +1,31 @@
 # Reserved with elementary type output
 
+map Offsets (int) {0b00,{1024}}
 class A {reserved unsigned int<Offsets> offset;}
 
 ==>
 
-
 [global]
+  Offsets MAP INTEGER
   A CLASS
+  [Offsets]
   [A]
-    a VARIABLE INTEGER
+    offset VARIABLE UNSIGNED_INTEGER Offsets
+
 
 # Legacy with class output
 
+class B {}
+map MapB (B) {0b00,{1024}}
 class A {legacy B<MapB> b;}
 
 ==>
 
-
 [global]
+  B CLASS
+  MapB MAP B
   A CLASS
+  [B]
+  [MapB]
   [A]
-    a VARIABLE INTEGER
+    b VARIABLE B MapB

@@ -31,11 +31,7 @@ import {
   getRequiredToken,
   getStringVariableKind,
 } from "../util/symbol-table-utils.ts";
-import {
-  isComputedElementaryTypeDefinition,
-  isElementaryType,
-  isIdentifier,
-} from "../../ast/util/types.ts";
+import { isElementaryType, isIdentifier } from "../../ast/util/types.ts";
 
 export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
@@ -390,7 +386,10 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if ((attributes.elementaryTypeKind === undefined) && !attributes.classReference) {
+    if (
+      (attributes.elementaryTypeKind === undefined) &&
+      !attributes.classReference
+    ) {
       const error = new SemanticErrorClass(
         `Array definition must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
@@ -449,6 +448,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     const location = identifier.startToken!.location;
     const attributes: SymbolAttributes = {
       isArray: true,
+      isComputed: true,
       elementaryTypeKind,
     };
 
@@ -563,7 +563,10 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if (!attributes.elementaryTypeKind && !attributes.classReference) {
+    if (
+      (attributes.elementaryTypeKind === undefined) &&
+      !attributes.classReference
+    ) {
       const error = new SemanticErrorClass(
         `Map declaration must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
@@ -717,7 +720,10 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if ((attributes.elementaryTypeKind === undefined) && !attributes.classReference) {
+    if (
+      (attributes.elementaryTypeKind === undefined) &&
+      !attributes.classReference
+    ) {
       const error = new SemanticErrorClass(
         `Parameter must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
@@ -740,57 +746,10 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     });
   }
 
-  private handleForStatementBefore(forStatement: ForStatement): void {
+  private handleForStatementBefore(_forStatement: ForStatement): void {
     this.symbolTable.enterScope("FOR");
-
-    const compElemDef = forStatement.computedElementaryDefinition;
-
-    if (!isComputedElementaryTypeDefinition(compElemDef)) {
-      return;
-    }
-
-    const identifier = getRequiredIdentifier(
-      compElemDef.identifier,
-      compElemDef,
-      this.strict,
-    );
-
-    if (!identifier) {
-      return;
-    }
-
-    const elementaryType = getRequiredElementaryType(
-      compElemDef.elementaryType,
-      compElemDef,
-      this.strict,
-    );
-
-    if (!elementaryType) {
-      return;
-    }
-
-    const elementaryTypeKind = getElementaryTypeKind(
-      elementaryType,
-      this.strict,
-    );
-
-    if (elementaryTypeKind === undefined) {
-      return;
-    }
-
-    const name = identifier.name;
-    const location = identifier.startToken!.location;
-    const attributes: SymbolAttributes = {
-      isComputed: true,
-      elementaryTypeKind,
-    };
-
-    this.defineSymbol({
-      node: forStatement,
-      name,
-      kind: SymbolKind.VARIABLE,
-      attributes,
-      location,
-    });
+    // Note: We don't declare variables here because the computedElementaryDefinition
+    // within the for statement will be processed during normal AST traversal,
+    // which will handle the variable declaration.
   }
 }

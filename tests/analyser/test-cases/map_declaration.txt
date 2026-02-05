@@ -4,11 +4,10 @@ map offsets (int) {0b00,{1024},0b00,{1024}}
 
 ==>
 
-
 [global]
-  A CLASS
-  [A]
-    a VARIABLE INTEGER
+  offsets MAP INTEGER
+  [offsets]
+
 
 # Class output
 
@@ -16,11 +15,10 @@ map barMap (Bar) {0b00,{1024}}
 
 ==>
 
-
 [global]
-  A CLASS
-  [A]
-    a VARIABLE INTEGER
+  barMap MAP Bar
+  [barMap]
+
 
 # Escape codes
 
@@ -28,8 +26,6 @@ map offsets (int) {0b00,{int(6)}}
 
 ==>
 
-
 [global]
-  A CLASS
-  [A]
-    a VARIABLE INTEGER
+  offsets MAP INTEGER
+  [offsets]

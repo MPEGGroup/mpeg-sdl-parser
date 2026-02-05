@@ -4,9 +4,6 @@ computed int a=1;
 
 ==>
 
-
 [global]
-  A CLASS
-  [A]
-    a VARIABLE INTEGER
+  a VARIABLE computed INTEGER
 

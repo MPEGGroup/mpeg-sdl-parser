@@ -4,11 +4,11 @@ class A {utf8string foo;}
 
 ==>
 
-
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+    foo VARIABLE
+
 
 # utf8list with literal
 
@@ -16,11 +16,11 @@ class A {utf8list foo=u"hello world";}
 
 ==>
 
-
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+    foo VARIABLE UTF8_LIST
+
 
 # base64 string literal
 
@@ -28,8 +28,7 @@ class A {base64string foo="aGVsbG8K";}
 
 ==>
 
-
 [global]
   A CLASS
   [A]
-    a VARIABLE INTEGER
+    foo VARIABLE BASE64
