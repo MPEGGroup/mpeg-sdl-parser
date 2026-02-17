@@ -1,12 +1,11 @@
 import getLogger from "../../util/logger.ts";
-import type { AbstractCompositeNode } from "../node/abstract-composite-node.ts";
 import type { AbstractLeafNode } from "../node/abstract-leaf-node.ts";
 import type { AbstractNode } from "../node/abstract-node.ts";
 import { NodeKind } from "../node/enum/node-kind.ts";
 import type { NodeHandler } from "./node-handler.ts";
 import type { NodeVisitor } from "./node-visitor.ts";
 import { debugEnabled } from "../../util/logger.ts";
-import { isToken } from "../util/types.ts";
+import { isCompositeNode, isToken } from "../util/types.ts";
 
 const logger = getLogger("TraversingVisitor");
 
@@ -53,18 +52,16 @@ export class TraversingVisitor implements NodeVisitor {
       );
     }
 
-    if (node.isComposite) {
-      const compositeNode = node as AbstractCompositeNode;
+    if (isCompositeNode(node)) {
+      this.nodeHandler.beforeVisit(node);
 
-      this.nodeHandler.beforeVisit(compositeNode);
-
-      for (const childNode of compositeNode.children) {
+      for (const childNode of node.children) {
         this.depth++;
         this.visit(childNode);
         this.depth--;
       }
 
-      this.nodeHandler.afterVisit(compositeNode);
+      this.nodeHandler.afterVisit(node);
     } else {
       this.nodeHandler.visit(node as AbstractLeafNode);
     }

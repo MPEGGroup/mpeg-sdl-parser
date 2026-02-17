@@ -11,7 +11,10 @@ import type { UnexpectedError } from "../node/unexpected-error.ts";
 import { StatementKind } from "../node/enum/statement-kind.ts";
 import type { ElementaryType } from "../node/elementary-type.ts";
 import type { AbstractExpression } from "../node/abstract-expression.ts";
-import type { NumberLiteral } from "../../../dist/index.js";
+import type { ExpandableModifier } from "../node/expandable-modifier.ts";
+import type { DefaultClause } from "../node/default-clause.ts";
+import type { NumberLiteral } from "../node/number-literal.ts";
+import type { CaseClause } from "../node/case-clause.ts";
 
 export type OptionalNode<T> = T | UnexpectedError | undefined;
 
@@ -85,4 +88,22 @@ export function isComputedElementaryTypeDefinition(
   return node?.nodeKind === NodeKind.STATEMENT &&
     (node as AbstractStatement).statementKind ===
       StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION;
+}
+
+export function isExpandableModifier(
+  node: AbstractNode | undefined,
+): node is ExpandableModifier {
+  return node?.nodeKind === NodeKind.EXPANDABLE_MODIFIER;
+}
+
+export function isCaseClause(
+  node: AbstractNode | undefined,
+): node is CaseClause {
+  return node?.nodeKind === NodeKind.CASE_CLAUSE;
+}
+
+export function isDefaultClause(
+  node: AbstractNode | undefined,
+): node is DefaultClause {
+  return node?.nodeKind === NodeKind.DEFAULT_CLAUSE;
 }

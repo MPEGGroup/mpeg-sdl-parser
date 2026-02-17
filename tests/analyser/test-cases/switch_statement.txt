@@ -4,10 +4,15 @@ class A {switch(i){case 1:break;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [SWITCH]
+  [CLASS] A:
+    [BLOCK] SWITCH:
+      [BLOCK] COMPOUND:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
 
 
 # Single case with braces
@@ -16,10 +21,15 @@ class A {switch(i){case 1:{break;}}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [SWITCH]
+  [CLASS] A:
+    [BLOCK] SWITCH:
+      [BLOCK] COMPOUND:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
 
 
 # Multiple cases and default
@@ -28,10 +38,19 @@ class A {switch(i){case 1:break;case 2:{i++;break;}default:i--;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [SWITCH]
+  [CLASS] A:
+    [BLOCK] SWITCH:
+      [BLOCK] COMPOUND:
+      [BLOCK] COMPOUND#1:
+      [BLOCK] COMPOUND#2:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
 
 
 # Multiple cases with no break and default
@@ -40,10 +59,20 @@ class A {switch(i){case 1:i++;case 2:i++;default:i--;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [SWITCH]
+  [CLASS] A:
+    [BLOCK] SWITCH:
+      [BLOCK] COMPOUND:
+      [BLOCK] COMPOUND#1:
+      [BLOCK] COMPOUND#2:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
 
 
 # Multiple cases with no break and no expression and default
@@ -52,7 +81,16 @@ class A {switch(i){case 1:case 2:i++;default:i--;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [SWITCH]
+  [CLASS] A:
+    [BLOCK] SWITCH:
+      [BLOCK] COMPOUND:
+      [BLOCK] COMPOUND#1:
+      [BLOCK] COMPOUND#2:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared

@@ -4,10 +4,13 @@ class A {{utf8string foo;utf8string bar;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [COMPOUND]
+  [CLASS] A:
+    members:
+      foo VARIABLE (branch: COMPOUND)
+      bar VARIABLE (branch: COMPOUND)
+    [BLOCK] COMPOUND:
       foo VARIABLE
       bar VARIABLE
 
@@ -18,11 +21,43 @@ class A {{utf8string foo;{ utf8string bar1;utf8string bar2;}}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [COMPOUND]
+  [CLASS] A:
+    members:
+      foo VARIABLE (branch: COMPOUND)
+      bar1 VARIABLE (branch: COMPOUND/COMPOUND)
+      bar2 VARIABLE (branch: COMPOUND/COMPOUND)
+    [BLOCK] COMPOUND:
       foo VARIABLE
-      [COMPOUND]
+      [BLOCK] COMPOUND:
         bar1 VARIABLE
         bar2 VARIABLE
+
+
+# Multiple nested compound statements
+
+class A {{utf8string foo;{ utf8string bar1;utf8string bar2;}}{utf8string fooi;{ utf8string bar1i;utf8string bar2i;}}}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      foo VARIABLE (branch: COMPOUND)
+      bar1 VARIABLE (branch: COMPOUND/COMPOUND)
+      bar2 VARIABLE (branch: COMPOUND/COMPOUND)
+      fooi VARIABLE (branch: COMPOUND#1)
+      bar1i VARIABLE (branch: COMPOUND#1/COMPOUND)
+      bar2i VARIABLE (branch: COMPOUND#1/COMPOUND)
+    [BLOCK] COMPOUND:
+      foo VARIABLE
+      [BLOCK] COMPOUND:
+        bar1 VARIABLE
+        bar2 VARIABLE
+    [BLOCK] COMPOUND#1:
+      fooi VARIABLE
+      [BLOCK] COMPOUND:
+        bar1i VARIABLE
+        bar2i VARIABLE

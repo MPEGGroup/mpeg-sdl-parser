@@ -1,0 +1,214 @@
+# Global scope access
+
+computed const int a = 1;
+
+class A {
+    int(3) b[a];
+}
+
+
+==>
+
+[GLOBAL]:
+  a VARIABLE INTEGER COMPUTED CONST
+  A CLASS
+  [CLASS] A:
+    members:
+      b VARIABLE INTEGER []
+    b VARIABLE INTEGER []
+
+
+# Outer scope access
+
+class A {
+    computed int a = 1;
+    if (a == 1) {
+        a--;
+    }
+}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+    a VARIABLE INTEGER COMPUTED
+    [BLOCK] COMPOUND:
+
+
+# Nested scope visibility override
+
+class A {
+    computed int a = 1;
+    if (a == 1) {
+        computed float a = 2;
+        if (a == 2) {
+            a++;
+            // a == 3
+        }
+        // a == 3
+    }
+    // a == 1
+}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+    a VARIABLE INTEGER COMPUTED
+    [BLOCK] COMPOUND:
+      a VARIABLE FLOATING_POINT COMPUTED
+      [BLOCK] COMPOUND:
+
+
+# Duplicate variable in IF conditional branches with braces
+
+class A {
+    computed int a = 1;
+    if (a == 1) {
+        int(2) b;
+    }
+    else {
+        int(3) b;
+    }
+}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+      b VARIABLE INTEGER (branch: COMPOUND)
+      b VARIABLE INTEGER (branch: COMPOUND#1)
+    a VARIABLE INTEGER COMPUTED
+    [BLOCK] COMPOUND:
+      b VARIABLE INTEGER
+    [BLOCK] COMPOUND#1:
+      b VARIABLE INTEGER
+
+
+# Duplicate variable in IF conditional branches without braces
+
+class A {
+    computed int a = 1;
+    if (a == 1)
+        int(2) b;
+    else
+        int(3) b;
+}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+      b VARIABLE INTEGER (branch: COMPOUND)
+      b VARIABLE INTEGER (branch: COMPOUND#1)
+    a VARIABLE INTEGER COMPUTED
+    [BLOCK] COMPOUND:
+      b VARIABLE INTEGER
+    [BLOCK] COMPOUND#1:
+      b VARIABLE INTEGER
+
+
+# Duplicate variable in SWITCH conditional branches
+
+class A {
+    computed int a = 1;
+    switch (a) {
+        case 1:
+            int(2) b;
+            break;
+        default:
+            int(3) b;
+    }
+}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+      b VARIABLE INTEGER (branch: SWITCH/COMPOUND)
+      b VARIABLE INTEGER (branch: SWITCH/COMPOUND#1)
+    a VARIABLE INTEGER COMPUTED
+    [BLOCK] SWITCH:
+      [BLOCK] COMPOUND:
+        b VARIABLE INTEGER
+      [BLOCK] COMPOUND#1:
+        b VARIABLE INTEGER
+
+
+# Illegal duplicate variable with different type in IF conditional branches
+
+
+class A {
+    computed int a = 1;
+    if (a == 1) {
+        int(2) b;
+    }
+    else {
+        float(3) b;
+    }
+}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+      b VARIABLE INTEGER (branch: COMPOUND)
+    a VARIABLE INTEGER COMPUTED
+    [BLOCK] COMPOUND:
+      b VARIABLE INTEGER
+    [BLOCK] COMPOUND#1:
+      b VARIABLE FLOATING_POINT
+
+errors:
+
+SEMANTIC ERROR: Duplicate member variable: b conflicts with type defined in different conditional branch within scope: A
+
+# Illegal duplicate variable with different type in SWITCH conditional branches
+
+class A {
+    computed int a = 1;
+    switch (a) {
+        case 1:
+            int(2) b;
+            break;
+        default:
+            float(3) b;
+    }
+}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+      b VARIABLE INTEGER (branch: SWITCH/COMPOUND)
+    a VARIABLE INTEGER COMPUTED
+    [BLOCK] SWITCH:
+      [BLOCK] COMPOUND:
+        b VARIABLE INTEGER
+      [BLOCK] COMPOUND#1:
+        b VARIABLE FLOATING_POINT
+
+errors:
+
+SEMANTIC ERROR: Duplicate member variable: b conflicts with type defined in different conditional branch within scope: A

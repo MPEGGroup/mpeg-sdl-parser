@@ -2,10 +2,10 @@ import type { Specification } from "../ast/node/specification.ts";
 import { dispatchNodeHandler } from "../parse-helper.ts";
 import type { SemanticError } from "../scanner-error.ts";
 import { BuildSymbolTableNodeHandler } from "./node-handler/build-symbol-table-node-handler.ts";
-import type { Check } from "./check.ts";
+import type { Check } from "./checks/check.ts";
 import { ValidateScopeNodeHandler } from "./node-handler/validate-scope-node-handler.ts";
 import { ValidateTypeNodeHandler } from "./node-handler/validate-type-node-handler.ts";
-import type { SymbolTable } from "./symbol-table.ts";
+import { SymbolTable } from "./symbol-table.ts";
 
 export interface SdlAnalysisResult {
   semanticErrors: Array<SemanticError>;
@@ -30,13 +30,16 @@ export class SdlAnalyser {
   }
 
   analyse(specification: Specification): SdlAnalysisResult {
+    const symbolTable = new SymbolTable();
+
     const buildSymbolTableNodeHandler = new BuildSymbolTableNodeHandler(
+      symbolTable,
       this.strict,
     );
 
     dispatchNodeHandler(specification, buildSymbolTableNodeHandler);
 
-    const symbolTable = buildSymbolTableNodeHandler.symbolTable;
+    symbolTable.resetScope();
     const scopeValidationNodeHandler = new ValidateScopeNodeHandler(
       symbolTable,
       this.strict,
@@ -44,6 +47,7 @@ export class SdlAnalyser {
 
     dispatchNodeHandler(specification, scopeValidationNodeHandler);
 
+    symbolTable.resetScope();
     const typeValidationNodeHandler = new ValidateTypeNodeHandler(
       symbolTable,
       this.strict,
@@ -51,11 +55,27 @@ export class SdlAnalyser {
 
     dispatchNodeHandler(specification, typeValidationNodeHandler);
 
+    const allErrors = [
+      ...buildSymbolTableNodeHandler.semanticErrors,
+      ...scopeValidationNodeHandler.semanticErrors,
+      ...typeValidationNodeHandler.semanticErrors,
+    ];
+
+    const seen = new Set<string>();
+    const semanticErrors = allErrors.filter((error) => {
+      const key =
+        `${error.errorMessage}:${error.location?.row}:${error.location?.column}`;
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+
     return {
-      semanticErrors: [
-        ...scopeValidationNodeHandler.semanticErrors,
-        ...typeValidationNodeHandler.semanticErrors,
-      ],
+      semanticErrors,
       specification,
       symbolTable,
     };

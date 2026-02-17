@@ -4,11 +4,18 @@ class A {for (i=1;i<9;i++) {j++;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [FOR]
-      [COMPOUND]
+  [CLASS] A:
+    [BLOCK] FOR:
+      [BLOCK] COMPOUND:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: j is not declared
 
 
 # First expression is computed elementary type definition
@@ -17,12 +24,16 @@ class A {for (computed int i=1;i<9;i++) {j++;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [FOR]
-      i VARIABLE computed INTEGER
-      [COMPOUND]
+  [CLASS] A:
+    [BLOCK] FOR:
+      i VARIABLE INTEGER COMPUTED
+      [BLOCK] COMPOUND:
+
+errors:
+
+SEMANTIC ERROR: Identifier: j is not declared
 
 
 # First expression is empty
@@ -31,8 +42,14 @@ class A {for (;i<9;i++) {j++;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [FOR]
-      [COMPOUND]
+  [CLASS] A:
+    [BLOCK] FOR:
+      [BLOCK] COMPOUND:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: j is not declared

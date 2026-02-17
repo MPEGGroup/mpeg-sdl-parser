@@ -232,7 +232,7 @@ describe("Parse Helper Tests", () => {
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
     expect(syntaxErrors[0].message).toBe(
-      "SYNTAX ERROR: Expected: <CompoundStatement> => { row: 1, column: 19, position: 18 }",
+      "SYNTAX ERROR: Expected one of: <ArrayDefinition> <ClassDefinition> <CompoundStatement> <ComputedArrayDefinition> <ComputedElementaryTypeDefinition> <DoStatement> <ElementaryTypeDefinition> <ExpressionStatement> <ForStatement> <IfStatement> <MapDefinition> <StringDefinition> <SwitchStatement> <WhileStatement> => { row: 1, column: 19, position: 18 }",
     );
   });
 

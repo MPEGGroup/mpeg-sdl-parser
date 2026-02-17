@@ -1,50 +1,281 @@
 import { ElementaryTypeKind } from "../ast/node/enum/elementary-type-kind.ts";
 import { StringVariableKind } from "../ast/node/enum/string-variable-kind.ts";
 import { InternalScannerError } from "../scanner-error.ts";
-import { SymbolKind } from "./enum/symbol-kind.ts";
-import type { Symbol } from "./symbol.ts";
+import type { Location } from "../location.ts";
 import getLogger from "../util/logger.ts";
+import type { AbstractCompositeNode } from "../ast/node/abstract-composite-node.ts";
 
 const logger = getLogger("SymbolTable");
 
+/**
+ * Enum representing different kinds of semantic symbols.
+ */
+export enum SymbolKind {
+  CLASS,
+  MAP,
+  VARIABLE,
+}
+
+export enum AddSymbolResult {
+  SUCCESS,
+  DUPLICATE,
+  MEMBER_CONFLICT
+}
+
+/**
+ * Enum representing different kinds of scopes.
+ */
+export enum ScopeKind {
+  GLOBAL,
+  BLOCK,
+  CLASS,
+  MAP,
+}
+
+export interface SymbolAttributes {
+  isComputed?: boolean;
+  isConst?: boolean;
+  isString?: boolean;
+  isArray?: boolean;
+  elementaryTypeKind?: ElementaryTypeKind;
+  stringVariableKind?: StringVariableKind;
+
+  // Used for array of class types, Map class output type or Class definition
+  classReference?: string;
+
+  // Used for Map definition
+  mapReference?: string;
+}
+
+export interface Symbol {
+  name: string;
+  kind: SymbolKind;
+  attributes: SymbolAttributes;
+  location: Location;
+  node: AbstractCompositeNode;
+}
+
+/**
+ * Used to differentiate between class members defined in different branches of conditional statements within the same class scope.
+ * SDL allows such members to have the same name, but they are considered distinct members that may
+ * or may not be present at runtime depending on the conditions.
+ * The branchId is a string that represents the path of scopes from the class scope to the nested current scope.
+ */
+export interface ClassMemberSymbol {
+  symbol: Symbol;
+  branchId?: string;
+}
+
 export interface Scope {
-  symbols: Map<string, Symbol>;
+  name: string;
   parent?: Scope;
   children: Scope[];
-  name?: string;
+  symbols: Map<string, Symbol>;
+  classMemberSymbols?: Map<string, ClassMemberSymbol[]>;
+  kind: ScopeKind;
+}
+
+export enum Mode {
+  READ,
+  WRITE,
 }
 
 export class SymbolTable {
   private globalScope: Scope;
   private currentScope: Scope;
-  private scopeStack: Scope[] = [];
+  private scopeNameCounters: Map<Scope, Map<string, number>> = new Map();
+  private mode: Mode = Mode.WRITE;
 
   constructor() {
     this.globalScope = {
       symbols: new Map(),
       children: [],
-      name: "global",
+      name: "GLOBAL",
+      kind: ScopeKind.GLOBAL,
     };
     this.currentScope = this.globalScope;
-    this.scopeStack.push(this.globalScope);
   }
 
-  enterScope(name?: string): void {
-    const newScope: Scope = {
-      symbols: new Map(),
-      parent: this.currentScope,
-      children: [],
-      name,
-    };
-    this.currentScope.children.push(newScope);
-    this.scopeStack.push(newScope);
-    this.currentScope = newScope;
+  private getSymbolString(symbol: Symbol): string {
+    const kindName = SymbolKind[symbol.kind];
+    let attributesStr = "";
+
+    if (symbol.attributes) {
+      const attributes = symbol.attributes;
+      const parts: string[] = [];
+
+      if (attributes.stringVariableKind) {
+        parts.push(StringVariableKind[attributes.stringVariableKind]);
+      }
+
+      if (attributes.elementaryTypeKind !== undefined) {
+        parts.push(ElementaryTypeKind[attributes.elementaryTypeKind]);
+      }
+
+      if (attributes.classReference) {
+        parts.push("(class: " + attributes.classReference + ")");
+      }
+
+      if (attributes.mapReference) {
+        parts.push("(map: " + attributes.mapReference + ")");
+      }
+
+      if (attributes.isComputed) {
+        parts.push("COMPUTED");
+      }
+
+      if (attributes.isConst) {
+        parts.push("CONST");
+      }
+
+      if (attributes.isArray) {
+        parts.push("[]");
+      }
+
+      attributesStr = parts.length > 0 ? ` ${parts.join(" ")}` : "";
+    }
+    return `${symbol.name} ${kindName}${attributesStr}`;
+  }
+
+  private nextScopeName(baseName: string): string {
+    if (!this.scopeNameCounters.has(this.currentScope)) {
+      this.scopeNameCounters.set(this.currentScope, new Map());
+    }
+
+    const counters = this.scopeNameCounters.get(this.currentScope)!;
+    const count = counters.get(baseName) ?? 0;
+
+    counters.set(baseName, count + 1);
+
+    return (count === 0) ? baseName : `${baseName}#${count}`;
+  }
+
+  private getCurrentBranchId(): string | undefined {
+    const classScope = this.getEnclosingClassScope();
+
+    if (!classScope || (this.currentScope === classScope)) {
+      return undefined;
+    }
+
+    const parts: string[] = [];
+    let scope: Scope | undefined = this.currentScope;
+
+    while (scope && (scope !== classScope)) {
+      if (scope.name) {
+        parts.unshift(scope.name);
+      }
+      scope = scope.parent;
+    }
+
+    return (parts.length > 0) ? parts.join("/") : undefined;
+  }
+
+  private defineClassMember(symbol: Symbol): AddSymbolResult {
+    const classScope = this.getEnclosingClassScope();
+
+    if (!classScope) {
+      throw new InternalScannerError(
+        `Attempt to define class member '${symbol.name}' outside of class scope`,
+      );
+    }
+
+    if (!classScope.classMemberSymbols) {
+      classScope.classMemberSymbols = new Map();
+    }
+
+    const members = classScope.classMemberSymbols;
+
+    if (!members.has(symbol.name)) {
+      members.set(symbol.name, []);
+    }
+
+    // check for existing member with same name but different elementary type or string variable kind defined in different branch of conditional statement
+    const existingMembers = members.get(symbol.name)!;
+
+    for (const memberEntry of existingMembers) {
+      const member = memberEntry.symbol;
+
+      if (
+        (member.attributes.elementaryTypeKind !== symbol.attributes.elementaryTypeKind) ||
+        (member.attributes.stringVariableKind !== symbol.attributes.stringVariableKind)
+      ) {
+        return AddSymbolResult.MEMBER_CONFLICT;
+      }
+    }
+
+    const branchId = this.getCurrentBranchId();
+
+    existingMembers.push({ symbol, branchId });
+
+    logger.debug(
+      `Defined class member: ${symbol.name} in class scope: ${
+        classScope.name ?? "anonymous"
+      }${branchId ? ` (branch: ${branchId})` : ""}`,
+    );
+
+    return AddSymbolResult.SUCCESS;
+  }
+
+  private enterScope(baseName: string, scopeKind: ScopeKind): void {
+    const name = this.nextScopeName(baseName);
+
+    let child = this.currentScope.children.find((c) => c.name === name);
+
+    if (child && (this.mode === Mode.WRITE)) {
+      throw new InternalScannerError(
+        `Scope with name '${name}' already exists in current scope '${this.currentScope.name}'`,
+      );
+    }
+
+    if (!child && (this.mode === Mode.READ)) {
+      throw new InternalScannerError(
+        `Scope with name '${name}' does not exist in current scope '${this.currentScope.name}'`,
+      );
+    }
+
+    // Add the scope if if doesn't already exist
+    if (!child) {
+      child = {
+        symbols: new Map(),
+        parent: this.currentScope,
+        children: [],
+        name,
+        kind: scopeKind,
+      };
+      this.currentScope.children.push(child);
+    }
+
+    this.currentScope = child;
+  }
+
+  getEnclosingClassScope(): Scope | undefined {
+    let scope: Scope | undefined = this.currentScope;
+
+    while (scope) {
+      if (scope.kind === ScopeKind.CLASS) {
+        return scope;
+      }
+      scope = scope.parent;
+    }
+
+    return undefined;
+  }
+
+  enterBlockScope(baseName: string): void {
+    this.enterScope(baseName, ScopeKind.BLOCK);
+  }
+
+  enterClassScope(baseName: string): void {
+    this.enterScope(baseName, ScopeKind.CLASS);
+  }
+
+  enterMapScope(baseName: string): void {
+    this.enterScope(baseName, ScopeKind.MAP);
   }
 
   exitScope(): void {
-    if (this.scopeStack.length > 1) {
-      this.scopeStack.pop();
-      this.currentScope = this.scopeStack[this.scopeStack.length - 1];
+    if (this.currentScope.parent) {
+      this.currentScope = this.currentScope.parent;
 
       return;
     }
@@ -52,9 +283,36 @@ export class SymbolTable {
     throw new InternalScannerError("Cannot exit global scope");
   }
 
-  define(symbol: Symbol): boolean {
+  getCurrentScope(): Scope {
+    return this.currentScope;
+  }
+
+  resetScope(): void {
+    this.currentScope = this.globalScope;
+    this.scopeNameCounters.clear();
+    this.mode = Mode.READ;
+  }
+
+  addSymbol(symbol: Symbol): AddSymbolResult {
+    if (this.mode === Mode.READ) {
+      throw new InternalScannerError(`Attempt to add symbol '${symbol.name}' in read-only mode`);
+    }
+
     if (this.currentScope.symbols.has(symbol.name)) {
-      return false;
+      return AddSymbolResult.DUPLICATE;
+    }
+
+    if (this.currentScope !== this.globalScope) {
+      if (symbol.kind === SymbolKind.CLASS) {
+        throw new InternalScannerError(
+          `Class symbol '${symbol.name}' must be defined in global scope`,
+        );
+      }
+      if (symbol.kind === SymbolKind.MAP) {
+        throw new InternalScannerError(
+          `Map symbol '${symbol.name}' must be defined in global scope`,
+        );
+      }
     }
 
     this.currentScope.symbols.set(symbol.name, symbol);
@@ -65,43 +323,44 @@ export class SymbolTable {
       }`,
     );
 
-    return true;
-  }
-
-  defineGlobal(symbol: Symbol): boolean {
-    if (this.globalScope.symbols.has(symbol.name)) {
-      return false;
+    // if in a class scope and if variable is parsed (regardless of nested level) or if
+    // variable is computed (and in in top level of class scope) then define variable as a class member
+    if (
+      this.getEnclosingClassScope() &&
+      ((symbol.attributes.isComputed !== true) ||
+        (this.currentScope.kind === ScopeKind.CLASS))
+    ) {
+      if (this.defineClassMember(symbol) !== AddSymbolResult.SUCCESS) {
+        return AddSymbolResult.MEMBER_CONFLICT;
+      }
     }
 
-    this.globalScope.symbols.set(symbol.name, symbol);
-
-    logger.debug(`Defined global symbol: ${symbol.name}`);
-    return true;
+    return AddSymbolResult.SUCCESS;
   }
 
-  // TODO: support SDL specific scoping rules
-  lookup(name: string): Symbol | undefined {
+  lookupClassMember(name: string): ClassMemberSymbol[] | undefined {
+    const classScope = this.getEnclosingClassScope();
+
+    if (!classScope?.classMemberSymbols) {
+      return undefined;
+    }
+
+    return classScope.classMemberSymbols.get(name);
+  }
+
+  lookupVariable(name: string): Symbol | undefined {
     let scope: Scope | undefined = this.currentScope;
 
     while (scope) {
       const symbol = scope.symbols.get(name);
 
-      if (symbol) {
+      if (symbol && (symbol.kind === SymbolKind.VARIABLE)) {
         return symbol;
       }
+
       scope = scope.parent;
     }
     return undefined;
-  }
-
-  // TODO: support SDL specific scoping rules
-  lookupInCurrentScope(name: string): Symbol | undefined {
-    return this.currentScope.symbols.get(name);
-  }
-
-  // TODO: support SDL specific scoping rules
-  lookupGlobal(name: string): Symbol | undefined {
-    return this.globalScope.symbols.get(name);
   }
 
   lookupClass(name: string): Symbol | undefined {
@@ -124,65 +383,34 @@ export class SymbolTable {
     return undefined;
   }
 
-  getCurrentScope(): Scope {
-    return this.currentScope;
-  }
-
-  getGlobalScope(): Scope {
-    return this.globalScope;
-  }
-
-  getScopeDepth(): number {
-    return this.scopeStack.length;
-  }
-
   toString(): string {
     const lines: string[] = [];
     const formatScope = (scope: Scope, indent: number): void => {
       const prefix = "  ".repeat(indent);
-      const scopeLabel = scope.name ?? "anonymous";
 
-      lines.push(`${prefix}[${scopeLabel}]`);
+      lines.push(
+        `${prefix}[${ScopeKind[scope.kind]}]${
+          scope.kind === ScopeKind.GLOBAL ? "" : " " + scope.name
+        }:`,
+      );
 
-      for (const [name, symbol] of scope.symbols) {
-        const kindName = SymbolKind[symbol.kind];
-        let typeStr = "";
+      if (scope.classMemberSymbols && (scope.classMemberSymbols.size > 0)) {
+        lines.push(`${prefix}  members:`);
 
-        if (symbol.attributes) {
-          const attributes = symbol.attributes;
-          const parts: string[] = [];
-
-          if (attributes.isComputed) {
-            parts.push("computed");
+        for (const memberEntries of scope.classMemberSymbols.values()) {
+          for (const entry of memberEntries) {
+            const branchStr = entry.branchId
+              ? ` (branch: ${entry.branchId})`
+              : "";
+            lines.push(
+              `${prefix}    ${this.getSymbolString(entry.symbol)}${branchStr}`,
+            );
           }
-
-          if (attributes.isConst) {
-            parts.push("const");
-          }
-
-          if (attributes.stringVariableKind) {
-            parts.push(StringVariableKind[attributes.stringVariableKind]);
-          }
-
-          if (attributes.elementaryTypeKind !== undefined) {
-            parts.push(ElementaryTypeKind[attributes.elementaryTypeKind]);
-          }
-
-          if (attributes.classReference) {
-            parts.push(attributes.classReference);
-          }
-
-          if (attributes.mapReference) {
-            parts.push(attributes.mapReference);
-          }
-
-          if (attributes.isArray) {
-            parts.push("[]");
-          }
-
-          typeStr = parts.length > 0 ? ` ${parts.join(" ")}` : "";
         }
-        lines.push(`${prefix}  ${name} ${kindName}${typeStr}`);
+      }
+
+      for (const symbol of scope.symbols.values()) {
+        lines.push(`${prefix}  ${this.getSymbolString(symbol)}`);
       }
 
       for (const child of scope.children) {

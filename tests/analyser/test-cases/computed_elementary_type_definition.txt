@@ -4,10 +4,12 @@ class A {computed int a;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    a VARIABLE computed INTEGER
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+    a VARIABLE INTEGER COMPUTED
 
 
 # Const and value
@@ -16,7 +18,9 @@ class A {computed const int a=3;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    a VARIABLE computed const INTEGER
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED CONST
+    a VARIABLE INTEGER COMPUTED CONST

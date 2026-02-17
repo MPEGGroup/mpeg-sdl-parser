@@ -5,12 +5,14 @@ class A {ClassA a;}
 
 ==>
 
-[global]
+[GLOBAL]:
   ClassA CLASS
   A CLASS
-  [ClassA]
-  [A]
-    a VARIABLE ClassA
+  [CLASS] ClassA:
+  [CLASS] A:
+    members:
+      a VARIABLE (class: ClassA)
+    a VARIABLE (class: ClassA)
 
 
 # Legacy and one parameter value
@@ -20,12 +22,14 @@ class A {legacy ClassB b(3);}
 
 ==>
 
-[global]
+[GLOBAL]:
   ClassB CLASS
   A CLASS
-  [ClassB]
-  [A]
-    b VARIABLE ClassB
+  [CLASS] ClassB:
+  [CLASS] A:
+    members:
+      b VARIABLE (class: ClassB)
+    b VARIABLE (class: ClassB)
 
 
 # Multiple parameter values
@@ -35,9 +39,15 @@ class A {ClassC c(i, 3);}
 
 ==>
 
-[global]
+[GLOBAL]:
   ClassC CLASS
   A CLASS
-  [ClassC]
-  [A]
-    c VARIABLE ClassC
+  [CLASS] ClassC:
+  [CLASS] A:
+    members:
+      c VARIABLE (class: ClassC)
+    c VARIABLE (class: ClassC)
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared

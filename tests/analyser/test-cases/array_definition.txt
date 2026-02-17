@@ -4,9 +4,11 @@ class A {int(3) a[3];}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER []
     a VARIABLE INTEGER []
 
 
@@ -17,12 +19,14 @@ class A {reserved MyClass a[3][[2]];}
 
 ==>
 
-[global]
+[GLOBAL]:
   MyClass CLASS
   A CLASS
-  [MyClass]
-  [A]
-    a VARIABLE MyClass []
+  [CLASS] MyClass:
+  [CLASS] A:
+    members:
+      a VARIABLE (class: MyClass) []
+    a VARIABLE (class: MyClass) []
 
 
 # Implicit dimension
@@ -32,9 +36,11 @@ class A {MyClass a[1..3];}
 
 ==>
 
-[global]
+[GLOBAL]:
   MyClass CLASS
   A CLASS
-  [MyClass]
-  [A]
-    a VARIABLE MyClass []
+  [CLASS] MyClass:
+  [CLASS] A:
+    members:
+      a VARIABLE (class: MyClass) []
+    a VARIABLE (class: MyClass) []

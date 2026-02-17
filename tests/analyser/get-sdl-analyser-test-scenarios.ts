@@ -10,6 +10,7 @@ export interface TestScenario {
   name: string;
   text: string;
   expected: string;
+  expectedErrors: string;
 }
 
 export function getSdlAnalyserTestScenarios(file: string, fileName: string) {
@@ -31,12 +32,16 @@ export function getSdlAnalyserTestScenarios(file: string, fileName: string) {
 
     const name = scenarioRegexResult[1].trim();
     const text = scenarioRegexResult[2].trim();
-    const expected = scenarioRegexResult[3].trim();
+    const rawExpected = scenarioRegexResult[3];
+    const errorSplit = rawExpected.split(/errors:/);
+    const expected = errorSplit[0].trim();
+    const expectedErrors = (errorSplit[1] ?? "").trim();
 
     testScenarios.push({
       name,
       text,
       expected,
+      expectedErrors,
     });
 
     lastIndex = scenarioRegexResult.index + scenarioRegexResult[0].length;

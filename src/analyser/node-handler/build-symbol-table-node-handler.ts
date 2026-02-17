@@ -1,8 +1,10 @@
-import type { AbstractCompositeNode } from "../../ast/node/abstract-composite-node.ts";
-import type { AbstractLeafNode } from "../../ast/node/abstract-leaf-node.ts";
-import type { SemanticError } from "../../scanner-error.ts";
-import type { Symbol } from "../symbol.ts";
-import { SymbolTable } from "../symbol-table.ts";
+import {
+  AddSymbolResult,
+  type Symbol,
+  type SymbolAttributes,
+  SymbolKind,
+  SymbolTable,
+} from "../symbol-table.ts";
 import { NodeKind } from "../../ast/node/enum/node-kind.ts";
 import { StatementKind } from "../../ast/node/enum/statement-kind.ts";
 import type { ClassDeclaration } from "../../ast/node/class-declaration.ts";
@@ -16,14 +18,8 @@ import type { StringDefinition } from "../../ast/node/string-definition.ts";
 import type { ClassDefinition } from "../../ast/node/class-definition.ts";
 import type { MapDefinition } from "../../ast/node/map-definition.ts";
 import type { ForStatement } from "../../ast/node/for-statement.ts";
-import type { AbstractStatement } from "../../ast/node/abstract-statement.ts";
-import {
-  InternalScannerError,
-  SemanticError as SemanticErrorClass,
-} from "../../scanner-error.ts";
-import { SymbolKind } from "../enum/symbol-kind.ts";
+import { SemanticError } from "../../scanner-error.ts";
 import { AbstractAnalysisNodeHandler } from "./abstract-analysis-node-handler.ts";
-import type { SymbolAttributes } from "../symbol.ts";
 import {
   getElementaryTypeKind,
   getRequiredElementaryType,
@@ -31,231 +27,169 @@ import {
   getRequiredToken,
   getStringVariableKind,
 } from "../util/symbol-table-utils.ts";
-import { isElementaryType, isIdentifier } from "../../ast/util/types.ts";
+import {
+  isElementaryType,
+  isExpandableModifier,
+  isIdentifier,
+} from "../../ast/util/types.ts";
+import { ElementaryTypeKind } from "../../ast/node/enum/elementary-type-kind.ts";
 
 export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
-  public readonly symbolTable: SymbolTable = new SymbolTable();
 
-  constructor(strict: boolean) {
-    super(strict);
-  }
+  constructor(symbolTable: SymbolTable, strict: boolean) {
+    super(symbolTable, strict);
 
-  doBeforeVisit(node: AbstractCompositeNode): void {
-    const nodeKind = node.nodeKind;
-
-    switch (nodeKind) {
-      case NodeKind.STATEMENT:
-        this.handleStatementBeforeVisit(node as AbstractStatement);
-        break;
-      case NodeKind.PARAMETER:
-        this.handleParameter(node as Parameter);
-        break;
-      case NodeKind.BIT_MODIFIER:
-      case NodeKind.CASE_CLAUSE:
-      case NodeKind.DEFAULT_CLAUSE:
-        break;
-      case NodeKind.IDENTIFIER:
-      case NodeKind.EXPRESSION:
-      case NodeKind.NUMBER_LITERAL:
-      case NodeKind.UNEXPECTED_ERROR:
-      case NodeKind.AGGREGATE_OUTPUT_VALUE:
-      case NodeKind.ALIGNED_MODIFIER:
-      case NodeKind.ARRAY_DIMENSION:
-      case NodeKind.ARRAY_ELEMENT_ACCESS:
-      case NodeKind.CLASS_ID:
-      case NodeKind.EXTENDS_MODIFIER:
-      case NodeKind.CLASS_MEMBER_ACCESS:
-      case NodeKind.ELEMENTARY_TYPE:
-      case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
-      case NodeKind.EXPANDABLE_MODIFIER:
-      case NodeKind.LENGTH_ATTRIBUTE:
-      case NodeKind.MAP_ENTRY:
-      case NodeKind.PARAMETER_LIST:
-      case NodeKind.PARAMETER_VALUE_LIST:
-      case NodeKind.SPECIFICATION:
-      case NodeKind.STRING_LITERAL:
-      case NodeKind.TOKEN:
-        break;
-      default: {
-        const exhaustiveCheck: never = nodeKind;
-        throw new InternalScannerError(
-          "Unreachable code reached, nodeKind == " + exhaustiveCheck,
-        );
-      }
-    }
-  }
-
-  doVisit(_node: AbstractLeafNode): void {
-    // Leaf nodes don't define symbols
-  }
-
-  doAfterVisit(node: AbstractCompositeNode): void {
-    const nodeKind = node.nodeKind;
-
-    switch (nodeKind) {
-      case NodeKind.STATEMENT:
-        this.handleStatementAfterVisit(node as AbstractStatement);
-        break;
-      case NodeKind.CASE_CLAUSE:
-      case NodeKind.DEFAULT_CLAUSE:
-        break;
-      case NodeKind.UNEXPECTED_ERROR:
-      case NodeKind.AGGREGATE_OUTPUT_VALUE:
-      case NodeKind.ALIGNED_MODIFIER:
-      case NodeKind.ARRAY_DIMENSION:
-      case NodeKind.ARRAY_ELEMENT_ACCESS:
-      case NodeKind.BIT_MODIFIER:
-      case NodeKind.CLASS_ID:
-      case NodeKind.CLASS_MEMBER_ACCESS:
-      case NodeKind.ELEMENTARY_TYPE:
-      case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
-      case NodeKind.EXPANDABLE_MODIFIER:
-      case NodeKind.EXPRESSION:
-      case NodeKind.EXTENDS_MODIFIER:
-      case NodeKind.IDENTIFIER:
-      case NodeKind.LENGTH_ATTRIBUTE:
-      case NodeKind.MAP_ENTRY:
-      case NodeKind.NUMBER_LITERAL:
-      case NodeKind.PARAMETER:
-      case NodeKind.PARAMETER_LIST:
-      case NodeKind.PARAMETER_VALUE_LIST:
-      case NodeKind.SPECIFICATION:
-      case NodeKind.STRING_LITERAL:
-      case NodeKind.TOKEN:
-        break;
-      default: {
-        const exhaustiveCheck: never = nodeKind;
-        throw new InternalScannerError(
-          "Unreachable code reached, nodeKind == " + exhaustiveCheck,
-        );
-      }
-    }
-  }
-
-  private handleStatementBeforeVisit(statement: AbstractStatement): void {
-    const statementKind = statement.statementKind;
-
-    switch (statementKind) {
-      case StatementKind.CLASS_DECLARATION:
-        this.handleClassDeclaration(statement as ClassDeclaration);
-        break;
-      case StatementKind.MAP_DECLARATION:
-        this.handleMapDeclaration(statement as MapDeclaration);
-        break;
-      case StatementKind.ELEMENTARY_TYPE_DEFINITION:
-        this.handleElementaryTypeDefinition(
-          statement as ElementaryTypeDefinition,
-        );
-        break;
-      case StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION:
+    this.registerBeforeNodeHandler(
+      NodeKind.PARAMETER,
+      undefined,
+      (node) => this.handleParameter(node as Parameter),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.CLASS_DECLARATION,
+      (node) => this.handleClassDeclaration(node as ClassDeclaration),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.MAP_DECLARATION,
+      (node) => this.handleMapDeclaration(node as MapDeclaration),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.ELEMENTARY_TYPE_DEFINITION,
+      (node) =>
+        this.handleElementaryTypeDefinition(node as ElementaryTypeDefinition),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION,
+      (node) =>
         this.handleComputedElementaryTypeDefinition(
-          statement as ComputedElementaryTypeDefinition,
-        );
-        break;
-      case StatementKind.ARRAY_DEFINITION:
-        this.handleArrayDefinition(statement as ArrayDefinition);
-        break;
-      case StatementKind.COMPUTED_ARRAY_DEFINITION:
-        this.handleComputedArrayDefinition(
-          statement as ComputedArrayDefinition,
-        );
-        break;
-      case StatementKind.STRING_DEFINITION:
-        this.handleStringDefinition(statement as StringDefinition);
-        break;
-      case StatementKind.CLASS_DEFINITION:
-        this.handleClassDefinition(statement as ClassDefinition);
-        break;
-      case StatementKind.MAP_DEFINITION:
-        this.handleMapDefinition(statement as MapDefinition);
-        break;
-      case StatementKind.FOR:
-        this.handleForStatementBefore(statement as ForStatement);
-        break;
-      case StatementKind.COMPOUND:
-      case StatementKind.WHILE:
-      case StatementKind.DO:
-      case StatementKind.SWITCH:
-        this.symbolTable.enterScope(StatementKind[statementKind]);
-        break;
-      case StatementKind.EXPRESSION:
-      case StatementKind.IF:
-        break;
-      default: {
-        const exhaustiveCheck: never = statementKind;
-        throw new InternalScannerError(
-          "Unreachable code reached, statementKind == " + exhaustiveCheck,
-        );
-      }
-    }
-  }
-
-  private handleStatementAfterVisit(statement: AbstractStatement): void {
-    const statementKind = statement.statementKind;
-
-    switch (statementKind) {
-      case StatementKind.CLASS_DECLARATION:
-      case StatementKind.MAP_DECLARATION:
-      case StatementKind.FOR:
-      case StatementKind.COMPOUND:
-      case StatementKind.WHILE:
-      case StatementKind.DO:
-      case StatementKind.SWITCH:
-        this.symbolTable.exitScope();
-        break;
-      case StatementKind.IF:
-      case StatementKind.ELEMENTARY_TYPE_DEFINITION:
-      case StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION:
-      case StatementKind.ARRAY_DEFINITION:
-      case StatementKind.COMPUTED_ARRAY_DEFINITION:
-      case StatementKind.STRING_DEFINITION:
-      case StatementKind.CLASS_DEFINITION:
-      case StatementKind.MAP_DEFINITION:
-      case StatementKind.EXPRESSION:
-        // No action needed after visiting these statements
-        break;
-      default: {
-        const exhaustiveCheck: never = statementKind;
-        throw new InternalScannerError(
-          "Unreachable code reached, statementKind == " + exhaustiveCheck,
-        );
-      }
-    }
+          node as ComputedElementaryTypeDefinition,
+        ),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.ARRAY_DEFINITION,
+      (node) => this.handleArrayDefinition(node as ArrayDefinition),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.COMPUTED_ARRAY_DEFINITION,
+      (node) =>
+        this.handleComputedArrayDefinition(node as ComputedArrayDefinition),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.STRING_DEFINITION,
+      (node) => this.handleStringDefinition(node as StringDefinition),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.CLASS_DEFINITION,
+      (node) => this.handleClassDefinition(node as ClassDefinition),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.MAP_DEFINITION,
+      (node) => this.handleMapDefinition(node as MapDefinition),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.FOR,
+      (node) => this.handleForStatement(node as ForStatement),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.COMPOUND,
+      () =>
+        this.symbolTable.enterBlockScope(StatementKind[StatementKind.COMPOUND]),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.WHILE,
+      () =>
+        this.symbolTable.enterBlockScope(StatementKind[StatementKind.WHILE]),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.DO,
+      () => this.symbolTable.enterBlockScope(StatementKind[StatementKind.DO]),
+    );
+    this.registerBeforeNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.SWITCH,
+      () =>
+        this.symbolTable.enterBlockScope(StatementKind[StatementKind.SWITCH]),
+    );
+    this.registerAfterNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.COMPOUND,
+      () => this.symbolTable.exitScope(),
+    );
+    this.registerAfterNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.WHILE,
+      () => this.symbolTable.exitScope(),
+    );
+    this.registerAfterNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.DO,
+      () => this.symbolTable.exitScope(),
+    );
+    this.registerAfterNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.SWITCH,
+      () => this.symbolTable.exitScope(),
+    );
+    this.registerAfterNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.CLASS_DECLARATION,
+      () => this.symbolTable.exitScope(),
+    );
+    this.registerAfterNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.MAP_DECLARATION,
+      () => this.symbolTable.exitScope(),
+    );
+    this.registerAfterNodeHandler(
+      NodeKind.STATEMENT,
+      StatementKind.FOR,
+      () => this.symbolTable.exitScope(),
+    );
   }
 
   private defineSymbol(symbol: Symbol) {
-    const success = this.symbolTable.define(symbol);
+    const addSymbolResult = this.symbolTable.addSymbol(symbol);
 
-    if (!success) {
-      const error = new SemanticErrorClass(
-        `Variable: '${symbol.name}' is already declared in scope: ${this.symbolTable.getCurrentScope().name}`,
+    if (addSymbolResult === AddSymbolResult.SUCCESS) {
+      return;
+    }
+
+    let error: SemanticError | undefined;
+
+    if (addSymbolResult === AddSymbolResult.DUPLICATE) {
+      error = new SemanticError(
+        `Variable: ${symbol.name} is already declared in scope: ${this.symbolTable.getCurrentScope().name}`,
         symbol.location,
       );
+    } 
+    else if (addSymbolResult === AddSymbolResult.MEMBER_CONFLICT) {
+      const classScope = this.symbolTable.getEnclosingClassScope();
 
-      if (this.strict) {
-        throw error;
-      }
-
-      this.semanticErrors.push(error);
-    }
-  }
-
-  private defineGlobalSymbol(symbol: Symbol) {
-    const success = this.symbolTable.defineGlobal(symbol);
-
-    if (!success) {
-      const error = new SemanticErrorClass(
-        `Variable: '${symbol.name}' is already declared in global scope`,
+      error = new SemanticError(
+        `Duplicate member variable: ${symbol.name} conflicts with type defined in different conditional branch within scope: ${classScope!.name}`,
         symbol.location,
       );
-
-      if (this.strict) {
-        throw error;
-      }
-
-      this.semanticErrors.push(error);
     }
+        
+
+    if (this.strict) {
+      throw error;
+    }
+
+    this.semanticErrors.push(error!);
   }
 
   private handleElementaryTypeDefinition(
@@ -390,7 +324,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       (attributes.elementaryTypeKind === undefined) &&
       !attributes.classReference
     ) {
-      const error = new SemanticErrorClass(
+      const error = new SemanticError(
         `Array definition must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
       );
@@ -523,7 +457,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     const location = identifier.startToken!.location;
     const attributes: SymbolAttributes = {};
 
-    this.defineGlobalSymbol({
+    this.defineSymbol({
       node: classDeclaration,
       name,
       kind: SymbolKind.CLASS,
@@ -531,7 +465,26 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       location,
     });
 
-    this.symbolTable.enterScope(name);
+    this.symbolTable.enterClassScope(name);
+
+    if (isExpandableModifier(classDeclaration.expandableModifier)) {
+      const sizeOfInstanceLocation =
+        classDeclaration.expandableModifier!.startToken!.location;
+
+      const sizeOfInstanceAttributes: SymbolAttributes = {
+        isComputed: true,
+        isConst: true,
+        elementaryTypeKind: ElementaryTypeKind.UNSIGNED_INTEGER,
+      };
+
+      this.defineSymbol({
+        node: classDeclaration.expandableModifier!,
+        name: "sizeOfInstance",
+        kind: SymbolKind.VARIABLE,
+        attributes: sizeOfInstanceAttributes,
+        location: sizeOfInstanceLocation,
+      });
+    }
   }
 
   private handleMapDeclaration(mapDeclaration: MapDeclaration): void {
@@ -567,7 +520,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       (attributes.elementaryTypeKind === undefined) &&
       !attributes.classReference
     ) {
-      const error = new SemanticErrorClass(
+      const error = new SemanticError(
         `Map declaration must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
       );
@@ -580,7 +533,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       return;
     }
 
-    this.defineGlobalSymbol({
+    this.defineSymbol({
       node: mapDeclaration,
       name,
       kind: SymbolKind.MAP,
@@ -588,7 +541,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       location,
     });
 
-    this.symbolTable.enterScope(name);
+    this.symbolTable.enterMapScope(name);
   }
 
   private handleClassDefinition(classDefinition: ClassDefinition): void {
@@ -669,7 +622,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
 
     // check that at least one of elementaryType or classIdentifier is present
     if (!attributes.elementaryTypeKind && !attributes.classReference) {
-      const error = new SemanticErrorClass(
+      const error = new SemanticError(
         `Map definition must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
       );
@@ -724,7 +677,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       (attributes.elementaryTypeKind === undefined) &&
       !attributes.classReference
     ) {
-      const error = new SemanticErrorClass(
+      const error = new SemanticError(
         `Parameter must have either an elementary type or a class identifier`,
         identifier.startToken!.location,
       );
@@ -746,10 +699,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     });
   }
 
-  private handleForStatementBefore(_forStatement: ForStatement): void {
-    this.symbolTable.enterScope("FOR");
-    // Note: We don't declare variables here because the computedElementaryDefinition
-    // within the for statement will be processed during normal AST traversal,
-    // which will handle the variable declaration.
+  private handleForStatement(_forStatement: ForStatement): void {
+    this.symbolTable.enterBlockScope(StatementKind[StatementKind.FOR]);
   }
 }

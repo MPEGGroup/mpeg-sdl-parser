@@ -4,9 +4,9 @@ class A{}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
 
 
 # Single parameter with single id
@@ -15,9 +15,11 @@ class A(int a) {}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER
     a VARIABLE INTEGER
 
 
@@ -28,10 +30,19 @@ aligned(8) expandable(20) abstract class A (int a, B b) extends C(1, d) : bit(3)
 
 ==>
 
-[global]
+[GLOBAL]:
   C CLASS
   A CLASS
-  [C]
-  [A]
+  [CLASS] C:
+  [CLASS] A:
+    members:
+      sizeOfInstance VARIABLE UNSIGNED_INTEGER COMPUTED CONST
+      a VARIABLE INTEGER
+      b VARIABLE (class: B)
+    sizeOfInstance VARIABLE UNSIGNED_INTEGER COMPUTED CONST
     a VARIABLE INTEGER
-    b VARIABLE B
+    b VARIABLE (class: B)
+
+errors:
+
+SEMANTIC ERROR: Identifier: d is not declared

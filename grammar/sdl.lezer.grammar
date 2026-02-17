@@ -581,7 +581,7 @@ DoStatement {
 
 WhileStatement { 
   keyword<"while"> OpenParenthesis expression CloseParenthesis
-  CompoundStatement
+  statement
 }
 
 

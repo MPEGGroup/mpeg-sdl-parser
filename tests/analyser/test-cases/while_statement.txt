@@ -4,8 +4,13 @@ class A {while (i<9) {i++;}}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
-    [WHILE]
-      [COMPOUND]
+  [CLASS] A:
+    [BLOCK] WHILE:
+      [BLOCK] COMPOUND:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared

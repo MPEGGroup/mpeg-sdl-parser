@@ -4,9 +4,9 @@ map offsets (int) {0b00,{1024},0b00,{1024}}
 
 ==>
 
-[global]
+[GLOBAL]:
   offsets MAP INTEGER
-  [offsets]
+  [MAP] offsets:
 
 
 # Class output
@@ -15,9 +15,13 @@ map barMap (Bar) {0b00,{1024}}
 
 ==>
 
-[global]
-  barMap MAP Bar
-  [barMap]
+[GLOBAL]:
+  barMap MAP (class: Bar)
+  [MAP] barMap:
+
+errors:
+
+SEMANTIC ERROR: Class: Bar is not declared
 
 
 # Escape codes
@@ -26,6 +30,6 @@ map offsets (int) {0b00,{int(6)}}
 
 ==>
 
-[global]
+[GLOBAL]:
   offsets MAP INTEGER
-  [offsets]
+  [MAP] offsets:

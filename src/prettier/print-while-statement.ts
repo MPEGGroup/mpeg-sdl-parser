@@ -20,7 +20,7 @@ export function printWhileStatement(
 
   addNonBreakingWhitespace(doc);
 
-  doc.push(path.call(print, "compoundStatement"));
+  doc.push(path.call(print, "statement"));
 
   return doc;
 }

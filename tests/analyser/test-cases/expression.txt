@@ -4,9 +4,9 @@ class A {+1;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
 
 
 # Identifier with unary negation operator
@@ -15,9 +15,13 @@ class A {-i;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
 
 
 # Lengthof operator with unary negation
@@ -26,9 +30,13 @@ class A {-lengthof(i);}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
 
 
 # Postfix operator
@@ -37,9 +45,13 @@ class A {i++;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
 
 
 # Class member access expression
@@ -48,9 +60,13 @@ class A {a.b;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: a is not declared
 
 
 # Class member access expression - multiple
@@ -59,9 +75,13 @@ class A {a.b.c;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: a is not declared
 
 
 # Array element access expression
@@ -70,9 +90,13 @@ class A {a[1];}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: a is not declared
 
 
 # Array element access expression multiple
@@ -81,9 +105,13 @@ class A {a[1][2];}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: a is not declared
 
 
 # Class member access expression with postfix operator
@@ -92,9 +120,13 @@ class A {a.b++;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: a is not declared
 
 
 # Array element access expression with postfix operator
@@ -103,9 +135,13 @@ class A {a[1]++;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: a is not declared
 
 
 # Class member and array element access expression - multiple mixed
@@ -114,6 +150,10 @@ class A {a[1][2].b.c[3];}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+
+errors:
+
+SEMANTIC ERROR: Identifier: a is not declared

@@ -24,7 +24,7 @@ describe("Semantic Error Scenario Tests", () => {
     const specification = buildAst(parseTree, sdlStringInput);
 
     expect(() => sdlAnalyser.analyse(specification as Specification)).toThrow(
-      "SEMANTIC ERROR: Variable: 'a' is already declared in scope: global => { row: 1, column: 34, position: 33 }",
+      "SEMANTIC ERROR: Variable: a is already declared in scope: GLOBAL => { row: 1, column: 34, position: 33 }",
     );
   });
 
@@ -34,7 +34,7 @@ describe("Semantic Error Scenario Tests", () => {
     const specification = buildAst(parseTree, sdlStringInput);
 
     expect(() => sdlAnalyser.analyse(specification as Specification)).toThrow(
-      "SEMANTIC ERROR: Class 'B' is not declared => { row: 1, column: 11, position: 10 }",
+      "SEMANTIC ERROR: Class: B is not declared => { row: 1, column: 11, position: 10 }",
     );
   });
 });

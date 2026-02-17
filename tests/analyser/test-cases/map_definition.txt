@@ -5,12 +5,14 @@ class A {reserved unsigned int<Offsets> offset;}
 
 ==>
 
-[global]
+[GLOBAL]:
   Offsets MAP INTEGER
   A CLASS
-  [Offsets]
-  [A]
-    offset VARIABLE UNSIGNED_INTEGER Offsets
+  [MAP] Offsets:
+  [CLASS] A:
+    members:
+      offset VARIABLE UNSIGNED_INTEGER (map: Offsets)
+    offset VARIABLE UNSIGNED_INTEGER (map: Offsets)
 
 
 # Legacy with class output
@@ -21,11 +23,13 @@ class A {legacy B<MapB> b;}
 
 ==>
 
-[global]
+[GLOBAL]:
   B CLASS
-  MapB MAP B
+  MapB MAP (class: B)
   A CLASS
-  [B]
-  [MapB]
-  [A]
-    b VARIABLE B MapB
+  [CLASS] B:
+  [MAP] MapB:
+  [CLASS] A:
+    members:
+      b VARIABLE (class: B) (map: MapB)
+    b VARIABLE (class: B) (map: MapB)

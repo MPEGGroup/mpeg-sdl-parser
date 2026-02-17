@@ -4,6 +4,6 @@ computed int a=1;
 
 ==>
 
-[global]
-  a VARIABLE computed INTEGER
+[GLOBAL]:
+  a VARIABLE INTEGER COMPUTED
 

@@ -4,9 +4,11 @@ class A {utf8string foo;}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+    members:
+      foo VARIABLE
     foo VARIABLE
 
 
@@ -16,9 +18,11 @@ class A {utf8list foo=u"hello world";}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+    members:
+      foo VARIABLE UTF8_LIST
     foo VARIABLE UTF8_LIST
 
 
@@ -28,7 +32,9 @@ class A {base64string foo="aGVsbG8K";}
 
 ==>
 
-[global]
+[GLOBAL]:
   A CLASS
-  [A]
+  [CLASS] A:
+    members:
+      foo VARIABLE BASE64
     foo VARIABLE BASE64
