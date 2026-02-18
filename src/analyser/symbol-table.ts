@@ -19,7 +19,7 @@ export enum SymbolKind {
 export enum AddSymbolResult {
   SUCCESS,
   DUPLICATE,
-  MEMBER_CONFLICT
+  MEMBER_CONFLICT,
 }
 
 /**
@@ -196,8 +196,10 @@ export class SymbolTable {
       const member = memberEntry.symbol;
 
       if (
-        (member.attributes.elementaryTypeKind !== symbol.attributes.elementaryTypeKind) ||
-        (member.attributes.stringVariableKind !== symbol.attributes.stringVariableKind)
+        (member.attributes.elementaryTypeKind !==
+          symbol.attributes.elementaryTypeKind) ||
+        (member.attributes.stringVariableKind !==
+          symbol.attributes.stringVariableKind)
       ) {
         return AddSymbolResult.MEMBER_CONFLICT;
       }
@@ -295,7 +297,9 @@ export class SymbolTable {
 
   addSymbol(symbol: Symbol): AddSymbolResult {
     if (this.mode === Mode.READ) {
-      throw new InternalScannerError(`Attempt to add symbol '${symbol.name}' in read-only mode`);
+      throw new InternalScannerError(
+        `Attempt to add symbol '${symbol.name}' in read-only mode`,
+      );
     }
 
     if (this.currentScope.symbols.has(symbol.name)) {

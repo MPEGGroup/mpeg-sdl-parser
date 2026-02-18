@@ -174,16 +174,16 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
         `Variable: ${symbol.name} is already declared in scope: ${this.symbolTable.getCurrentScope().name}`,
         symbol.location,
       );
-    } 
-    else if (addSymbolResult === AddSymbolResult.MEMBER_CONFLICT) {
+    } else if (addSymbolResult === AddSymbolResult.MEMBER_CONFLICT) {
       const classScope = this.symbolTable.getEnclosingClassScope();
 
       error = new SemanticError(
-        `Duplicate member variable: ${symbol.name} conflicts with type defined in different conditional branch within scope: ${classScope!.name}`,
+        `Duplicate member variable: ${symbol.name} conflicts with type defined in different conditional branch within scope: ${
+          classScope!.name
+        }`,
         symbol.location,
       );
     }
-        
 
     if (this.strict) {
       throw error;
