@@ -34,6 +34,7 @@ Object.values(TokenTypeId).forEach((value) => {
     case TokenTypeId.int:
       tokenIdToSyntaxStringMapping.set(value, "int");
       break;
+    case TokenTypeId.signed:
     case TokenTypeId.unsigned:
       tokenIdToSyntaxStringMapping.set(value, "unsigned");
       break;

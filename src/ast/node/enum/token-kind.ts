@@ -76,6 +76,7 @@ export enum TokenKind {
   SWITCH,
   UNARY_NEGATION,
   UNARY_PLUS,
+  SIGNED,
   UNSIGNED,
   UTF_PREFIX,
   UTF_STRING,

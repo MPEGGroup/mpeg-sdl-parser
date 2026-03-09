@@ -351,7 +351,7 @@ AlignedModifier {
 }
 
 ElementaryType {
-  keyword<"int"> | keyword<"unsigned"> keyword<"int"> | keyword<"float"> | keyword<"bit">
+  keyword<"int"> | keyword<"signed"> keyword<"int"> | keyword<"unsigned"> keyword<"int"> | keyword<"float"> | keyword<"bit">
 }
 
 LengthAttribute {
@@ -510,7 +510,7 @@ ImplicitArrayDimension {
 }
 
 ArrayDefinition {
-  (keyword<"reserved"> | keyword<"legacy">)? AlignedModifier? ((ElementaryType LengthAttribute) | Identifier) Identifier (ImplicitArrayDimension | (ExplicitArrayDimension | PartialArrayDimension)+) Semicolon
+  (keyword<"reserved"> | keyword<"legacy"> | keyword<"const">)? AlignedModifier? ((ElementaryType LengthAttribute) | Identifier) Identifier (ImplicitArrayDimension | (ExplicitArrayDimension | PartialArrayDimension)+) Semicolon
 }
 
 

@@ -143,6 +143,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
     case TokenTypeId.Subtraction:
     case TokenTypeId.UnaryNegation:
     case TokenTypeId.UnaryPlus:
+    case TokenTypeId.signed:
     case TokenTypeId.unsigned:
     case TokenTypeId.utf16string:
     case TokenTypeId.utf8list:

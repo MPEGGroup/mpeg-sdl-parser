@@ -1,0 +1,47 @@
+// Test file demonstrating signed type support (previously broken, now fixed)
+// This file tests signed integer types which were not supported in the original parser
+
+aligned(8) class SignedTypeTests {
+    // Basic signed types - these were failing before the fix
+    signed int(16) samples[1024];
+    signed int(32) signed_values[100];
+    
+    // Signed types with different bit widths
+    signed int(8) byte_samples[256];
+    signed int(16) short_samples[512];
+    signed int(32) int_samples[1024];
+    signed int(64) long_samples[128];
+    
+    // Signed types with const qualifier
+    const signed int(16) const_signed_array[50];
+    const signed int(32) signed_constants[10];
+    
+    // Signed types with alignment modifiers
+    aligned(16) signed int(32) aligned_signed_array[8];
+    aligned(32) signed int(64) double_aligned_signed[4];
+    
+    // Mixed signed and unsigned types
+    signed int(16) signed_data[100];
+    unsigned int(16) unsigned_data[100];
+    
+    // Signed types in expressions
+    signed int(32) result = signed_value1 + signed_value2;
+    signed int(32) difference = signed_value1 - signed_value2;
+    signed int(32) product = signed_value1 * signed_value2;
+    
+    // Signed types with bitwise operations
+    signed int(16) signed_and = signed_val1 & signed_val2;
+    signed int(16) signed_or = signed_val1 | signed_val2;
+    
+    // Signed types with shift operations
+    signed int(16) signed_shift_left = signed_val << 2;
+    signed int(16) signed_shift_right = signed_val >> 1;
+    
+    // Signed types in multi-dimensional arrays
+    signed int(16) signed_matrix[3][3];
+    signed int(32) signed_3d_array[2][2][2];
+    
+    // Signed types with legacy/reserved qualifiers
+    reserved signed int(16) reserved_signed_array[5];
+    legacy signed int(8) legacy_signed_array[3];
+}

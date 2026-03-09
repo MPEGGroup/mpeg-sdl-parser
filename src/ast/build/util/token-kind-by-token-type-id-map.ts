@@ -249,6 +249,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
     case TokenTypeId.UnaryPlus:
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.UNARY_PLUS);
       break;
+    case TokenTypeId.signed:
     case TokenTypeId.unsigned:
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.UNSIGNED);
       break;

@@ -1,0 +1,30 @@
+// Test file demonstrating const array support (previously broken, now fixed)
+// This file tests const-qualified arrays which were not supported in the original parser
+
+aligned(8) class ConstArrayTests {
+    // Basic const arrays - these were failing before the fix
+    const unsigned int(32) reserved_array[2];
+    const int(16) const_samples[1024];
+    const float(32) const_values[100];
+    
+    // Const arrays with different types
+    const bit(8) flags[8];
+    const unsigned int(4) nibbles[16];
+    const int(64) large_const_array[256];
+    
+    // Const arrays with alignment modifiers
+    const aligned(16) unsigned int(32) aligned_const_array[4];
+    const aligned(32) float(64) double_precision_const[8];
+    
+    // Mixed const and non-const arrays in same class
+    unsigned int(32) regular_array[10];
+    const unsigned int(32) const_counterpart[10];
+    
+    // Const arrays with legacy/reserved qualifiers
+    reserved unsigned int(16) reserved_const_array[5];
+    legacy int(8) legacy_const_array[3];
+    
+    // Multi-dimensional const arrays
+    const unsigned int(8) const_matrix[3][3];
+    const float(32) const_3d_array[2][2][2];
+}

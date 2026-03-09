@@ -12,6 +12,7 @@ const tokenIdToStyleTagMapping: { [selector: string]: Tag | readonly Tag[] } =
 Object.entries(TokenTypeId).forEach(([key, value]) => {
   switch (value) {
     case TokenTypeId.int:
+    case TokenTypeId.signed:
     case TokenTypeId.unsigned:
     case TokenTypeId.float:
     case TokenTypeId.bit:

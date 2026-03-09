@@ -158,6 +158,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
     case TokenTypeId.lengthof:
     case TokenTypeId.map:
     case TokenTypeId.reserved:
+    case TokenTypeId.signed:
     case TokenTypeId.unsigned:
     case TokenTypeId.utf16string:
     case TokenTypeId.utf8list:
