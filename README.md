@@ -277,6 +277,73 @@ classDiagram
   Specification --|> AbstractCompositeNode
 ```
 
+### Semantic Analyser Model
+
+```mermaid
+classDiagram
+    class SdlAnalyser {
+        configure(options) SdlAnalyser
+        analyse(specification) SdlAnalysisResult
+    }
+
+    class SdlAnalysisResult {
+        <<interface>>
+        SemanticError[] semanticErrors
+        SemanticWarning[] semanticWarnings
+    }
+
+    class SymbolTable {
+        addSymbol()
+        lookupVariable()
+        lookupClass()
+        lookupMap()
+        enterClassScope()
+        enterBlockScope()
+        exitScope()
+    }
+
+    class AbstractAnalysisNodeHandler {
+        <<abstract>>
+    }
+
+    class BuildSymbolTableNodeHandler {
+    }
+
+    class ValidateScopeNodeHandler {
+    }
+
+    class ValidateTypeNodeHandler {
+    }
+
+    class SpecificCheckNodeHandler {
+    }
+
+    class Check {
+        <<interface>>
+        string nodeKind
+        string subKind
+        checkFunc()
+    }
+
+    class Specification {
+    }
+
+    SdlAnalyser --> SdlAnalysisResult : produces
+    SdlAnalyser --> Specification : analyses
+    SdlAnalysisResult --> SymbolTable
+    SdlAnalysisResult --> Specification
+    AbstractAnalysisNodeHandler --> SymbolTable
+    BuildSymbolTableNodeHandler --|> AbstractAnalysisNodeHandler
+    ValidateScopeNodeHandler --|> AbstractAnalysisNodeHandler
+    ValidateTypeNodeHandler --|> AbstractAnalysisNodeHandler
+    SpecificCheckNodeHandler --|> AbstractAnalysisNodeHandler
+    SpecificCheckNodeHandler --> Check
+    SdlAnalyser ..> BuildSymbolTableNodeHandler : pass 1
+    SdlAnalyser ..> ValidateScopeNodeHandler : pass 2
+    SdlAnalyser ..> ValidateTypeNodeHandler : pass 3
+    SdlAnalyser ..> SpecificCheckNodeHandler : pass 4
+```
+
 ### API
 
 Link to auto-generated API docs:
