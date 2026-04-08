@@ -11,6 +11,7 @@ export interface TestScenario {
   text: string;
   expected: string;
   expectedErrors: string;
+  expectedWarnings: string;
 }
 
 export function getSdlAnalyserTestScenarios(file: string, fileName: string) {
@@ -32,16 +33,40 @@ export function getSdlAnalyserTestScenarios(file: string, fileName: string) {
 
     const name = scenarioRegexResult[1].trim();
     const text = scenarioRegexResult[2].trim();
-    const rawExpected = scenarioRegexResult[3];
-    const errorSplit = rawExpected.split(/errors:/);
-    const expected = errorSplit[0].trim();
-    const expectedErrors = (errorSplit[1] ?? "").trim();
+    let rawExpected = scenarioRegexResult[3];
+
+    let expected = "";
+    let expectedErrors = "";
+    let expectedWarnings = "";
+
+    if (rawExpected.includes("errors:")) {
+      let expectedSplit = rawExpected.split(/errors:/);
+
+      expected = expectedSplit[0].trim();
+      rawExpected = expectedSplit[1] ?? "";
+
+      if (rawExpected.includes("warnings:")) {
+        expectedSplit = rawExpected.split(/warnings:/);
+        expectedErrors = (expectedSplit[0] ?? "").trim();
+        expectedWarnings = (expectedSplit[1] ?? "").trim();
+      } else {
+        expectedErrors = rawExpected.trim();
+      }
+    } else if (rawExpected.includes("warnings")) {
+      const expectedSplit = rawExpected.split(/warnings:/);
+
+      expected = expectedSplit[0].trim();
+      expectedWarnings = (expectedSplit[1] ?? "").trim();
+    } else {
+      expected = rawExpected.trim();
+    }
 
     testScenarios.push({
       name,
       text,
       expected,
       expectedErrors,
+      expectedWarnings,
     });
 
     lastIndex = scenarioRegexResult.index + scenarioRegexResult[0].length;

@@ -1,11 +1,26 @@
-import { ElementaryTypeKind } from "../ast/node/enum/elementary-type-kind.ts";
-import { StringVariableKind } from "../ast/node/enum/string-variable-kind.ts";
 import { InternalScannerError } from "../scanner-error.ts";
 import type { Location } from "../location.ts";
 import getLogger from "../util/logger.ts";
 import type { AbstractCompositeNode } from "../ast/node/abstract-composite-node.ts";
 
 const logger = getLogger("SymbolTable");
+
+/**
+ * Enum representing different numeric variable types.
+ */
+export enum NumericType {
+  INTEGER,
+  DECIMAL,
+  FLOATING_POINT,
+}
+
+/**
+ * Enum representing different string variable types.
+ */
+export enum StringType {
+  BASIC,
+  UCS,
+}
 
 /**
  * Enum representing different kinds of semantic symbols.
@@ -37,14 +52,18 @@ export interface SymbolAttributes {
   isConst?: boolean;
   isString?: boolean;
   isArray?: boolean;
-  elementaryTypeKind?: ElementaryTypeKind;
-  stringVariableKind?: StringVariableKind;
+
+  // Used for numeric variables
+  numericType?: NumericType;
+
+  // Used for string variables
+  stringType?: StringType;
 
   // Used for array of class types, Map class output type or Class definition
-  classReference?: string;
+  classType?: string;
 
   // Used for Map definition
-  mapReference?: string;
+  mapType?: string;
 }
 
 export interface Symbol {
@@ -94,47 +113,6 @@ export class SymbolTable {
       kind: ScopeKind.GLOBAL,
     };
     this.currentScope = this.globalScope;
-  }
-
-  private getSymbolString(symbol: Symbol): string {
-    const kindName = SymbolKind[symbol.kind];
-    let attributesStr = "";
-
-    if (symbol.attributes) {
-      const attributes = symbol.attributes;
-      const parts: string[] = [];
-
-      if (attributes.stringVariableKind) {
-        parts.push(StringVariableKind[attributes.stringVariableKind]);
-      }
-
-      if (attributes.elementaryTypeKind !== undefined) {
-        parts.push(ElementaryTypeKind[attributes.elementaryTypeKind]);
-      }
-
-      if (attributes.classReference) {
-        parts.push("(class: " + attributes.classReference + ")");
-      }
-
-      if (attributes.mapReference) {
-        parts.push("(map: " + attributes.mapReference + ")");
-      }
-
-      if (attributes.isComputed) {
-        parts.push("COMPUTED");
-      }
-
-      if (attributes.isConst) {
-        parts.push("CONST");
-      }
-
-      if (attributes.isArray) {
-        parts.push("[]");
-      }
-
-      attributesStr = parts.length > 0 ? ` ${parts.join(" ")}` : "";
-    }
-    return `${symbol.name} ${kindName}${attributesStr}`;
   }
 
   private nextScopeName(baseName: string): string {
@@ -195,12 +173,21 @@ export class SymbolTable {
     for (const memberEntry of existingMembers) {
       const member = memberEntry.symbol;
 
-      if (
-        (member.attributes.elementaryTypeKind !==
-          symbol.attributes.elementaryTypeKind) ||
-        (member.attributes.stringVariableKind !==
-          symbol.attributes.stringVariableKind)
+      if (member.attributes.numericType !== symbol.attributes.numericType) {
+        logger.debug(
+          `Defined class member: ${symbol.name} in class scope: ${
+            classScope.name ?? "anonymous"
+          } conflicts with existing member type: ${symbol.attributes.numericType} != ${symbol.attributes.numericType}`,
+        );
+        return AddSymbolResult.MEMBER_CONFLICT;
+      } else if (
+        member.attributes.stringType !== symbol.attributes.stringType
       ) {
+        logger.debug(
+          `Defined class member: ${symbol.name} in class scope: ${
+            classScope.name ?? "anonymous"
+          } conflicts with existing member type: ${symbol.attributes.stringType} != ${symbol.attributes.stringType}`,
+        );
         return AddSymbolResult.MEMBER_CONFLICT;
       }
     }
@@ -248,6 +235,8 @@ export class SymbolTable {
     }
 
     this.currentScope = child;
+
+    logger.debug(`Entered ${ScopeKind[scopeKind]} scope: ${name}`);
   }
 
   getEnclosingClassScope(): Scope | undefined {
@@ -277,6 +266,12 @@ export class SymbolTable {
 
   exitScope(): void {
     if (this.currentScope.parent) {
+      logger.debug(
+        `Exiting ${
+          ScopeKind[this.currentScope.kind]
+        } scope: ${this.currentScope.name}`,
+      );
+
       this.currentScope = this.currentScope.parent;
 
       return;
@@ -287,6 +282,10 @@ export class SymbolTable {
 
   getCurrentScope(): Scope {
     return this.currentScope;
+  }
+
+  getGlobalScope(): Scope {
+    return this.globalScope;
   }
 
   resetScope(): void {
@@ -385,45 +384,5 @@ export class SymbolTable {
     }
 
     return undefined;
-  }
-
-  toString(): string {
-    const lines: string[] = [];
-    const formatScope = (scope: Scope, indent: number): void => {
-      const prefix = "  ".repeat(indent);
-
-      lines.push(
-        `${prefix}[${ScopeKind[scope.kind]}]${
-          scope.kind === ScopeKind.GLOBAL ? "" : " " + scope.name
-        }:`,
-      );
-
-      if (scope.classMemberSymbols && (scope.classMemberSymbols.size > 0)) {
-        lines.push(`${prefix}  members:`);
-
-        for (const memberEntries of scope.classMemberSymbols.values()) {
-          for (const entry of memberEntries) {
-            const branchStr = entry.branchId
-              ? ` (branch: ${entry.branchId})`
-              : "";
-            lines.push(
-              `${prefix}    ${this.getSymbolString(entry.symbol)}${branchStr}`,
-            );
-          }
-        }
-      }
-
-      for (const symbol of scope.symbols.values()) {
-        lines.push(`${prefix}  ${this.getSymbolString(symbol)}`);
-      }
-
-      for (const child of scope.children) {
-        formatScope(child, indent + 1);
-      }
-    };
-
-    formatScope(this.globalScope, 0);
-
-    return lines.join("\n");
   }
 }

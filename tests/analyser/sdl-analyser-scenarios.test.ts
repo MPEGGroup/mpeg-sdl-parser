@@ -6,7 +6,8 @@ import { getSdlAnalyserTestScenarios } from "./get-sdl-analyser-test-scenarios.t
 import { createLenientSdlAnalyser } from "../../src/analyser/create-sdl-analyser.ts";
 import { buildAst } from "../../src/ast/build-ast.ts";
 import { SdlStringInput } from "../../src/lezer/sdl-string-input.ts";
-import type { Specification } from "../../dist/index.js";
+import { getSymbolTableString } from "../../src/analyser/util/symbol-table-utils.ts";
+import type { Specification } from "../../src/ast/node/specification.ts";
 
 const sdlParser = createStrictSdlParser();
 const sdlAnalyser = createLenientSdlAnalyser();
@@ -35,7 +36,9 @@ for (const filename of fs.readdirSync(testCaseDir)) {
         const actualAnalysisResult = sdlAnalyser.analyse(
           specification as Specification,
         );
-        const actualOutput = actualAnalysisResult.symbolTable.toString().trim();
+        const actualOutput = getSymbolTableString(
+          actualAnalysisResult.symbolTable,
+        );
 
         expect(actualOutput).toBe(expectedOutput);
 
@@ -45,6 +48,13 @@ for (const filename of fs.readdirSync(testCaseDir)) {
         const expectedErrors = testScenario.expectedErrors;
 
         expect(actualErrors).toBe(expectedErrors);
+
+        const actualWarnings = actualAnalysisResult.semanticWarnings
+          .map((e) => e.errorMessage)
+          .join("\n");
+        const expectedWarnings = testScenario.expectedWarnings;
+
+        expect(actualWarnings).toBe(expectedWarnings);
       });
     }
   });

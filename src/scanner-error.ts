@@ -47,9 +47,19 @@ export class SemanticError extends ScannerError {
   constructor(
     errorMessage: string,
     location?: Location,
-    public errorLine?: string,
-    public precedingLines?: string[],
   ) {
     super(`SEMANTIC ERROR: ${errorMessage}`.trim(), location);
+  }
+}
+
+/**
+ * Indicates a semantic warning in the provided AST.
+ */
+export class SemanticWarning extends ScannerError {
+  constructor(
+    warningMessage: string,
+    location?: Location,
+  ) {
+    super(`SEMANTIC WARNING: ${warningMessage}`.trim(), location);
   }
 }

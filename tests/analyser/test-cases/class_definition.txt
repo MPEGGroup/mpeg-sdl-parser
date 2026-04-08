@@ -17,7 +17,7 @@ class A {ClassA a;}
 
 # Legacy and one parameter value
 
-class ClassB {}
+class ClassB(int a) {}
 class A {legacy ClassB b(3);}
 
 ==>
@@ -26,6 +26,9 @@ class A {legacy ClassB b(3);}
   ClassB CLASS
   A CLASS
   [CLASS] ClassB:
+    members:
+      a VARIABLE INTEGER
+    a VARIABLE INTEGER
   [CLASS] A:
     members:
       b VARIABLE (class: ClassB)
@@ -51,3 +54,4 @@ class A {ClassC c(i, 3);}
 errors:
 
 SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Class 'ClassC' does not expect parameters, but 2 provided

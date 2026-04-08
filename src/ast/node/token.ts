@@ -13,4 +13,8 @@ export class Token extends AbstractLeafNode {
       NodeKind.TOKEN,
     );
   }
+
+  getLocation(): Location {
+    return this.location;
+  }
 }

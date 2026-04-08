@@ -8,8 +8,8 @@ class A {utf8string foo;}
   A CLASS
   [CLASS] A:
     members:
-      foo VARIABLE
-    foo VARIABLE
+      foo VARIABLE UCS
+    foo VARIABLE UCS
 
 
 # utf8list with literal
@@ -22,8 +22,8 @@ class A {utf8list foo=u"hello world";}
   A CLASS
   [CLASS] A:
     members:
-      foo VARIABLE UTF8_LIST
-    foo VARIABLE UTF8_LIST
+      foo VARIABLE UCS
+    foo VARIABLE UCS
 
 
 # base64 string literal
@@ -36,5 +36,5 @@ class A {base64string foo="aGVsbG8K";}
   A CLASS
   [CLASS] A:
     members:
-      foo VARIABLE BASE64
-    foo VARIABLE BASE64
+      foo VARIABLE BASIC
+    foo VARIABLE BASIC

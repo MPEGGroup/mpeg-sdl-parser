@@ -36,10 +36,10 @@ aligned(8) expandable(20) abstract class A (int a, B b) extends C(1, d) : bit(3)
   [CLASS] C:
   [CLASS] A:
     members:
-      sizeOfInstance VARIABLE UNSIGNED_INTEGER COMPUTED CONST
+      sizeOfInstance VARIABLE INTEGER COMPUTED CONST
       a VARIABLE INTEGER
       b VARIABLE (class: B)
-    sizeOfInstance VARIABLE UNSIGNED_INTEGER COMPUTED CONST
+    sizeOfInstance VARIABLE INTEGER COMPUTED CONST
     a VARIABLE INTEGER
     b VARIABLE (class: B)
 

@@ -1,3 +1,4 @@
+import type { Location } from "../../location.ts";
 import { InternalScannerError } from "../../scanner-error.ts";
 import { isCompositeNode, isToken } from "../util/types.ts";
 import { AbstractNode } from "./abstract-node.ts";
@@ -45,5 +46,13 @@ export abstract class AbstractCompositeNode extends AbstractNode {
           NodeKind[lastChild.nodeKind],
       );
     }
+  }
+
+  getLocation(): Location {
+    if (!this.startToken && !this.endToken) {
+      throw new InternalScannerError("Start and end token are undefined");
+    }
+
+    return this.startToken?.location ?? this.endToken!.location;
   }
 }

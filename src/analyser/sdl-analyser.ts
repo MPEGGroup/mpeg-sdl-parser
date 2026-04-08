@@ -1,14 +1,16 @@
 import type { Specification } from "../ast/node/specification.ts";
 import { dispatchNodeHandler } from "../parse-helper.ts";
-import type { SemanticError } from "../scanner-error.ts";
+import type { SemanticError, SemanticWarning } from "../scanner-error.ts";
 import { BuildSymbolTableNodeHandler } from "./node-handler/build-symbol-table-node-handler.ts";
 import type { Check } from "./checks/check.ts";
 import { ValidateScopeNodeHandler } from "./node-handler/validate-scope-node-handler.ts";
 import { ValidateTypeNodeHandler } from "./node-handler/validate-type-node-handler.ts";
 import { SymbolTable } from "./symbol-table.ts";
+import { SpecificCheckNodeHandler } from "./node-handler/specific-check-node-handler.ts";
 
 export interface SdlAnalysisResult {
   semanticErrors: Array<SemanticError>;
+  semanticWarnings: Array<SemanticWarning>;
   specification: Specification;
   symbolTable: SymbolTable;
 }
@@ -40,42 +42,76 @@ export class SdlAnalyser {
     dispatchNodeHandler(specification, buildSymbolTableNodeHandler);
 
     symbolTable.resetScope();
-    const scopeValidationNodeHandler = new ValidateScopeNodeHandler(
+
+    const validateScopeNodeHandler = new ValidateScopeNodeHandler(
       symbolTable,
       this.strict,
     );
 
-    dispatchNodeHandler(specification, scopeValidationNodeHandler);
+    dispatchNodeHandler(specification, validateScopeNodeHandler);
 
     symbolTable.resetScope();
-    const typeValidationNodeHandler = new ValidateTypeNodeHandler(
+
+    const validateTypeNodeHandler = new ValidateTypeNodeHandler(
       symbolTable,
       this.strict,
     );
 
-    dispatchNodeHandler(specification, typeValidationNodeHandler);
+    dispatchNodeHandler(specification, validateTypeNodeHandler);
+
+    symbolTable.resetScope();
+
+    const specificCheckNodeHandler = new SpecificCheckNodeHandler(
+      symbolTable,
+      this.strict,
+      this.checks
+    );
+
+    dispatchNodeHandler(specification, specificCheckNodeHandler);
 
     const allErrors = [
       ...buildSymbolTableNodeHandler.semanticErrors,
-      ...scopeValidationNodeHandler.semanticErrors,
-      ...typeValidationNodeHandler.semanticErrors,
+      ...validateScopeNodeHandler.semanticErrors,
+      ...validateTypeNodeHandler.semanticErrors,
+      ...specificCheckNodeHandler.semanticErrors
     ];
 
-    const seen = new Set<string>();
+    const seenErrors = new Set<string>();
     const semanticErrors = allErrors.filter((error) => {
       const key =
         `${error.errorMessage}:${error.location?.row}:${error.location?.column}`;
 
-      if (seen.has(key)) {
+      if (seenErrors.has(key)) {
         return false;
       }
 
-      seen.add(key);
+      seenErrors.add(key);
+      return true;
+    });
+
+    const allWarnings = [
+      ...buildSymbolTableNodeHandler.semanticWarnings,
+      ...validateScopeNodeHandler.semanticWarnings,
+      ...validateTypeNodeHandler.semanticWarnings,
+      ...specificCheckNodeHandler.semanticWarnings
+    ];
+
+    const seenWarnings = new Set<string>();
+    const semanticWarnings = allWarnings.filter((warning) => {
+      const key =
+        `${warning.errorMessage}:${warning.location?.row}:${warning.location?.column}`;
+
+      if (seenWarnings.has(key)) {
+        return false;
+      }
+
+      seenWarnings.add(key);
       return true;
     });
 
     return {
       semanticErrors,
+      semanticWarnings,
       specification,
       symbolTable,
     };

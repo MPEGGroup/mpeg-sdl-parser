@@ -6,50 +6,42 @@ import type { Identifier } from "../../ast/node/identifier.ts";
 import type { ClassDefinition } from "../../ast/node/class-definition.ts";
 import type { MapDefinition } from "../../ast/node/map-definition.ts";
 import type { ArrayDefinition } from "../../ast/node/array-definition.ts";
-import type { ClassDeclaration } from "../../ast/node/class-declaration.ts";
 import type { ExtendsModifier } from "../../ast/node/extends-modifier.ts";
 import type { UnaryExpression } from "../../ast/node/unary-expression.ts";
 import type { BinaryExpression } from "../../ast/node/binary-expression.ts";
 import type { LengthofExpression } from "../../ast/node/length-of-expression.ts";
 import { SemanticError } from "../../scanner-error.ts";
 import { AbstractAnalysisNodeHandler } from "./abstract-analysis-node-handler.ts";
-import type { MapDeclaration } from "../../../dist/index.js";
 import {
   getRequiredIdentifier,
   getRequiredOperand,
 } from "../util/symbol-table-utils.ts";
 import { isIdentifier } from "../../ast/util/types.ts";
+import type { MapDeclaration } from "../../ast/node/map-declaration.ts";
 
 export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
-  public readonly semanticErrors: Array<SemanticError> = [];
-
   constructor(public readonly symbolTable: SymbolTable, strict: boolean) {
     super(symbolTable, strict);
 
     this.registerBeforeNodeHandler(
       NodeKind.EXTENDS_MODIFIER,
       undefined,
-      (node) => this.handleExtendsModifier(node as ExtendsModifier),
+      (node) => this.validateExtendsModifier(node as ExtendsModifier),
     );
     this.registerBeforeNodeHandler(
       NodeKind.EXPRESSION,
       ExpressionKind.UNARY,
-      (node) => this.handleUnaryExpression(node as UnaryExpression),
+      (node) => this.validateUnaryExpression(node as UnaryExpression),
     );
     this.registerBeforeNodeHandler(
       NodeKind.EXPRESSION,
       ExpressionKind.BINARY,
-      (node) => this.handleBinaryExpression(node as BinaryExpression),
+      (node) => this.validateBinaryExpression(node as BinaryExpression),
     );
     this.registerBeforeNodeHandler(
       NodeKind.EXPRESSION,
       ExpressionKind.LENGTHOF,
-      (node) => this.handleLengthofExpression(node as LengthofExpression),
-    );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DECLARATION,
-      (node) => this.handleClassDeclaration(node as ClassDeclaration),
+      (node) => this.validateLengthofExpression(node as LengthofExpression),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
@@ -59,95 +51,18 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.CLASS_DEFINITION,
-      (node) => this.handleClassDefinition(node as ClassDefinition),
+      (node) => this.validateClassDefinition(node as ClassDefinition),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.MAP_DEFINITION,
-      (node) => this.handleMapDefinition(node as MapDefinition),
+      (node) => this.validateMapDefinition(node as MapDefinition),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.ARRAY_DEFINITION,
-      (node) => this.handleArrayDefinition(node as ArrayDefinition),
+      (node) => this.validateArrayDefinition(node as ArrayDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.WHILE,
-      () =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.WHILE]),
-    );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.DO,
-      () => this.symbolTable.enterBlockScope(StatementKind[StatementKind.DO]),
-    );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.FOR,
-      () => this.symbolTable.enterBlockScope(StatementKind[StatementKind.FOR]),
-    );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.SWITCH,
-      () =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.SWITCH]),
-    );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.COMPOUND,
-      () =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.COMPOUND]),
-    );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.SWITCH,
-      () => this.symbolTable.exitScope(),
-    );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.WHILE,
-      () => this.symbolTable.exitScope(),
-    );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.DO,
-      () => this.symbolTable.exitScope(),
-    );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.FOR,
-      () => this.symbolTable.exitScope(),
-    );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.COMPOUND,
-      () => this.symbolTable.exitScope(),
-    );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DECLARATION,
-      () => this.symbolTable.exitScope(),
-    );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.MAP_DECLARATION,
-      () => this.symbolTable.exitScope(),
-    );
-  }
-
-  private handleClassDeclaration(classDeclaration: ClassDeclaration): void {
-    const identifier = getRequiredIdentifier(
-      classDeclaration.identifier,
-      classDeclaration,
-      this.strict,
-    );
-
-    if (!identifier) {
-      return;
-    }
-
-    this.symbolTable.enterClassScope(identifier.name);
   }
 
   private handleMapDeclaration(mapDeclaration: MapDeclaration): void {
@@ -174,11 +89,9 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
 
       this.checkClassReference(classIdentifier);
     }
-
-    this.symbolTable.enterMapScope(identifier.name);
   }
 
-  private handleClassDefinition(classDefinition: ClassDefinition): void {
+  private validateClassDefinition(classDefinition: ClassDefinition): void {
     const classIdentifier = getRequiredIdentifier(
       classDefinition.classIdentifier,
       classDefinition,
@@ -192,7 +105,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     this.checkClassReference(classIdentifier);
   }
 
-  private handleMapDefinition(mapDefinition: MapDefinition): void {
+  private validateMapDefinition(mapDefinition: MapDefinition): void {
     const mapIdentifier = getRequiredIdentifier(
       mapDefinition.mapIdentifier,
       mapDefinition,
@@ -220,7 +133,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     }
   }
 
-  private handleArrayDefinition(arrayDefinition: ArrayDefinition): void {
+  private validateArrayDefinition(arrayDefinition: ArrayDefinition): void {
     if (isIdentifier(arrayDefinition.classIdentifier)) {
       const classIdentifier = getRequiredIdentifier(
         arrayDefinition.classIdentifier,
@@ -236,7 +149,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     }
   }
 
-  private handleExtendsModifier(extendsModifier: ExtendsModifier): void {
+  private validateExtendsModifier(extendsModifier: ExtendsModifier): void {
     const identifier = getRequiredIdentifier(
       extendsModifier.identifier,
       extendsModifier,
@@ -250,7 +163,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     this.checkClassReference(identifier);
   }
 
-  private handleUnaryExpression(unaryExpression: UnaryExpression): void {
+  private validateUnaryExpression(unaryExpression: UnaryExpression): void {
     const operand = getRequiredOperand(
       unaryExpression.operand,
       unaryExpression,
@@ -268,7 +181,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     // Nested expressions will be visited recursively by the traversal
   }
 
-  private handleBinaryExpression(binaryExpression: BinaryExpression): void {
+  private validateBinaryExpression(binaryExpression: BinaryExpression): void {
     const leftOperand = getRequiredOperand(
       binaryExpression.leftOperand,
       binaryExpression,
@@ -291,7 +204,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     // Nested expressions will be visited recursively by the traversal
   }
 
-  private handleLengthofExpression(
+  private validateLengthofExpression(
     lengthofExpression: LengthofExpression,
   ): void {
     const operand = getRequiredOperand(

@@ -11,8 +11,8 @@ class A {reserved unsigned int<Offsets> offset;}
   [MAP] Offsets:
   [CLASS] A:
     members:
-      offset VARIABLE UNSIGNED_INTEGER (map: Offsets)
-    offset VARIABLE UNSIGNED_INTEGER (map: Offsets)
+      offset VARIABLE INTEGER (map: Offsets)
+    offset VARIABLE INTEGER (map: Offsets)
 
 
 # Legacy with class output

@@ -16,6 +16,15 @@ import {
 } from "../../ast/util/types.ts";
 import { SemanticError } from "../../scanner-error.ts";
 import getLogger from "../../util/logger.ts";
+import {
+  NumericType,
+  type Scope,
+  ScopeKind,
+  StringType,
+  type Symbol,
+  SymbolKind,
+  type SymbolTable,
+} from "../symbol-table.ts";
 
 const logger = getLogger("SymbolTableUtils");
 
@@ -365,4 +374,85 @@ export function getRequiredOperand(
     );
     return undefined;
   }
+}
+
+function getSymbolString(symbol: Symbol): string {
+  const kindName = SymbolKind[symbol.kind];
+  let attributesStr = "";
+
+  if (symbol.attributes) {
+    const attributes = symbol.attributes;
+    const parts: string[] = [];
+
+    if (attributes.stringType !== undefined) {
+      parts.push(StringType[attributes.stringType]);
+    }
+
+    if (attributes.numericType !== undefined) {
+      parts.push(NumericType[attributes.numericType]);
+    }
+
+    if (attributes.classType) {
+      parts.push("(class: " + attributes.classType + ")");
+    }
+
+    if (attributes.mapType) {
+      parts.push("(map: " + attributes.mapType + ")");
+    }
+
+    if (attributes.isComputed) {
+      parts.push("COMPUTED");
+    }
+
+    if (attributes.isConst) {
+      parts.push("CONST");
+    }
+
+    if (attributes.isArray) {
+      parts.push("[]");
+    }
+
+    attributesStr = parts.length > 0 ? ` ${parts.join(" ")}` : "";
+  }
+  return `${symbol.name} ${kindName}${attributesStr}`;
+}
+
+export function getSymbolTableString(symbolTable: SymbolTable): string {
+  const lines: string[] = [];
+  const formatScope = (scope: Scope, indent: number): void => {
+    const prefix = "  ".repeat(indent);
+
+    lines.push(
+      `${prefix}[${ScopeKind[scope.kind]}]${
+        scope.kind === ScopeKind.GLOBAL ? "" : " " + scope.name
+      }:`,
+    );
+
+    if (scope.classMemberSymbols && (scope.classMemberSymbols.size > 0)) {
+      lines.push(`${prefix}  members:`);
+
+      for (const memberEntries of scope.classMemberSymbols.values()) {
+        for (const entry of memberEntries) {
+          const branchStr = entry.branchId
+            ? ` (branch: ${entry.branchId})`
+            : "";
+          lines.push(
+            `${prefix}    ${getSymbolString(entry.symbol)}${branchStr}`,
+          );
+        }
+      }
+    }
+
+    for (const symbol of scope.symbols.values()) {
+      lines.push(`${prefix}  ${getSymbolString(symbol)}`);
+    }
+
+    for (const child of scope.children) {
+      formatScope(child, indent + 1);
+    }
+  };
+
+  formatScope(symbolTable.getGlobalScope(), 0);
+
+  return lines.join("\n").trim();
 }

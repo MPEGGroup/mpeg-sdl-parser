@@ -6,7 +6,7 @@ import {
 import { createLenientSdlParser } from "../../src/lezer/create-sdl-parser.ts";
 import { SdlStringInput } from "../../src/lezer/sdl-string-input.ts";
 import { buildAst } from "../../src/ast/build-ast.ts";
-import type { Specification } from "../../dist/index.js";
+import type { Specification } from "../../src/ast/node/specification.ts";
 
 const lenientSdlParser = createLenientSdlParser();
 

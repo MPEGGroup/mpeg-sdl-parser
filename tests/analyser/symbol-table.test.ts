@@ -1,15 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import {
   AddSymbolResult,
+  NumericType,
   ScopeKind,
   type Symbol,
   SymbolKind,
   SymbolTable,
 } from "../../src/analyser/symbol-table.ts";
-import {} from "../../src/analyser/enum/symbol-kind.ts";
 import { TokenKind } from "../../src/ast/node/enum/token-kind.ts";
 import { Token } from "../../src/ast/node/token.ts";
-import { ElementaryTypeKind } from "../../src/ast/node/enum/elementary-type-kind.ts";
 import { Identifier } from "../../src/ast/node/identifier.ts";
 
 describe("Symbol Table Tests", () => {
@@ -77,7 +76,7 @@ describe("Symbol Table Tests", () => {
       name: "MyVariable",
       kind: SymbolKind.VARIABLE,
       attributes: {
-        elementaryTypeKind: ElementaryTypeKind.INTEGER,
+        numericType: NumericType.INTEGER,
         isConst: true,
       },
       location: { row: 1, column: 1, position: 0 },
@@ -87,7 +86,7 @@ describe("Symbol Table Tests", () => {
       name: "MyVariable",
       kind: SymbolKind.VARIABLE,
       attributes: {
-        elementaryTypeKind: ElementaryTypeKind.FLOATING_POINT,
+        numericType: NumericType.FLOATING_POINT,
         isConst: true,
       },
       location: { row: 1, column: 1, position: 0 },
@@ -185,57 +184,5 @@ describe("Symbol Table Tests", () => {
 
     expect(table.lookupMap("MyMap")).toBeDefined();
     expect(table.lookupMap("MyClass")).toBeUndefined();
-  });
-
-  test("toString outputs human-readable format", () => {
-    const table = new SymbolTable();
-
-    table.addSymbol({
-      node,
-      name: "MyClass",
-      kind: SymbolKind.CLASS,
-      attributes: {},
-      location: { row: 1, column: 1, position: 0 },
-    });
-    table.addSymbol({
-      node,
-      name: "MyMap",
-      kind: SymbolKind.MAP,
-      attributes: {},
-      location: { row: 1, column: 1, position: 0 },
-    });
-
-    const output = table.toString();
-
-    expect(output).toContain("[GLOBAL]");
-    expect(output).toContain("MyClass CLASS");
-    expect(output).toContain("MyMap MAP");
-  });
-
-  test("toString includes nested scopes", () => {
-    const table = new SymbolTable();
-
-    table.addSymbol({
-      node,
-      name: "GlobalClass",
-      kind: SymbolKind.CLASS,
-      attributes: {},
-      location: { row: 1, column: 1, position: 0 },
-    });
-    table.enterClassScope("MyClass");
-    table.addSymbol({
-      node,
-      name: "param1",
-      kind: SymbolKind.VARIABLE,
-      attributes: {},
-      location: { row: 2, column: 1, position: 10 },
-    });
-
-    const output = table.toString();
-
-    expect(output).toContain("[GLOBAL]");
-    expect(output).toContain("GlobalClass CLASS");
-    expect(output).toContain("[CLASS] MyClass:");
-    expect(output).toContain("param1 VARIABLE");
   });
 });

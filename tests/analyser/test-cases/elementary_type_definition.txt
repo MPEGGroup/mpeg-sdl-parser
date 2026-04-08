@@ -22,8 +22,8 @@ class A{legacy const aligned(8) unsigned int(7)* a=3..i;}
   A CLASS
   [CLASS] A:
     members:
-      a VARIABLE UNSIGNED_INTEGER CONST
-    a VARIABLE UNSIGNED_INTEGER CONST
+      a VARIABLE INTEGER CONST
+    a VARIABLE INTEGER CONST
 
 errors:
 

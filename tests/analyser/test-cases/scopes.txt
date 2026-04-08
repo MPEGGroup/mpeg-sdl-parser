@@ -65,6 +65,12 @@ class A {
       a VARIABLE FLOATING_POINT COMPUTED
       [BLOCK] COMPOUND:
 
+warnings:
+
+SEMANTIC WARNING: Type coercion required for 'a' value: expected FLOATING_POINT, got INTEGER
+SEMANTIC WARNING: Different types in binary expression, coercion required: FLOATING_POINT vs INTEGER
+SEMANTIC WARNING: Non-integer increment operand, coercion required: FLOATING_POINT
+
 
 # Duplicate variable in IF conditional branches with braces
 
