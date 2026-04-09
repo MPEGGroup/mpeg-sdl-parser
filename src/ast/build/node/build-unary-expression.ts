@@ -63,7 +63,7 @@ export function buildUnaryExpression(
     } else {
       throw new InternalScannerError(
         "Expected closing parenthesis for unary expression which includes open parenthesis",
-        (openParenthesisPunctuator as Token).location,
+        (openParenthesisPunctuator as Token).getLocation(),
       );
     }
   }

@@ -134,7 +134,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
     if ((parameters.length === 0) && (values.length > 0)) {
       const error = new SemanticError(
         `Class '${classIdentifier.name}' does not expect parameters, but ${values.length} provided`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -149,7 +149,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
     if ((parameters.length > 0) && (values.length === 0)) {
       const error = new SemanticError(
         `Class '${classIdentifier.name}' expects ${parameters.length} parameter(s), but none provided`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -164,7 +164,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
     if (values.length !== parameters.length) {
       const error = new SemanticError(
         `Class '${classIdentifier.name}' expects ${parameters.length} parameter(s), but ${values.length} provided`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -335,7 +335,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
         `Type coercion required for '${identifier.name}' value: expected ${
           NumericType[declaredType]
         }, got ${NumericType[valueType!]}`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       this.semanticWarnings.push(warning);
@@ -358,7 +358,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
         `Type coercion required for '${identifier.name}' end value: expected ${
           NumericType[declaredType]
         }, got ${NumericType[endValueType!]}`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       this.semanticWarnings.push(warning);
@@ -446,7 +446,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
         `Different types in binary expression, coercion required: ${
           NumericType[leftOperandNumericType]
         } vs ${NumericType[rightOperandNumericType]}`,
-        operatorToken.location,
+        operatorToken.getLocation(),
       );
       this.semanticWarnings.push(warning);
     }
@@ -487,7 +487,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
                 ? "increment"
                 : "decrement"
             } operand, coercion required: ${NumericType[operandNumericType]}`,
-            token.location,
+            token.getLocation(),
           );
           this.semanticWarnings.push(warning);
         }

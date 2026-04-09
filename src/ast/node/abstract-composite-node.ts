@@ -53,6 +53,6 @@ export abstract class AbstractCompositeNode extends AbstractNode {
       throw new InternalScannerError("Start and end token are undefined");
     }
 
-    return this.startToken?.location ?? this.endToken!.location;
+    return this.startToken?.getLocation() ?? this.endToken!.getLocation();
   }
 }

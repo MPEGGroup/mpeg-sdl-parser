@@ -30,7 +30,7 @@ function checkArrayDimensionsPositiveInteger(
           ) {
             results.push({
               message: "Array dimensions must be a positive integer.",
-              location: size.startToken!.location,
+              location: size.startToken!.getLocation(),
             });
           }
         }
@@ -63,7 +63,7 @@ function checkImplicitArrayClassId(
         results.push({
           message:
             "Implicit arrays can only contain classes which have a classId defined.",
-          location: definition.classIdentifier.startToken!.location,
+          location: definition.classIdentifier.startToken!.getLocation(),
         });
       }
     }

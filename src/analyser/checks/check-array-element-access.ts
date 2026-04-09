@@ -21,7 +21,7 @@ export const checkArrayElementAccess: Check = {
         results.push({
           message:
             "Array element access cannot be performed with floating point or negative integer values.",
-          location: node.index.startToken!.location,
+          location: node.index.startToken!.getLocation(),
         });
       }
     }

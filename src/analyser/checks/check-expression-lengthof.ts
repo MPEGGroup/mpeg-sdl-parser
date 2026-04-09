@@ -24,7 +24,7 @@ export const checkExpressionLengthof: Check = {
         results.push({
           message:
             "The lengthof operator cannot be used with a computed variable.",
-          location: node.operand.startToken!.location,
+          location: node.operand.startToken!.getLocation(),
         });
       }
     }

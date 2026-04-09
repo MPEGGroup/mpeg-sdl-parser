@@ -13,14 +13,14 @@ export function buildHexadecimalLiteral(
   if (!literalText.startsWith("0x")) {
     throw new InternalScannerError(
       `Missing hexadecimal literal prefix '0x': ${literalText}`,
-      token.location,
+      token.getLocation(),
     );
   }
 
   if (literalText.length === 2) {
     throw new InternalScannerError(
       `Missing hexadecimal literal value after prefix '0x'`,
-      token.location,
+      token.getLocation(),
     );
   }
 

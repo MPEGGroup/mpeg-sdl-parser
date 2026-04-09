@@ -31,7 +31,7 @@ export const checkParameterList: Check = {
           results.push({
             message:
               "String variables are not supported in class parameter lists.",
-            location: identifier.startToken!.location,
+            location: identifier.startToken!.getLocation(),
           });
         }
       }

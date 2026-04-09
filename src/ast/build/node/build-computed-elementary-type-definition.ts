@@ -75,7 +75,7 @@ export function buildComputedElementaryTypeDefinition(
     } else {
       throw new InternalScannerError(
         "Expected value for computed elementary type definition after assignment operator",
-        (assignmentOperator as Token).location,
+        (assignmentOperator as Token).getLocation(),
       );
     }
   }

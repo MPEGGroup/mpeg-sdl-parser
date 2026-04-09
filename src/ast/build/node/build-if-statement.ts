@@ -64,7 +64,7 @@ export function buildIfStatement(
     } else {
       throw new InternalScannerError(
         "Expected else statement after else keyword",
-        (elseKeyword as Token).location,
+        (elseKeyword as Token).getLocation(),
       );
     }
   }

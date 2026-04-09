@@ -7,7 +7,7 @@ export class Token extends AbstractLeafNode {
   constructor(
     public readonly tokenKind: TokenKind,
     public readonly text: string,
-    public readonly location: Location,
+    private readonly location: Location,
   ) {
     super(
       NodeKind.TOKEN,

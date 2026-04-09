@@ -40,7 +40,7 @@ export function buildExpandableModifier(
     } else {
       throw new InternalScannerError(
         "ExpandableModifier missing required maxClassSize NumberLiteral",
-        (openParenthesisPunctuator as Token).location,
+        (openParenthesisPunctuator as Token).getLocation(),
       );
     }
     closedParenthesisPunctuator = fetchOptionalNode<Token>(
@@ -53,7 +53,7 @@ export function buildExpandableModifier(
     } else {
       throw new InternalScannerError(
         "ExpandableModifier missing required closedParenthesisPunctuator Token",
-        (openParenthesisPunctuator as Token).location,
+        (openParenthesisPunctuator as Token).getLocation(),
       );
     }
   }

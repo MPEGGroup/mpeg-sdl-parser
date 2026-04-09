@@ -224,7 +224,7 @@ export function getElementaryTypeKind(
           `Elementary type unsigned qualifier has invalid token kind: ${
             TokenKind[elementaryType.unsignedQualifierKeyword.tokenKind]
           }`,
-          elementaryType.unsignedQualifierKeyword.location,
+          elementaryType.unsignedQualifierKeyword.getLocation(),
         );
       } else {
         logger.debug(
@@ -272,7 +272,7 @@ export function getElementaryTypeKind(
           `Unsupported elementary type token kind: ${
             TokenKind[typeToken.tokenKind]
           }`,
-          typeToken.location,
+          typeToken.getLocation(),
         );
       } else {
         logger.debug(
@@ -311,7 +311,7 @@ export function getStringVariableKind(
           `Unsupported string variable kind token: ${
             TokenKind[stringVariableKindToken.tokenKind]
           }`,
-          stringVariableKindToken.location,
+          stringVariableKindToken.getLocation(),
         );
       } else {
         logger.debug(

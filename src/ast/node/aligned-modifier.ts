@@ -10,6 +10,7 @@ export class AlignedModifier extends AbstractCompositeNode {
     public readonly openParenthesisPunctuator: OptionalNode<Token>,
     public readonly bitCountModifierToken: OptionalNode<Token>,
     public readonly closeParenthesisPunctuator: OptionalNode<Token>,
+    public readonly alignment: number,
     children: Array<AbstractNode>,
   ) {
     super(

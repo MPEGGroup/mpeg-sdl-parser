@@ -167,7 +167,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {
       isConst: !!elementaryTypeDefinition.constKeyword,
       numericType: getNumericTypeFromElementaryTypeKind(elementaryTypeKind),
@@ -215,7 +215,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {
       isConst: !!computedElementaryTypeDefinition.constKeyword,
       numericType: getNumericTypeFromElementaryTypeKind(elementaryTypeKind),
@@ -243,7 +243,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {
       isArray: true,
     };
@@ -270,7 +270,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     ) {
       const error = new SemanticError(
         `Array definition must have either an elementary type or a class identifier`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -323,7 +323,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {
       isArray: true,
       isComputed: true,
@@ -370,7 +370,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {
       isString: true,
       isConst: !!stringDefinition.constKeyword,
@@ -398,7 +398,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {};
 
     this.defineSymbol({
@@ -413,7 +413,8 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   private addExpandableModifierSymbol(
     expandableModifier: ExpandableModifier,
   ): void {
-    const sizeOfInstanceLocation = expandableModifier!.startToken!.location;
+    const sizeOfInstanceLocation = expandableModifier!.startToken!
+      .getLocation();
 
     const sizeOfInstanceAttributes: SymbolAttributes = {
       isComputed: true,
@@ -442,7 +443,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {};
 
     if (isElementaryType(mapDeclaration.outputElementaryType)) {
@@ -467,7 +468,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     ) {
       const error = new SemanticError(
         `Map declaration must have either an elementary type or a class identifier`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -509,7 +510,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {
       classType: classIdentifier.name,
     };
@@ -545,7 +546,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {
       mapType: mapIdentifier.name,
     };
@@ -569,7 +570,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     if ((attributes.numericType === undefined) && !attributes.classType) {
       const error = new SemanticError(
         `Map definition must have either an elementary type or a class identifier`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -601,7 +602,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     }
 
     const name = identifier.name;
-    const location = identifier.startToken!.location;
+    const location = identifier.startToken!.getLocation();
     const attributes: SymbolAttributes = {};
 
     if (isElementaryType(parameter.elementaryType)) {
@@ -626,7 +627,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     ) {
       const error = new SemanticError(
         `Parameter must have either an elementary type or a class identifier`,
-        identifier.startToken!.location,
+        identifier.startToken!.getLocation(),
       );
 
       if (this.strict) {

@@ -108,7 +108,7 @@ export function buildElementaryTypeDefinition(
     } else {
       throw new InternalScannerError(
         "Expected value for elementary type definition after assignment operator",
-        (assignmentOperator as Token).location,
+        (assignmentOperator as Token).getLocation(),
       );
     }
     rangeOperator = fetchOptionalNode<Token>(
@@ -131,7 +131,7 @@ export function buildElementaryTypeDefinition(
       } else {
         throw new InternalScannerError(
           "Expected end value for elementary type definition after range operator",
-          (rangeOperator as Token).location,
+          (rangeOperator as Token).getLocation(),
         );
       }
     }

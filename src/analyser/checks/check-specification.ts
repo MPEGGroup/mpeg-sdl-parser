@@ -30,7 +30,7 @@ export const checkSpecification: Check = {
           results.push({
             message:
               "The only items that may be present in global scope are: constant computed elementary variable definitions, map declarations, class declarations.",
-            location: child.startToken?.location ||
+            location: child.startToken?.getLocation() ||
               child.leadingTrivia?.[0]?.location!,
           });
         }
@@ -42,7 +42,7 @@ export const checkSpecification: Check = {
         results.push({
           message:
             "The only items that may be present in global scope are: constant computed elementary variable definitions, map declarations, class declarations.",
-          location: child.startToken?.location ||
+          location: child.startToken?.getLocation() ||
             child.leadingTrivia?.[0]?.location!,
         });
       }

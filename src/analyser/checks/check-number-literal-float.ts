@@ -17,7 +17,7 @@ export const checkNumberLiteralFloat: Check = {
       results.push({
         message:
           "Usage of signed zero for a floating point literal will lead to undefined behaviour.",
-        location: node.startToken?.location ||
+        location: node.startToken?.getLocation() ||
           node.leadingTrivia?.[0]?.location!,
         isWarning: true,
       });

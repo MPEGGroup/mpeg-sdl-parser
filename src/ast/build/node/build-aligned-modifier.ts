@@ -5,7 +5,7 @@ import { NodeKind } from "../../node/enum/node-kind.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import type { Token } from "../../node/token.ts";
 import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
-import type { OptionalNode } from "../../util/types.ts";
+import { isToken, type OptionalNode } from "../../util/types.ts";
 import type { BuildContext } from "../util/build-context.ts";
 
 export function buildAlignedModifier(
@@ -28,6 +28,8 @@ export function buildAlignedModifier(
   let bitCountModifierToken: OptionalNode<Token> | undefined = undefined;
   let closeParenthesisPunctuator: OptionalNode<Token> | undefined = undefined;
 
+  let alignment = 8;
+
   if (openParenthesisPunctuator) {
     children.push(openParenthesisPunctuator);
 
@@ -44,10 +46,30 @@ export function buildAlignedModifier(
     );
     if (bitCountModifierToken) {
       children.push(bitCountModifierToken);
+
+      if (isToken(bitCountModifierToken)) {
+        switch (bitCountModifierToken.tokenKind) {
+          case TokenKind.ALIGNMENT_BIT_COUNT_8:
+            alignment = 8;
+            break;
+          case TokenKind.ALIGNMENT_BIT_COUNT_16:
+            alignment = 16;
+            break;
+          case TokenKind.ALIGNMENT_BIT_COUNT_32:
+            alignment = 32;
+            break;
+          case TokenKind.ALIGNMENT_BIT_COUNT_64:
+            alignment = 64;
+            break;
+          case TokenKind.ALIGNMENT_BIT_COUNT_128:
+            alignment = 128;
+            break;
+        }
+      }
     } else {
       throw new InternalScannerError(
         "Expected alignment bit count modifier token after 'aligned('",
-        (openParenthesisPunctuator as Token).location,
+        (openParenthesisPunctuator as Token).getLocation(),
       );
     }
 
@@ -61,7 +83,7 @@ export function buildAlignedModifier(
     } else {
       throw new InternalScannerError(
         "Expected closing parenthesis ')' after alignment bit count modifier",
-        (bitCountModifierToken as Token).location,
+        (bitCountModifierToken as Token).getLocation(),
       );
     }
   }
@@ -71,6 +93,7 @@ export function buildAlignedModifier(
     openParenthesisPunctuator,
     bitCountModifierToken,
     closeParenthesisPunctuator,
+    alignment,
     children,
   );
 }

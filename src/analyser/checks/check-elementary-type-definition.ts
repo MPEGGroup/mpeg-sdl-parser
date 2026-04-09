@@ -18,7 +18,7 @@ function checkOptionalCannotDefineRange(
     definition.assignmentOperator === undefined &&
     definition.rangeOperator !== undefined
   ) {
-    const location = definition.startToken?.location;
+    const location = definition.startToken?.getLocation();
     if (location) {
       return [{
         message:
@@ -42,8 +42,8 @@ function checkRangeMinMaxValidation(
 
     // Check that types match
     if (minValue.numberLiteralKind !== maxValue.numberLiteralKind) {
-      const location = maxValue.startToken?.location ||
-        definition.startToken!.location;
+      const location = maxValue.startToken?.getLocation() ||
+        definition.startToken!.getLocation();
       if (location) {
         return [{
           message:
@@ -55,8 +55,8 @@ function checkRangeMinMaxValidation(
 
     // Check that max >= min
     if (maxValue.value < minValue.value) {
-      const location = maxValue.startToken?.location ||
-        definition.startToken!.location;
+      const location = maxValue.startToken?.getLocation() ||
+        definition.startToken!.getLocation();
       if (location) {
         return [{
           message:
@@ -131,8 +131,8 @@ function checkValueRepresentability(
     }
 
     if (!isValid) {
-      const location = valueLiteral.startToken?.location ||
-        definition.startToken!.location;
+      const location = valueLiteral.startToken?.getLocation() ||
+        definition.startToken!.getLocation();
       if (location) {
         return [{
           message:

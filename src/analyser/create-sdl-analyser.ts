@@ -9,7 +9,10 @@ import { checkExpressionBinary } from "./checks/check-expression-binary.ts";
 import { checkExpressionLengthof } from "./checks/check-expression-lengthof.ts";
 import { checkExpressionUnary } from "./checks/check-expression-unary.ts";
 import { checkIdentifier } from "./checks/check-identifier.ts";
+import { checkIfStatement } from "./checks/check-if-statement.ts";
 import { checkMapDeclaration } from "./checks/check-map-declaration.ts";
+import { checkMapDefinition } from "./checks/check-map-definition.ts";
+import { checkSwitchStatement } from "./checks/check-switch-statement.ts";
 import { checkNumberLiteralFloat } from "./checks/check-number-literal-float.ts";
 import { checkParameterList } from "./checks/check-parameter-list.ts";
 import { checkSpecification } from "./checks/check-specification.ts";
@@ -22,6 +25,7 @@ export const defaultChecks: Check[] = [
   checkComputedElementaryTypeDefinition,
   checkSpecification,
   checkMapDeclaration,
+  checkMapDefinition,
   checkClassDeclaration,
   checkParameterList,
   checkArrayDefinition,
@@ -33,6 +37,8 @@ export const defaultChecks: Check[] = [
   checkExpressionLengthof,
   checkNumberLiteralFloat,
   checkArrayElementAccess,
+  checkIfStatement,
+  checkSwitchStatement,
 ];
 
 /**

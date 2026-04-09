@@ -38,7 +38,7 @@ export const checkComputedElementaryTypeDefinition: Check = {
       {
         message:
           `${identifier.name}: const computed elementary type definition must have a value specified`,
-        location: identifier.startToken!.location,
+        location: identifier.startToken!.getLocation(),
       },
     ];
   },

@@ -49,7 +49,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       return (token.leadingTrivia &&
           (token.leadingTrivia.length > 0))
         ? token.leadingTrivia[0].location.position
-        : token.location.position;
+        : token.getLocation().position;
     },
     locEnd: (node: RequiredNode<AbstractNode>) => {
       let token: Token;
@@ -71,7 +71,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
           (token.trailingTrivia.length > 0))
         ? token.trailingTrivia[token.trailingTrivia.length - 1].location
           .position
-        : token.location.position;
+        : token.getLocation().position;
     },
   },
 };

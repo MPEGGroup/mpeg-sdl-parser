@@ -61,7 +61,7 @@ export const checkIdentifier: Check = {
       results.push({
         message:
           "It is illegal to define an identifier which conflicts (ignoring case) with SDL syntax items such as keywords, binary, hexadecimal and string literal prefixes.",
-        location: node.startToken?.location ||
+        location: node.startToken?.getLocation() ||
           node.leadingTrivia?.[0]?.location!,
       });
     }

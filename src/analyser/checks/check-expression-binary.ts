@@ -29,7 +29,7 @@ function checkConstMutationViaAssignment(
   if (symbol && symbol.attributes.isConst && symbol.attributes.isComputed) {
     return [{
       message: "a const computed variable cannot be mutated.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
     }];
   }
 
@@ -52,7 +52,7 @@ function checkModulusWithNegativeRhs(
     return [{
       message:
         "Using the modulus operator with a negative right-hand operand will lead to undefined behavior.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
       isWarning: true,
     }];
   }
@@ -77,7 +77,7 @@ function checkModulusWithFloatOperands(
   ) {
     return [{
       message: "Using the modulus operator cannot be used with float operands.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
     }];
   }
 
@@ -100,7 +100,7 @@ function checkModulusWithZeroRhs(
     return [{
       message:
         "Using the modulus operator with a right-hand operand of zero will lead to undefined behavior.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
       isWarning: true,
     }];
   }
@@ -124,7 +124,7 @@ function checkDivisionByZero(
     return [{
       message:
         "The value of division where the value of the second operand is zero will lead to undefined behavior.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
       isWarning: true,
     }];
   }
@@ -156,7 +156,7 @@ function checkIntegerDivisionWithNegatives(
     return [{
       message:
         "The direction of truncation for integer division with negative operands is not defined by the SDL which will lead to undefined behavior.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
       isWarning: true,
     }];
   }
@@ -177,7 +177,7 @@ function checkRightShiftOnSignedInt(
     return [{
       message:
         "The behaviour of the right shift operator applied to a signed int value is not defined by the SDL which will lead to undefined behavior.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
       isWarning: true,
     }];
   }
@@ -204,7 +204,7 @@ function checkLeftHandAssignmentConst(
     return [{
       message:
         "The left-hand operand of an assignment operator cannot be a const variable.",
-      location: node.startToken!.location,
+      location: node.startToken!.getLocation(),
     }];
   }
 

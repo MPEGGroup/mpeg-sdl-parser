@@ -579,7 +579,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
         if (this.strict) {
           throw new SemanticError(
             "ERROR_UNKNOWN_TOKEN encountered",
-            token.location,
+            token.getLocation(),
           );
         }
 
@@ -593,7 +593,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
         if (this.strict) {
           throw new SemanticError(
             "ERROR_MISSING_TOKEN encountered",
-            token.location,
+            token.getLocation(),
           );
         }
 

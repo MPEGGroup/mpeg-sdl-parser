@@ -12,14 +12,14 @@ export function buildBinaryLiteral(
   if (!literalText.startsWith("0b")) {
     throw new InternalScannerError(
       `Missing binary literal prefix '0b': ${literalText}`,
-      token.location,
+      token.getLocation(),
     );
   }
 
   if (literalText.length === 2) {
     throw new InternalScannerError(
       `Missing binary literal value after prefix '0b'`,
-      token.location,
+      token.getLocation(),
     );
   }
 

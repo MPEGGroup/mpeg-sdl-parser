@@ -80,7 +80,7 @@ export function buildStringDefinition(
     } else {
       throw new InternalScannerError(
         "Expected string literal after assignment operator in string definition",
-        (assignmentPunctuator as Token).location,
+        (assignmentPunctuator as Token).getLocation(),
       );
     }
   }

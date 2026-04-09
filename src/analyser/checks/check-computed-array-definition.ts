@@ -31,7 +31,7 @@ export const checkComputedArrayDefinition: Check = {
             ) {
               results.push({
                 message: "Array dimensions must be a positive integer.",
-                location: size.startToken!.location,
+                location: size.startToken!.getLocation(),
               });
             }
           }

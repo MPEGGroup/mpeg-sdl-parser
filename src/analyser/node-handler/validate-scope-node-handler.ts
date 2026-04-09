@@ -229,7 +229,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     if (!classSymbol) {
       const error = new SemanticError(
         `Class: ${name} is not declared`,
-        classIdentifier.startToken!.location,
+        classIdentifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -247,7 +247,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     if (!mapSymbol) {
       const error = new SemanticError(
         `Map: ${name} is not declared`,
-        mapIdentifier.startToken!.location,
+        mapIdentifier.startToken!.getLocation(),
       );
 
       if (this.strict) {
@@ -260,7 +260,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
 
   private checkIdentifierReference(identifier: Identifier): void {
     const name = identifier.name;
-    const location = identifier.startToken?.location;
+    const location = identifier.startToken?.getLocation();
     const symbol = this.symbolTable.lookupVariable(name);
 
     if (!symbol) {

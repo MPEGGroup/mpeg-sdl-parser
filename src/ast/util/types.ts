@@ -15,6 +15,10 @@ import type { ExpandableModifier } from "../node/expandable-modifier.ts";
 import type { DefaultClause } from "../node/default-clause.ts";
 import type { NumberLiteral } from "../node/number-literal.ts";
 import type { CaseClause } from "../node/case-clause.ts";
+import type { ExtendsModifier } from "../node/extends-modifier.ts";
+import type { AlignedModifier } from "../node/aligned-modifier.ts";
+import type { BitModifier } from "../node/bit-modifier.ts";
+import { ExpressionKind } from "../node/enum/expression-kind.ts";
 
 export type OptionalNode<T> = T | UnexpectedError | undefined;
 
@@ -76,6 +80,13 @@ export function isAbstractExpression(
   return node?.nodeKind === NodeKind.EXPRESSION;
 }
 
+export function isUnaryExpression(
+  node: AbstractNode | undefined,
+): node is AbstractExpression {
+  return (node?.nodeKind === NodeKind.EXPRESSION) &&
+    (node as AbstractExpression).expressionKind === ExpressionKind.UNARY;
+}
+
 export function isNumberLiteral(
   node: AbstractNode | undefined,
 ): node is NumberLiteral {
@@ -96,6 +107,18 @@ export function isExpandableModifier(
   return node?.nodeKind === NodeKind.EXPANDABLE_MODIFIER;
 }
 
+export function isAlignedModifier(
+  node: AbstractNode | undefined,
+): node is AlignedModifier {
+  return node?.nodeKind === NodeKind.ALIGNED_MODIFIER;
+}
+
+export function isExtendsModifier(
+  node: AbstractNode | undefined,
+): node is ExtendsModifier {
+  return node?.nodeKind === NodeKind.EXTENDS_MODIFIER;
+}
+
 export function isCaseClause(
   node: AbstractNode | undefined,
 ): node is CaseClause {
@@ -106,4 +129,10 @@ export function isDefaultClause(
   node: AbstractNode | undefined,
 ): node is DefaultClause {
   return node?.nodeKind === NodeKind.DEFAULT_CLAUSE;
+}
+
+export function isBitModifier(
+  node: AbstractNode | undefined,
+): node is BitModifier {
+  return node?.nodeKind === NodeKind.BIT_MODIFIER;
 }

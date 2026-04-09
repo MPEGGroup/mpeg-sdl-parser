@@ -60,7 +60,7 @@ export function buildDefaultClause(
     } else {
       throw new InternalScannerError(
         "Expected close brace '}' to match open brace",
-        (openBracePunctuator as Token).location,
+        (openBracePunctuator as Token).getLocation(),
       );
     }
   }

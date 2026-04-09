@@ -32,7 +32,7 @@ function checkOutputValuesTypeMatch(
           results.push({
             message:
               "The type and number of constituent values within the aggregate output values of the map declaration must match the corresponding constituent types within the map's output_type.",
-            location: outputValue.startToken!.location,
+            location: outputValue.startToken!.getLocation(),
           });
         }
       }
@@ -63,7 +63,7 @@ function checkOutputValuesTypeMatch(
             results.push({
               message:
                 "The type and number of constituent values within the aggregate output values of the map declaration must match the corresponding constituent types within the map's output_type.",
-              location: outputValue.startToken!.location,
+              location: outputValue.startToken!.getLocation(),
             });
           }
         }
@@ -130,7 +130,7 @@ function checkParsableClassOutput(
     return [{
       message:
         "Declaring a map with an output_value consisting of a class with parsable members will result in undefined behaviour.",
-      location: declaration.outputClassIdentifier.startToken!.location,
+      location: declaration.outputClassIdentifier.startToken!.getLocation(),
       isWarning: true,
     }];
   }
@@ -152,7 +152,7 @@ function checkUniqueInputValues(declaration: MapDeclaration): CheckResult[] {
       if (seenValues.has(value)) {
         results.push({
           message: "Input values in a map declaration must be unique.",
-          location: mapEntry.inputValue.startToken!.location,
+          location: mapEntry.inputValue.startToken!.getLocation(),
         });
       } else {
         seenValues.set(value, true);
