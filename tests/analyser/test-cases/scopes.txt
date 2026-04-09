@@ -99,6 +99,10 @@ class A {
     [BLOCK] COMPOUND#1:
       b VARIABLE INTEGER
 
+warnings:
+
+SEMANTIC WARNING: This if-then-else clauses may result in duplicate class member variables being declared simultaneously.
+
 
 # Duplicate variable in IF conditional branches without braces
 
@@ -124,6 +128,10 @@ class A {
       b VARIABLE INTEGER
     [BLOCK] COMPOUND#1:
       b VARIABLE INTEGER
+
+warnings:
+
+SEMANTIC WARNING: This if-then-else clauses may result in duplicate class member variables being declared simultaneously.
 
 
 # Duplicate variable in SWITCH conditional branches
@@ -155,6 +163,9 @@ class A {
       [BLOCK] COMPOUND#1:
         b VARIABLE INTEGER
 
+warnings:
+
+SEMANTIC WARNING: This switch statement may result in duplicate class member variables being declared simultaneously.
 
 # Illegal duplicate variable with different type in IF conditional branches
 
@@ -187,6 +198,10 @@ errors:
 
 SEMANTIC ERROR: Duplicate member variable: b conflicts with type defined in different conditional branch within scope: A
 
+warnings:
+
+SEMANTIC WARNING: This if-then-else clauses may result in duplicate class member variables being declared simultaneously.
+
 # Illegal duplicate variable with different type in SWITCH conditional branches
 
 class A {
@@ -218,3 +233,7 @@ class A {
 errors:
 
 SEMANTIC ERROR: Duplicate member variable: b conflicts with type defined in different conditional branch within scope: A
+
+warnings:
+
+SEMANTIC WARNING: This switch statement may result in duplicate class member variables being declared simultaneously.

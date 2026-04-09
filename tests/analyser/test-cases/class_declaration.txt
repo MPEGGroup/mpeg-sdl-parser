@@ -52,7 +52,7 @@ SEMANTIC ERROR: Identifier: d is not declared
 SEMANTIC ERROR: Because the class is expandable, it has an encoded sizeOfInstance value therefore it cannot be abstract.
 SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
 SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
-
+SEMANTIC ERROR: The alignment of a class which extends another must not differ from the alignment of the base class.
 
 # maxClassSize must be positive
 
