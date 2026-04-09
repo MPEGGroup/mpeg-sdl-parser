@@ -12,5 +12,9 @@ export interface CheckResult {
 export interface Check {
   nodeKind: NodeKind;
   subKind?: number;
-  checkFunc(node: AbstractCompositeNode, symbolTable: SymbolTable, strict: boolean): CheckResult[];
+  checkFunc(
+    node: AbstractCompositeNode,
+    symbolTable: SymbolTable,
+    strict: boolean,
+  ): CheckResult[];
 }

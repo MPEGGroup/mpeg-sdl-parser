@@ -44,3 +44,7 @@ class A {MyClass a[1..3];}
     members:
       a VARIABLE (class: MyClass) []
     a VARIABLE (class: MyClass) []
+
+errors:
+
+SEMANTIC ERROR: Implicit arrays can only contain classes which have a classId defined.

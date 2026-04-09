@@ -64,7 +64,7 @@ export class SdlAnalyser {
     const specificCheckNodeHandler = new SpecificCheckNodeHandler(
       symbolTable,
       this.strict,
-      this.checks
+      this.checks,
     );
 
     dispatchNodeHandler(specification, specificCheckNodeHandler);
@@ -73,7 +73,7 @@ export class SdlAnalyser {
       ...buildSymbolTableNodeHandler.semanticErrors,
       ...validateScopeNodeHandler.semanticErrors,
       ...validateTypeNodeHandler.semanticErrors,
-      ...specificCheckNodeHandler.semanticErrors
+      ...specificCheckNodeHandler.semanticErrors,
     ];
 
     const seenErrors = new Set<string>();
@@ -93,7 +93,7 @@ export class SdlAnalyser {
       ...buildSymbolTableNodeHandler.semanticWarnings,
       ...validateScopeNodeHandler.semanticWarnings,
       ...validateTypeNodeHandler.semanticWarnings,
-      ...specificCheckNodeHandler.semanticWarnings
+      ...specificCheckNodeHandler.semanticWarnings,
     ];
 
     const seenWarnings = new Set<string>();

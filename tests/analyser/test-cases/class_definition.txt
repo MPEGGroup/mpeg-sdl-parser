@@ -34,6 +34,9 @@ class A {legacy ClassB b(3);}
       b VARIABLE (class: ClassB)
     b VARIABLE (class: ClassB)
 
+errors:
+
+SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
 
 # Multiple parameter values
 

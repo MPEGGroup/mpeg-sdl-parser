@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import * as path from "path";
+import * as path from "node:path";
 import { describe, expect, test } from "bun:test";
 import { createStrictSdlParser } from "../../src/lezer/create-sdl-parser.ts";
 import { getSdlAnalyserTestScenarios } from "./get-sdl-analyser-test-scenarios.ts";
@@ -10,8 +10,11 @@ import { getSymbolTableString } from "../../src/analyser/util/symbol-table-utils
 import type { Specification } from "../../src/ast/node/specification.ts";
 
 const sdlParser = createStrictSdlParser();
-const sdlAnalyser = createLenientSdlAnalyser();
-const testCaseDir = path.join(__dirname, "./test-cases");
+const sdlAnalyser = createLenientSdlAnalyser(undefined);
+const testCaseDir = path.join(
+  path.dirname(new URL(import.meta.url).pathname),
+  "./test-cases",
+);
 
 for (const filename of fs.readdirSync(testCaseDir)) {
   if (!/\.txt$/.test(filename)) {

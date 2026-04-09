@@ -7,3 +7,25 @@ computed int a=1;
 [GLOBAL]:
   a VARIABLE INTEGER COMPUTED
 
+errors:
+
+SEMANTIC ERROR: The only items that may be present in global scope are: constant computed elementary variable definitions, map declarations, class declarations.
+
+
+# Signed zero floating point placeholder
+
+class A {float(32) a = 3.14;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE FLOATING_POINT
+    a VARIABLE FLOATING_POINT
+
+warnings:
+
+SEMANTIC WARNING: Type coercion required for 'a' value: expected FLOATING_POINT, got DECIMAL
+

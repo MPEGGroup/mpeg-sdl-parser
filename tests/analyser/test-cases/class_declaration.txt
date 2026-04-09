@@ -22,6 +22,9 @@ class A(int a) {}
       a VARIABLE INTEGER
     a VARIABLE INTEGER
 
+errors:
+
+SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
 
 # All features
 
@@ -46,3 +49,64 @@ aligned(8) expandable(20) abstract class A (int a, B b) extends C(1, d) : bit(3)
 errors:
 
 SEMANTIC ERROR: Identifier: d is not declared
+SEMANTIC ERROR: Because the class is expandable, it has an encoded sizeOfInstance value therefore it cannot be abstract.
+SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
+SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
+
+
+# maxClassSize must be positive
+
+expandable(0) class A {}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      sizeOfInstance VARIABLE INTEGER COMPUTED CONST
+    sizeOfInstance VARIABLE INTEGER COMPUTED CONST
+
+errors:
+
+SEMANTIC ERROR: maxClassSize must be a positive integer
+
+
+# Expandable class cannot be abstract
+
+expandable(20) abstract class A {}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      sizeOfInstance VARIABLE INTEGER COMPUTED CONST
+    sizeOfInstance VARIABLE INTEGER COMPUTED CONST
+
+errors:
+
+SEMANTIC ERROR: Because the class is expandable, it has an encoded sizeOfInstance value therefore it cannot be abstract.
+
+
+# Unreferenced parameter
+
+class A(int a, int b) {int(8) c = a;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER
+      b VARIABLE INTEGER
+      c VARIABLE INTEGER
+    a VARIABLE INTEGER
+    b VARIABLE INTEGER
+    c VARIABLE INTEGER
+
+errors:
+
+SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
