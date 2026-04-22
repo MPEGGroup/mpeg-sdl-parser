@@ -17,7 +17,7 @@ const testCaseDir = path.join(
   "test-cases",
 );
 
-const normalize = (s: string) => s.replace(/\r\n/g, '\n');
+const normalize = (s: string) => s.replace(/\r\n/g, "\n");
 
 for (const filename of fs.readdirSync(testCaseDir)) {
   if (!/\.txt$/.test(filename)) {
