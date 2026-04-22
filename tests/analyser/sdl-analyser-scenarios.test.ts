@@ -17,6 +17,8 @@ const testCaseDir = path.join(
   "test-cases",
 );
 
+const normalize = (s: string) => s.replace(/\r\n/g, '\n');
+
 for (const filename of fs.readdirSync(testCaseDir)) {
   if (!/\.txt$/.test(filename)) {
     continue;
@@ -32,7 +34,7 @@ for (const filename of fs.readdirSync(testCaseDir)) {
     ) {
       test(`Test SDL Analyser ${scenarioName} - ${testScenario.name}`, () => {
         const sdlString = testScenario.text.trim();
-        const expectedOutput = testScenario.expected.trim();
+        const expectedOutput = normalize(testScenario.expected.trim());
 
         const sdlStringInput = new SdlStringInput(sdlString);
         const parseTree = sdlParser.parse(sdlStringInput);
@@ -40,26 +42,23 @@ for (const filename of fs.readdirSync(testCaseDir)) {
         const actualAnalysisResult = sdlAnalyser.analyse(
           specification as Specification,
         );
-        const actualOutput = getSymbolTableString(
+        const actualOutput = normalize(getSymbolTableString(
           actualAnalysisResult.symbolTable,
-        );
-
-        console.error("Actual Output:\n<" + actualOutput + ">");
-        console.error("Expected Output:\n<" + expectedOutput + ">");
+        ));
 
         expect(actualOutput).toBe(expectedOutput);
 
         const actualErrors = actualAnalysisResult.semanticErrors
           .map((e) => e.errorMessage)
           .join("\n");
-        const expectedErrors = testScenario.expectedErrors;
+        const expectedErrors = normalize(testScenario.expectedErrors);
 
         expect(actualErrors).toBe(expectedErrors);
 
         const actualWarnings = actualAnalysisResult.semanticWarnings
           .map((e) => e.errorMessage)
           .join("\n");
-        const expectedWarnings = testScenario.expectedWarnings;
+        const expectedWarnings = normalize(testScenario.expectedWarnings);
 
         expect(actualWarnings).toBe(expectedWarnings);
       });
