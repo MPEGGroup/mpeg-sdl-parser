@@ -122,13 +122,16 @@ dispatchNodeHandler(specification, new MyNodeHandler());
 // Create an SDL semantic analyser
 // This will create a lenient analyser which recovers from semantic errors and stores them in the analysis results.
 // A strict analyser which will throw a `SemanticError` can be created with `createStrictSdlAnalyser()`.
-const analyser = await createLenientSdlAnalyser();
+const analyser = createLenientSdlAnalyser();
 
 // Analyse the AST
 const analysisResult = analyser.analyse(specification);
 
 // Print any semantic errors from the AST analysis
-console.log(JSON.stringify(analysisResult.semanticErrors);
+console.log(JSON.stringify(analysisResult.semanticErrors));
+
+// Print any semantic warnings from the AST analysis
+console.log(JSON.stringify(analysisResult.semanticWarnings));
 
 // Pretty print the specification (retaining comments and handling parse errors)
 let prettifiedSpecification = await prettyPrint(specification, sdlStringInput)
