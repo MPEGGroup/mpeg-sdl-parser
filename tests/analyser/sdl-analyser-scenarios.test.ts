@@ -44,6 +44,9 @@ for (const filename of fs.readdirSync(testCaseDir)) {
           actualAnalysisResult.symbolTable,
         );
 
+        console.error("Actual Output:\n<" + actualOutput + ">");
+        console.error("Expected Output:\n<" + expectedOutput + ">");
+
         expect(actualOutput).toBe(expectedOutput);
 
         const actualErrors = actualAnalysisResult.semanticErrors
