@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import { IfStatement } from "../../node/if-statement.ts";
 import type { AbstractStatement } from "../../node/abstract-statement.ts";
@@ -62,9 +62,9 @@ export function buildIfStatement(
     if (elseStatement) {
       children.push(elseStatement);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected else statement after else keyword",
-        (elseKeyword as Token).location,
+        (elseKeyword as Token).getLocation(),
       );
     }
   }

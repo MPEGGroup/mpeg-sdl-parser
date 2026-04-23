@@ -82,4 +82,9 @@ class odd2(int a) {
   }
   for (; j > 0; j--) {
   }
-} // until EOF
+}
+
+class A {
+  MyClass a[1..3];
+  reserved MyClass b[3][[2]];
+} // end of file

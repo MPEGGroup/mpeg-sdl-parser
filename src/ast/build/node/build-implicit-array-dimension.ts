@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { Identifier } from "../../node/identifier.ts";
 import { ImplicitArrayDimension } from "../../node/implicit-array-dimension.ts";
@@ -19,7 +19,7 @@ export function buildImplicitArrayDimension(
   const openBracketPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
-    TokenKind.OPEN_BRACE,
+    TokenKind.OPEN_BRACKET,
   );
   children.push(openBracketPunctuator);
   const rangeStart = fetchOptionalNode<
@@ -42,7 +42,7 @@ export function buildImplicitArrayDimension(
     if (rangeOperator) {
       children.push(rangeOperator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected range operator after range start in implicit array dimension",
       );
     }
@@ -52,10 +52,10 @@ export function buildImplicitArrayDimension(
       buildContext,
       [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
     );
-    if (rangeStart) {
-      children.push(rangeStart);
+    if (rangeEnd) {
+      children.push(rangeEnd);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected range end after range operator in implicit array dimension",
       );
     }

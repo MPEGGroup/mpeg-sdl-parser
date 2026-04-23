@@ -1,0 +1,28 @@
+# Global scope with valid items
+
+computed const int a=1;
+map offsets (int) {0b00,{1024}}
+class A{}
+
+==>
+
+[GLOBAL]:
+  a VARIABLE INTEGER COMPUTED CONST
+  offsets MAP INTEGER
+  A CLASS
+  [MAP] offsets:
+  [CLASS] A:
+
+
+# Non-const computed at global scope
+
+computed int a=1;
+
+==>
+
+[GLOBAL]:
+  a VARIABLE INTEGER COMPUTED
+
+errors:
+
+SEMANTIC ERROR: The only items that may be present in global scope are: constant computed elementary variable definitions, map declarations, class declarations.

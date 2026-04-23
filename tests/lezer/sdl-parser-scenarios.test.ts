@@ -14,11 +14,11 @@ for (const filename of fs.readdirSync(testCaseDir)) {
 
   const scenarioName = /^[^\.]*/.exec(filename)?.[0] || "??";
 
-  describe(`${scenarioName} Tests`, () => {
+  describe(`SDL Parser ${scenarioName} Tests`, () => {
     const testCases = fs.readFileSync(path.join(testCaseDir, filename), "utf8");
 
     for (const { name, run } of fileTests(testCases, filename)) {
-      test(`Test ${scenarioName} - ${name}`, () => run(sdlParser));
+      test(`Test SDL Parser ${scenarioName} - ${name}`, () => run(sdlParser));
     }
   });
 }

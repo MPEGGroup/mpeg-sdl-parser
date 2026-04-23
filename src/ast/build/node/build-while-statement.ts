@@ -3,12 +3,11 @@ import type { AbstractExpression } from "../../node/abstract-expression.ts";
 import type { NumberLiteral } from "../../node/number-literal.ts";
 import type { Identifier } from "../../node/identifier.ts";
 import { WhileStatement } from "../../node/while-statement.ts";
-import { CompoundStatement } from "../../node/compound-statement.ts";
-import { StatementKind } from "../../node/enum/statement-kind.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import type { Token } from "../../node/token.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
+import type { AbstractStatement } from "../../node/abstract-statement.ts";
 
 export function buildWhileStatement(
   buildContext: BuildContext,
@@ -34,10 +33,9 @@ export function buildWhileStatement(
     NodeKind.TOKEN,
     TokenKind.CLOSE_PARENTHESIS,
   );
-  const compoundStatement = fetchRequiredNode<CompoundStatement>(
+  const statement = fetchRequiredNode<AbstractStatement>(
     buildContext,
     NodeKind.STATEMENT,
-    StatementKind.COMPOUND,
   );
 
   return new WhileStatement(
@@ -45,13 +43,13 @@ export function buildWhileStatement(
     openParenthesisPunctuator,
     condition,
     closeParenthesisPunctuator,
-    compoundStatement,
+    statement,
     [
       whileKeyword,
       openParenthesisPunctuator,
       condition,
       closeParenthesisPunctuator,
-      compoundStatement,
+      statement,
     ],
   );
 }

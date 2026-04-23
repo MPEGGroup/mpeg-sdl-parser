@@ -1,0 +1,60 @@
+# Simple
+
+class ClassA {}
+class A {ClassA a;}
+
+==>
+
+[GLOBAL]:
+  ClassA CLASS
+  A CLASS
+  [CLASS] ClassA:
+  [CLASS] A:
+    members:
+      a VARIABLE (class: ClassA)
+    a VARIABLE (class: ClassA)
+
+
+# Legacy and one parameter value
+
+class ClassB(int a) {}
+class A {legacy ClassB b(3);}
+
+==>
+
+[GLOBAL]:
+  ClassB CLASS
+  A CLASS
+  [CLASS] ClassB:
+    members:
+      a VARIABLE INTEGER
+    a VARIABLE INTEGER
+  [CLASS] A:
+    members:
+      b VARIABLE (class: ClassB)
+    b VARIABLE (class: ClassB)
+
+errors:
+
+SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.
+
+# Multiple parameter values
+
+class ClassC {}
+class A {ClassC c(i, 3);}
+
+==>
+
+[GLOBAL]:
+  ClassC CLASS
+  A CLASS
+  [CLASS] ClassC:
+  [CLASS] A:
+    members:
+      c VARIABLE (class: ClassC)
+    c VARIABLE (class: ClassC)
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Class 'ClassC' does not expect parameters, but 2 provided

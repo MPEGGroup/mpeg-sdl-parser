@@ -1,4 +1,5 @@
-import { InternalParseError } from "../../parse-error.ts";
+import type { Location } from "../../location.ts";
+import { InternalScannerError } from "../../scanner-error.ts";
 import { isCompositeNode, isToken } from "../util/types.ts";
 import { AbstractNode } from "./abstract-node.ts";
 import { NodeKind } from "./enum/node-kind.ts";
@@ -29,7 +30,7 @@ export abstract class AbstractCompositeNode extends AbstractNode {
     } else if (isToken(firstChild)) {
       this.startToken = firstChild;
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unsupported node type for start token assignment: " +
           NodeKind[firstChild.nodeKind],
       );
@@ -40,10 +41,18 @@ export abstract class AbstractCompositeNode extends AbstractNode {
     } else if (isToken(lastChild)) {
       this.endToken = lastChild;
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unsupported node type for end token assignment: " +
           NodeKind[lastChild.nodeKind],
       );
     }
+  }
+
+  getLocation(): Location {
+    if (!this.startToken && !this.endToken) {
+      throw new InternalScannerError("Start and end token are undefined");
+    }
+
+    return this.startToken?.getLocation() ?? this.endToken!.getLocation();
   }
 }

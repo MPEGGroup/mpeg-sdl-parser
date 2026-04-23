@@ -1,0 +1,16 @@
+# Simple
+
+class A {do {i++;} while (i<3);}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    [BLOCK] DO:
+      [BLOCK] COMPOUND:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared

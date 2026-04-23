@@ -1,6 +1,6 @@
 import { NumberLiteral } from "../../node/number-literal.ts";
 import { NumberLiteralKind } from "../../node/enum/number-literal-kind.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import type { Token } from "../../node/token.ts";
@@ -14,7 +14,7 @@ const MAXIMUM_MULTIPLE_CHARACTER_LITERAL_LENGTH = 10;
 
 function parseUnsignedIntFromMultipleCharacterLiteral(literal: string): number {
   if (literal.length > MAXIMUM_MULTIPLE_CHARACTER_LITERAL_LENGTH) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Multiple character number literal exceeds maximum length of ${MAXIMUM_MULTIPLE_CHARACTER_LITERAL_LENGTH}: ${literal}`,
     );
   }
@@ -23,7 +23,7 @@ function parseUnsignedIntFromMultipleCharacterLiteral(literal: string): number {
   for (let i = 0; i < literal.length; i++) {
     const charCode = literal.charCodeAt(i);
     if (charCode < 0x20 || charCode > 0x7E) {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         `Invalid character ${
           literal.charCodeAt(i)
         } in multiple character number literal: ${literal}`,

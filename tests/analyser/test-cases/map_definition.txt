@@ -1,0 +1,35 @@
+# Reserved with elementary type output
+
+map Offsets (int) {0b00,{1024}}
+class A {reserved unsigned int<Offsets> offset;}
+
+==>
+
+[GLOBAL]:
+  Offsets MAP INTEGER
+  A CLASS
+  [MAP] Offsets:
+  [CLASS] A:
+    members:
+      offset VARIABLE INTEGER (map: Offsets)
+    offset VARIABLE INTEGER (map: Offsets)
+
+
+# Legacy with class output
+
+class B {}
+map MapB (B) {0b00,{1024}}
+class A {legacy B<MapB> b;}
+
+==>
+
+[GLOBAL]:
+  B CLASS
+  MapB MAP (class: B)
+  A CLASS
+  [CLASS] B:
+  [MAP] MapB:
+  [CLASS] A:
+    members:
+      b VARIABLE (class: B) (map: MapB)
+    b VARIABLE (class: B) (map: MapB)

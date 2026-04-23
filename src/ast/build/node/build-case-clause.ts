@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { NumberLiteral } from "../../node/number-literal.ts";
 import { CaseClause } from "../../node/case-clause.ts";
@@ -65,7 +65,7 @@ export function buildCaseClause(
     if (semicolonPunctuator) {
       children.push(semicolonPunctuator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected semicolon punctuator ';' after break keyword.",
       );
     }
@@ -81,7 +81,7 @@ export function buildCaseClause(
     if (closeBracePunctuator) {
       children.push(closeBracePunctuator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected close brace punctuator '}' to match open brace punctuator.",
       );
     }

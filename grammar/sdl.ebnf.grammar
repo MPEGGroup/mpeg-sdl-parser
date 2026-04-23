@@ -396,4 +396,4 @@ do_statement ::= do compound_statement while open_parenthesis expression close_p
 
 /* Rule FC.5: Flow control using while */
 
-while_statement ::= while open_parenthesis expression close_parenthesis compound_statement
+while_statement ::= while open_parenthesis expression close_parenthesis statement

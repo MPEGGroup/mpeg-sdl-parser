@@ -1,0 +1,89 @@
+# Elementary type output
+
+map offsets (int) {0b00,{1024},0b00,{1024}}
+
+==>
+
+[GLOBAL]:
+  offsets MAP INTEGER
+  [MAP] offsets:
+
+errors:
+
+SEMANTIC ERROR: Input values in a map declaration must be unique.
+
+# Class output
+
+map barMap (Bar) {0b00,{1024}}
+
+==>
+
+[GLOBAL]:
+  barMap MAP (class: Bar)
+  [MAP] barMap:
+
+errors:
+
+SEMANTIC ERROR: Class: Bar is not declared
+
+
+# Escape codes
+
+map offsets (int) {0b00,{int(6)}}
+
+==>
+
+[GLOBAL]:
+  offsets MAP INTEGER
+  [MAP] offsets:
+
+
+# Duplicate input values
+
+map offsets (int) {0b00,{1024},0b01,{2048},0b00,{4096}}
+
+==>
+
+[GLOBAL]:
+  offsets MAP INTEGER
+  [MAP] offsets:
+
+errors:
+
+SEMANTIC ERROR: Input values in a map declaration must be unique.
+
+
+# Output value count mismatch for elementary type
+
+map offsets (int) {0b00,{1024,2048}}
+
+==>
+
+[GLOBAL]:
+  offsets MAP INTEGER
+  [MAP] offsets:
+
+errors:
+
+SEMANTIC ERROR: The type and number of constituent values within the aggregate output values of the map declaration must match the corresponding constituent types within the map's output_type.
+
+
+# Map with parsable class output
+
+class Bar {int(8) x;}
+map barMap (Bar) {0b00,{1024}}
+
+==>
+
+[GLOBAL]:
+  Bar CLASS
+  barMap MAP (class: Bar)
+  [CLASS] Bar:
+    members:
+      x VARIABLE INTEGER
+    x VARIABLE INTEGER
+  [MAP] barMap:
+
+warnings:
+
+SEMANTIC WARNING: Declaring a map with an output_value consisting of a class with parsable members will result in undefined behaviour.

@@ -1,7 +1,7 @@
 import { type Tree } from "@lezer/common";
 import type { NodeHandler } from "./ast/visitor/node-handler.ts";
 import type { Specification } from "./ast/node/specification.ts";
-import { SyntacticParseError } from "./parse-error.ts";
+import { SyntaxError } from "./scanner-error.ts";
 import { TraversingVisitor } from "./ast/visitor/traversing-visitor.ts";
 import * as prettier from "prettier/standalone.js";
 import { prettierPluginSdl } from "./prettier/prettier-plugin-sdl.ts";
@@ -9,8 +9,7 @@ import type { Plugin } from "prettier";
 import { Text } from "@codemirror/state";
 import type { AbstractNode } from "./ast/node/abstract-node.ts";
 import { SdlStringInput } from "./lezer/sdl-string-input.ts";
-import { getLocationFromTextPosition } from "./util/location-utils.ts";
-import { createParseErrorFromTextAndCursor } from "./lezer/create-parse-error-from-text-and-cursor.ts";
+import { createSyntaxErrorFromTextAndCursor } from "./lezer/create-syntax-error-from-text-and-cursor.ts";
 
 /**
  * Create a dynamic prettier plugin for SDL using the pre-parsed AST.
@@ -35,39 +34,28 @@ function getPreParsedAstPrettierPlugin(
 }
 
 /**
- * Return a collated list of parse errors from the parse tree.
+ * Return a collated list of syntax errors from the parse tree.
  *
  * @param parseTree The parse tree generated from the source string.
  * @param sdlStringInput The SDL source `StringInput`.
  */
-export function collateParseErrors(
+export function collateSyntaxErrors(
   parseTree: Tree,
   sdlStringInput: SdlStringInput,
-): SyntacticParseError[] {
+): SyntaxError[] {
   const text = Text.of(
     sdlStringInput.read(0, sdlStringInput.length).split("\n"),
   );
 
-  const parseErrors = [];
-  const errorRows = new Set<number>();
-
+  const syntaxErrors = [];
   const cursor = parseTree.cursor();
   do {
     if (cursor.type.isError) {
-      const location = getLocationFromTextPosition(text, cursor.from);
-
-      // only keep one error per line
-      if (!errorRows.has(location!.row)) {
-        errorRows.add(location!.row);
-
-        const error = createParseErrorFromTextAndCursor(text, cursor);
-
-        parseErrors.push(error);
-      }
+      syntaxErrors.push(createSyntaxErrorFromTextAndCursor(text, cursor));
     }
   } while (cursor.next());
 
-  return parseErrors;
+  return syntaxErrors;
 }
 
 /**

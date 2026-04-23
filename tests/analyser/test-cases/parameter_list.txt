@@ -1,0 +1,16 @@
+# Valid parameter syntax - no string parameters possible in current SDL grammar
+
+class A(int a) {}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER
+    a VARIABLE INTEGER
+
+errors:
+
+SEMANTIC ERROR: A parameter in a parameter list must be referenced within the class declaration.

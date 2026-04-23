@@ -6,7 +6,7 @@ import type { ClassIdRange } from "../ast/node/class-id-range.ts";
 import { ClassIdKind } from "../ast/node/enum/class-id-kind.ts";
 import type { ExtendedClassIdRange } from "../ast/node/extended-class-id-range.ts";
 import { interleaveCommaSeparatorDocs } from "./util/print-utils.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 
 export function printAbstractClassId(
   path: AstPath<AbstractClassId>,
@@ -45,7 +45,7 @@ export function printAbstractClassId(
     }
     default: {
       const exhaustiveCheck: never = classIdKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, classIdKind == " + exhaustiveCheck,
       );
     }

@@ -1,0 +1,63 @@
+# Simple
+
+class A {{utf8string foo;utf8string bar;}}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      foo VARIABLE UCS (branch: COMPOUND)
+      bar VARIABLE UCS (branch: COMPOUND)
+    [BLOCK] COMPOUND:
+      foo VARIABLE UCS
+      bar VARIABLE UCS
+
+
+# Nested compound statements
+
+class A {{utf8string foo;{ utf8string bar1;utf8string bar2;}}}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      foo VARIABLE UCS (branch: COMPOUND)
+      bar1 VARIABLE UCS (branch: COMPOUND/COMPOUND)
+      bar2 VARIABLE UCS (branch: COMPOUND/COMPOUND)
+    [BLOCK] COMPOUND:
+      foo VARIABLE UCS
+      [BLOCK] COMPOUND:
+        bar1 VARIABLE UCS
+        bar2 VARIABLE UCS
+
+
+# Multiple nested compound statements
+
+class A {{utf8string foo;{ utf8string bar1;utf8string bar2;}}{utf8string fooi;{ utf8string bar1i;utf8string bar2i;}}}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      foo VARIABLE UCS (branch: COMPOUND)
+      bar1 VARIABLE UCS (branch: COMPOUND/COMPOUND)
+      bar2 VARIABLE UCS (branch: COMPOUND/COMPOUND)
+      fooi VARIABLE UCS (branch: COMPOUND#1)
+      bar1i VARIABLE UCS (branch: COMPOUND#1/COMPOUND)
+      bar2i VARIABLE UCS (branch: COMPOUND#1/COMPOUND)
+    [BLOCK] COMPOUND:
+      foo VARIABLE UCS
+      [BLOCK] COMPOUND:
+        bar1 VARIABLE UCS
+        bar2 VARIABLE UCS
+    [BLOCK] COMPOUND#1:
+      fooi VARIABLE UCS
+      [BLOCK] COMPOUND:
+        bar1i VARIABLE UCS
+        bar2i VARIABLE UCS

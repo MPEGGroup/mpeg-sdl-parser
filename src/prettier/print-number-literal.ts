@@ -4,7 +4,7 @@ import type { NumberLiteral } from "../ast/node/number-literal.ts";
 import type { Token } from "../ast/node/token.ts";
 import { isMissingError, isUnexpectedError } from "../ast/util/types.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 
 const { join } = doc.builders;
 
@@ -76,7 +76,7 @@ export function printNumberLiteral(
       return printMultipleCharacterNumberLiteral(path, print);
     default: {
       const exhaustiveCheck: never = numberLiteralKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, numberLiteralKind == " + exhaustiveCheck,
       );
     }

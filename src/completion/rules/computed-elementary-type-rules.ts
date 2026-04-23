@@ -11,8 +11,23 @@ export const computedElementaryTypeRules = [
   },
   { previous: TokenTypeId._const, expected: TokenTypeId.ElementaryType },
   { previous: TokenTypeId.ElementaryType, expected: TokenTypeId.Identifier },
+  // const must have an assignment
   {
-    previous: TokenTypeId.Identifier,
+    previous: [
+      TokenTypeId.computed,
+      TokenTypeId._const,
+      TokenTypeId.ElementaryType,
+      TokenTypeId.Identifier,
+    ],
+    expected: TokenTypeId.Assignment,
+  },
+  // non-const has optional assignment
+  {
+    previous: [
+      TokenTypeId.computed,
+      TokenTypeId.ElementaryType,
+      TokenTypeId.Identifier,
+    ],
     expected: [TokenTypeId.Assignment, TokenTypeId.Semicolon],
   },
   {

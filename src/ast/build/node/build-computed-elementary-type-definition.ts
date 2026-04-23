@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { AbstractExpression } from "../../node/abstract-expression.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import { ComputedElementaryTypeDefinition } from "../../node/computed-elementary-type-definition.ts";
@@ -73,9 +73,9 @@ export function buildComputedElementaryTypeDefinition(
     if (value !== undefined) {
       children.push(value);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected value for computed elementary type definition after assignment operator",
-        (assignmentOperator as Token).location,
+        (assignmentOperator as Token).getLocation(),
       );
     }
   }

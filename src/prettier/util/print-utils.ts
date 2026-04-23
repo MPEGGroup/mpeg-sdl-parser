@@ -8,13 +8,13 @@ import {
   isIndent,
   isLabel,
 } from "./types.ts";
-import { InternalParseError } from "../../parse-error.ts";
+import { InternalScannerError } from "../../scanner-error.ts";
 
 const { hardline, ifBreak, label, line, indent } = doc.builders;
 
 function getCommentString(trivia: Trivia): string {
   if (!trivia.text.startsWith("//")) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       "Logic Error: Expected comment to start with // : " +
         JSON.stringify(trivia),
     );
@@ -574,7 +574,7 @@ export function interleaveCommaSeparatorDocs(
 ): Doc {
   if (commaSeparatorDocs.length === 0) {
     if (valueDocs.length > 1) {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         `Logic Error: Number of values: ${valueDocs.length} and no comma separators provided`,
       );
     }
@@ -582,7 +582,7 @@ export function interleaveCommaSeparatorDocs(
   }
 
   if (valueDocs.length !== commaSeparatorDocs.length + 1) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Logic Error: Number of values: ${valueDocs.length} and comma separators: ${commaSeparatorDocs.length} are not as expected`,
     );
   }

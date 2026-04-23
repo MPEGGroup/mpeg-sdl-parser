@@ -1,0 +1,12 @@
+# Simple
+
+class A {computed int a[3];}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED []
+    a VARIABLE INTEGER COMPUTED []

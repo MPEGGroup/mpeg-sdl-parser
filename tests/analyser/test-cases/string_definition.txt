@@ -1,0 +1,40 @@
+# String definition
+
+class A {utf8string foo;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      foo VARIABLE UCS
+    foo VARIABLE UCS
+
+
+# utf8list with literal
+
+class A {utf8list foo=u"hello world";}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      foo VARIABLE UCS
+    foo VARIABLE UCS
+
+
+# base64 string literal
+
+class A {base64string foo="aGVsbG8K";}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      foo VARIABLE BASIC
+    foo VARIABLE BASIC

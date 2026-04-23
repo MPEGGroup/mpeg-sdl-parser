@@ -1,0 +1,39 @@
+# Simple
+
+class A {computed int a;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED
+    a VARIABLE INTEGER COMPUTED
+
+
+# Const and value
+
+class A {computed const int a=3;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER COMPUTED CONST
+    a VARIABLE INTEGER COMPUTED CONST
+
+# Const computed value must be defined
+
+computed const int a;
+
+==>
+
+[GLOBAL]:
+  a VARIABLE INTEGER COMPUTED CONST
+
+errors:
+
+SEMANTIC ERROR: a: const computed elementary type definition must have a value specified

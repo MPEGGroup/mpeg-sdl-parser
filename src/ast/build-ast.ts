@@ -5,7 +5,7 @@ import type { Specification } from "./node/specification.ts";
 import { debugEnabled } from "../util/logger.ts";
 import type { NodeHandler } from "./visitor/node-handler.ts";
 import { TraversingVisitor } from "./visitor/traversing-visitor.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 import type { BuildContext } from "./build/util/build-context.ts";
 import type { RequiredNode } from "./util/types.ts";
 import { fetchRequiredNode } from "./build/util/fetch-node.ts";
@@ -38,14 +38,14 @@ export function buildAst(
   const nodeKind = nodeKindByTokenTypeId.get(cursor.type.id);
 
   if (nodeKind === undefined) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `No nodeKind mapping found for token type id: ${cursor.type.id} (${cursor.type.name})`,
     );
   }
 
   // check the root node is a Specification
   if (nodeKind !== NodeKind.SPECIFICATION) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Expected start node to be a Specification, but found ${
         NodeKind[nodeKind]
       }.`,
@@ -58,19 +58,19 @@ export function buildAst(
   );
 
   if (buildContext.stateStack.length !== 1) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Expected final build context state stack length to be 1, but found ${buildContext.stateStack.length}.`,
     );
   }
 
   if (!specification) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Expected to parse a Specification node, but none was found.`,
     );
   }
 
   if ((nodeKind !== NodeKind.SPECIFICATION) && (!cursor.type.isError)) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Expected final node to be a Specification or an error, but found ${
         NodeKind[nodeKind]
       }.`,

@@ -1,3 +1,4 @@
+import type { Location } from "../../location.ts";
 import { NodeKind } from "./enum/node-kind.ts";
 import type { Trivia } from "./trivia.ts";
 
@@ -10,4 +11,6 @@ export abstract class AbstractNode {
     public readonly isComposite: boolean,
   ) {
   }
+
+  abstract getLocation(): Location;
 }

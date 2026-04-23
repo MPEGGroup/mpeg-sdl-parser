@@ -1,0 +1,58 @@
+# Simple
+
+class A{int(3) a;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER
+    a VARIABLE INTEGER
+
+
+# Legacy, const, aligned, lookahead value range
+
+class A{legacy const aligned(8) unsigned int(7)* a=3..i;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER CONST
+    a VARIABLE INTEGER CONST
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+
+
+# Default aligned
+
+class A {aligned int(2) a;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER
+    a VARIABLE INTEGER
+
+
+# Explicit aligned bit count
+
+class A {aligned(16) int(2) a;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    members:
+      a VARIABLE INTEGER
+    a VARIABLE INTEGER

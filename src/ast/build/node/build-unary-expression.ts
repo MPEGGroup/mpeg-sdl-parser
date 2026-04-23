@@ -10,7 +10,7 @@ import type { AbstractNode } from "../../node/abstract-node.ts";
 import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import { Token } from "../../node/token.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { OptionalNode } from "../../util/types.ts";
 
 export function buildUnaryExpression(
@@ -61,9 +61,9 @@ export function buildUnaryExpression(
     if (closeParenthesisPunctuator) {
       children.push(closeParenthesisPunctuator);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Expected closing parenthesis for unary expression which includes open parenthesis",
-        (openParenthesisPunctuator as Token).location,
+        (openParenthesisPunctuator as Token).getLocation(),
       );
     }
   }

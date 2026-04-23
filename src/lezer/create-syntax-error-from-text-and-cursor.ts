@@ -1,9 +1,9 @@
 import type { Text } from "@codemirror/state";
 import { TreeCursor } from "@lezer/common";
-import { InternalParseError, SyntacticParseError } from "../parse-error.ts";
+import { InternalScannerError, SyntaxError } from "../scanner-error.ts";
 import { syntacticTokenNodeProp } from "./props/syntactic-token-node-prop-source.ts";
 import { getPotentialTokenTypeIds } from "../completion/get-potential-token-type-ids.ts";
-import { createParseErrorFromTextAndPosition } from "./create-parse-error-from-text-and-position.ts";
+import { createSyntaxErrorFromTextAndPosition } from "./create-syntax-error-from-text-and-position.ts";
 import { createLenientSdlParser } from "./create-sdl-parser.ts";
 
 const lenientSdlParser = createLenientSdlParser();
@@ -11,18 +11,18 @@ const lenientSdlParser = createLenientSdlParser();
 const nodeSet = lenientSdlParser.nodeSet;
 
 /**
- * Helper function to create a SyntacticParseError from the text and a cursor positioned at an error node.
+ * Helper function to create a SyntaxError from the text and a cursor positioned at an error node.
  * As the cursor from a parse tree is available, details on missing or unexpected tokens can be extracted.
  *
  * @param text The text to parse.
  * @param cursor The cursor position in the text which should be at an error node.
  */
-export function createParseErrorFromTextAndCursor(
+export function createSyntaxErrorFromTextAndCursor(
   text: Text,
   cursor: TreeCursor,
-): SyntacticParseError {
+): SyntaxError {
   if (!cursor.type.isError) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       "Expected cursor to be an error token, but it is not",
     );
   }
@@ -36,7 +36,7 @@ export function createParseErrorFromTextAndCursor(
     message = "Unexpected: " +
       text.sliceString(cursor.from, cursor.to);
 
-    return createParseErrorFromTextAndPosition(
+    return createSyntaxErrorFromTextAndPosition(
       text,
       cursor.from,
       message,
@@ -48,7 +48,7 @@ export function createParseErrorFromTextAndCursor(
     message = "Unknown token: " +
       text.sliceString(cursor.from, cursor.to);
 
-    return createParseErrorFromTextAndPosition(
+    return createSyntaxErrorFromTextAndPosition(
       text,
       cursor.from,
       message,
@@ -61,7 +61,7 @@ export function createParseErrorFromTextAndCursor(
   );
 
   if (!potentialTokenTypeIds || potentialTokenTypeIds.length === 0) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       "Expected token type IDs not found for parse error at position " +
         cursor.from,
     );
@@ -102,7 +102,7 @@ export function createParseErrorFromTextAndCursor(
   message = possibleSyntacticTokensAndNodes.length > 1
     ? "Expected one of: " + possibleSyntacticTokensAndNodes.join(" ")
     : "Expected: " + possibleSyntacticTokensAndNodes[0];
-  return createParseErrorFromTextAndPosition(
+  return createSyntaxErrorFromTextAndPosition(
     text,
     cursor.from,
     message,

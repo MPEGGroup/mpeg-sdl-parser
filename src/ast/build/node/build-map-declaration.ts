@@ -1,4 +1,4 @@
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import { NodeKind } from "../../node/enum/node-kind.ts";
 import type { Identifier } from "../../node/identifier.ts";
 import { MapDeclaration } from "../../node/map-declaration.ts";
@@ -54,7 +54,7 @@ export function buildMapDeclaration(
     if (outputClassIdentifier) {
       children.push(outputClassIdentifier);
     } else {
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "MapDeclaration must have either an output elementary type or an output class identifier.",
       );
     }

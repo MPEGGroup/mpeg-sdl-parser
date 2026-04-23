@@ -5,7 +5,7 @@ import { ArrayDimensionKind } from "../ast/node/enum/array-dimension-kind.ts";
 import type { ExplicitArrayDimension } from "../ast/node/explicit-array-dimension.ts";
 import type { ImplicitArrayDimension } from "../ast/node/implicit-array-dimension.ts";
 import type { PartialArrayDimension } from "../ast/node/partial-array-dimension.ts";
-import { InternalParseError } from "../parse-error.ts";
+import { InternalScannerError } from "../scanner-error.ts";
 
 export function printAbstractArrayDimension(
   path: AstPath<AbstractArrayDimension>,
@@ -23,7 +23,6 @@ export function printAbstractArrayDimension(
     }
     case ArrayDimensionKind.PARTIAL: {
       return [
-        path.call(print, "openBracketPunctuator"),
         path.call(print, "openBracketPunctuator"),
         (path as AstPath<PartialArrayDimension>).call(
           print,
@@ -44,7 +43,6 @@ export function printAbstractArrayDimension(
       doc.push(
         path.call(print, "openBracketPunctuator"),
       );
-      doc.push("[");
 
       if (node.rangeStart !== undefined) {
         doc.push(
@@ -78,7 +76,7 @@ export function printAbstractArrayDimension(
 
     default: {
       const exhaustiveCheck: never = arrayDimensionKind;
-      throw new InternalParseError(
+      throw new InternalScannerError(
         "Unreachable code reached, arrayDimensionKind == " + exhaustiveCheck,
       );
     }

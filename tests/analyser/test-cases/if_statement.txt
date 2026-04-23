@@ -1,0 +1,57 @@
+# With braces in clauses
+
+class A {if(i==1){i++;}else if(i==2){i--;}else{j++;}}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    [BLOCK] COMPOUND:
+    [BLOCK] COMPOUND#1:
+    [BLOCK] COMPOUND#2:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: j is not declared
+
+
+# No braces and no else if clause
+
+class A {if(i==1)i++;else j++;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    [BLOCK] COMPOUND:
+    [BLOCK] COMPOUND#1:
+
+errors:
+
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: i is not declared
+SEMANTIC ERROR: Identifier: j is not declared
+
+
+# Two if statements
+
+class A{if(x)1;if(y)2;}
+
+==>
+
+[GLOBAL]:
+  A CLASS
+  [CLASS] A:
+    [BLOCK] COMPOUND:
+    [BLOCK] COMPOUND#1:
+
+errors:
+
+SEMANTIC ERROR: Identifier: x is not declared
+SEMANTIC ERROR: Identifier: y is not declared

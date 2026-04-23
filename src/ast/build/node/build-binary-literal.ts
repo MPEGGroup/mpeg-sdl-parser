@@ -1,6 +1,6 @@
 import { NumberLiteral } from "../../node/number-literal.ts";
 import { NumberLiteralKind } from "../../node/enum/number-literal-kind.ts";
-import { InternalParseError } from "../../../parse-error.ts";
+import { InternalScannerError } from "../../../scanner-error.ts";
 import type { Token } from "../../node/token.ts";
 
 const DOT_SEPARATOR_REGEX = /\./g;
@@ -10,16 +10,16 @@ export function buildBinaryLiteral(
   const literalText = token.text;
 
   if (!literalText.startsWith("0b")) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Missing binary literal prefix '0b': ${literalText}`,
-      token.location,
+      token.getLocation(),
     );
   }
 
   if (literalText.length === 2) {
-    throw new InternalParseError(
+    throw new InternalScannerError(
       `Missing binary literal value after prefix '0b'`,
-      token.location,
+      token.getLocation(),
     );
   }
 

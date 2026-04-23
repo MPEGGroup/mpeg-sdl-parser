@@ -14,4 +14,16 @@ describe("Print Array tests", () => {
         "}\n",
     );
   });
+
+  test("prettified array output with implicit array is as expected", async () => {
+    await testPrettierScenario(
+      "class A{B b[2..4];}",
+      "class A {\n" +
+        "  B b[2..4];\n" +
+        "}\n",
+      "class A {\n" +
+        "  B b[2..4];\n" +
+        "}\n",
+    );
+  });
 });
