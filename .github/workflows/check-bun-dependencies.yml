@@ -11,4 +11,3 @@ jobs:
     uses: flowscripter/.github/.github/workflows/check-bun-dependencies.yml@v1
     secrets:
       CREATE_PR_TOKEN: ${{ secrets.CREATE_PR_TOKEN }}
-      NPM_GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}

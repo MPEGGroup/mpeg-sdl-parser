@@ -7,5 +7,3 @@ permissions:
 jobs:
   call-validate-bun-library-pr:
     uses: flowscripter/.github/.github/workflows/validate-bun-library-pr.yml@v1
-    secrets:
-      NPM_GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
