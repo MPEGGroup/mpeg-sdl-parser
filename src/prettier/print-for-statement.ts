@@ -1,4 +1,4 @@
-import { AstPath, type Doc } from "prettier";
+import { type AstPath, type Doc } from "prettier";
 import { addBreakingWhitespace, addNonBreakingWhitespace } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ForStatement } from "../ast/node/for-statement.ts";

@@ -1,4 +1,4 @@
-import { AstPath, type Doc, doc } from "prettier";
+import { type AstPath, type Doc, doc } from "prettier";
 import { addIndentedStatements } from "./util/print-utils.ts";
 import { printArrayDefinition } from "./print-array-definition.ts";
 import { printDoStatement } from "./print-do-statement.ts";
