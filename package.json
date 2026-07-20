@@ -18,22 +18,26 @@
     "dist",
     "grammar",
     "src",
-    "tests",
-    "bun.lock",
     "index.ts",
     "LICENSE",
-    "package.json",
     "README.md",
-    "tsconfig.json"
   ],
   "type": "module",
   "main": "dist/index.js",
-  "module": "index.ts",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "bun": "./index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "bun build --entrypoints ./index.ts --outdir ./dist --target node --format esm --external '@lezer/*' --external '@codemirror/*' --external 'prettier'",
+    "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "bun run build",
     "generate": "lezer-generator --typeScript --output src/lezer/parser ./grammar/sdl.lezer.grammar"
   },

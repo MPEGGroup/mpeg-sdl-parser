@@ -14,8 +14,6 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
 
-    "types": ["bun", "node"],
-
     // Best practices
     "strict": true,
     "skipLibCheck": true,
@@ -24,6 +22,10 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+    "noPropertyAccessFromIndexSignature": false,
+
+    // Type definitions
+    "types": ["bun", "node"]
+  },
+  "exclude": ["dist"]
 }

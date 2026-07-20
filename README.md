@@ -127,6 +127,10 @@ Generate parser from grammar:
 
 `bun run generate`
 
+Build (produces `dist/` for Node.js and TypeScript consumers; Bun uses raw source directly):
+
+`bun run build`
+
 Test:
 
 `bun test`
