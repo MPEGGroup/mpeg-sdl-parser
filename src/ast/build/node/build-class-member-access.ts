@@ -6,22 +6,16 @@ import type { Token } from "../../node/token.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildClassMemberAccess(
-  buildContext: BuildContext,
-): ClassMemberAccess {
+export function buildClassMemberAccess(buildContext: BuildContext): ClassMemberAccess {
   const classMemberAccessOperator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.PERIOD,
   );
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
 
-  return new ClassMemberAccess(
+  return new ClassMemberAccess(classMemberAccessOperator, identifier, [
     classMemberAccessOperator,
     identifier,
-    [classMemberAccessOperator, identifier],
-  );
+  ]);
 }

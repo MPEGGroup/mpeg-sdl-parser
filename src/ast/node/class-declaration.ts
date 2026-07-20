@@ -1,8 +1,4 @@
-import type {
-  OptionalNode,
-  RequiredNode,
-  ZeroToManyList,
-} from "../util/types.ts";
+import type { OptionalNode, RequiredNode, ZeroToManyList } from "../util/types.ts";
 import type { AbstractNode } from "./abstract-node.ts";
 import { AbstractStatement } from "./abstract-statement.ts";
 import type { AlignedModifier } from "./aligned-modifier.ts";
@@ -17,9 +13,7 @@ import type { Token } from "./token.ts";
 export class ClassDeclaration extends AbstractStatement {
   constructor(
     public readonly alignedModifier: OptionalNode<AlignedModifier>,
-    public readonly expandableModifier:
-      | OptionalNode<ExpandableModifier>
-      | undefined,
+    public readonly expandableModifier: OptionalNode<ExpandableModifier> | undefined,
     public readonly abstractKeyword: OptionalNode<Token>,
     public readonly classKeyword: RequiredNode<Token>,
     public readonly identifier: RequiredNode<Identifier>,
@@ -31,9 +25,6 @@ export class ClassDeclaration extends AbstractStatement {
     public readonly closeBracePunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.CLASS_DECLARATION,
-      children,
-    );
+    super(StatementKind.CLASS_DECLARATION, children);
   }
 }

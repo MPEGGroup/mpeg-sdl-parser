@@ -14,9 +14,6 @@ export const explicitArrayDimensionRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.CloseBracket,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.CloseBracket, ...binaryOperatorTypes],
   })),
 ];

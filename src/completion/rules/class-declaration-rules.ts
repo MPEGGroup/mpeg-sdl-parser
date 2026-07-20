@@ -15,18 +15,11 @@ export const classDeclarationRules = [
   },
   {
     previous: TokenTypeId.AlignedModifier,
-    expected: [
-      TokenTypeId.ExpandableModifier,
-      TokenTypeId.abstract,
-      TokenTypeId._class,
-    ],
+    expected: [TokenTypeId.ExpandableModifier, TokenTypeId.abstract, TokenTypeId._class],
   },
   {
     previous: TokenTypeId.ExpandableModifier,
-    expected: [
-      TokenTypeId.abstract,
-      TokenTypeId._class,
-    ],
+    expected: [TokenTypeId.abstract, TokenTypeId._class],
   },
   {
     previous: TokenTypeId.abstract,
@@ -47,18 +40,11 @@ export const classDeclarationRules = [
   },
   {
     previous: TokenTypeId.ParameterList,
-    expected: [
-      TokenTypeId.ExtendsModifier,
-      TokenTypeId.BitModifier,
-      TokenTypeId.OpenBrace,
-    ],
+    expected: [TokenTypeId.ExtendsModifier, TokenTypeId.BitModifier, TokenTypeId.OpenBrace],
   },
   {
     previous: TokenTypeId.ExtendsModifier,
-    expected: [
-      TokenTypeId.BitModifier,
-      TokenTypeId.OpenBrace,
-    ],
+    expected: [TokenTypeId.BitModifier, TokenTypeId.OpenBrace],
   },
   {
     previous: TokenTypeId.BitModifier,
@@ -66,16 +52,10 @@ export const classDeclarationRules = [
   },
   {
     previous: TokenTypeId.OpenBrace,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [...statementTypes, TokenTypeId.CloseBrace],
   },
   ...statementTypes.map((type) => ({
     previous: type,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [...statementTypes, TokenTypeId.CloseBrace],
   })),
 ];

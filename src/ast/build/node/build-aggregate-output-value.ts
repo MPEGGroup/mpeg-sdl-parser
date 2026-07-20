@@ -5,15 +5,10 @@ import type { ElementaryTypeOutputValue } from "../../node/elementary-type-outpu
 import type { BuildContext } from "../util/build-context.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import type { Token } from "../../node/token.ts";
-import {
-  fetchOneToManyCommaSeparatedList,
-  fetchRequiredNode,
-} from "../util/fetch-node.ts";
+import { fetchOneToManyCommaSeparatedList, fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildAggregateOutputValue(
-  buildContext: BuildContext,
-): AggregateOutputValue {
+export function buildAggregateOutputValue(buildContext: BuildContext): AggregateOutputValue {
   const children: Array<AbstractNode> = [];
 
   const openBracePunctuator = fetchRequiredNode<Token>(
@@ -23,14 +18,13 @@ export function buildAggregateOutputValue(
   );
   children.push(openBracePunctuator);
 
-  const { nodes: outputValues, commaPunctuators } =
-    fetchOneToManyCommaSeparatedList<
-      AggregateOutputValue | ElementaryTypeOutputValue | NumberLiteral
-    >(buildContext, [
-      NodeKind.AGGREGATE_OUTPUT_VALUE,
-      NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE,
-      NodeKind.NUMBER_LITERAL,
-    ]);
+  const { nodes: outputValues, commaPunctuators } = fetchOneToManyCommaSeparatedList<
+    AggregateOutputValue | ElementaryTypeOutputValue | NumberLiteral
+  >(buildContext, [
+    NodeKind.AGGREGATE_OUTPUT_VALUE,
+    NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE,
+    NodeKind.NUMBER_LITERAL,
+  ]);
 
   // now push each output value and comma punctuator to children
   for (let i = 0; i < outputValues.length; i++) {

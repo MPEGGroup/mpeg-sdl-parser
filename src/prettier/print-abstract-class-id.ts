@@ -26,18 +26,12 @@ export function printAbstractClassId(
     }
     case ClassIdKind.EXTENDED_RANGE: {
       const doc: Doc = [];
-      const outputValuesDoc = (path as AstPath<ExtendedClassIdRange>).map(
-        print,
-        "classIds",
-      );
+      const outputValuesDoc = (path as AstPath<ExtendedClassIdRange>).map(print, "classIds");
 
       doc.push(
         interleaveCommaSeparatorDocs(
           outputValuesDoc,
-          (path as AstPath<ExtendedClassIdRange>).map(
-            print,
-            "commaPunctuators",
-          ),
+          (path as AstPath<ExtendedClassIdRange>).map(print, "commaPunctuators"),
         ),
       );
 
@@ -45,9 +39,7 @@ export function printAbstractClassId(
     }
     default: {
       const exhaustiveCheck: never = classIdKind;
-      throw new InternalScannerError(
-        "Unreachable code reached, classIdKind == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, classIdKind == " + exhaustiveCheck);
     }
   }
 }

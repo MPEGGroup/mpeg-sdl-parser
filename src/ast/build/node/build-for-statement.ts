@@ -12,16 +12,10 @@ import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildForStatement(
-  buildContext: BuildContext,
-): ForStatement {
+export function buildForStatement(buildContext: BuildContext): ForStatement {
   const children: Array<AbstractNode> = [];
 
-  const forKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.FOR,
-  );
+  const forKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.FOR);
   children.push(forKeyword);
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
     buildContext,
@@ -29,33 +23,24 @@ export function buildForStatement(
     TokenKind.OPEN_PARENTHESIS,
   );
   children.push(openParenthesisPunctuator);
-  const expression1 = fetchOptionalNode<AbstractExpression>(
-    buildContext,
-    NodeKind.EXPRESSION,
-  );
+  const expression1 = fetchOptionalNode<AbstractExpression>(buildContext, NodeKind.EXPRESSION);
   const semicolon1Punctuator = fetchOptionalNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.SEMICOLON,
   );
-  let computedElementaryTypeDefinition: OptionalNode<
-    ComputedElementaryTypeDefinition
-  >;
+  let computedElementaryTypeDefinition: OptionalNode<ComputedElementaryTypeDefinition>;
   if (expression1) {
     children.push(expression1);
     if (semicolon1Punctuator) {
       children.push(semicolon1Punctuator);
     } else {
-      throw new InternalScannerError(
-        "Expected semicolon after first expression in for statement",
-      );
+      throw new InternalScannerError("Expected semicolon after first expression in for statement");
     }
   } else if (semicolon1Punctuator) {
     children.push(semicolon1Punctuator);
   } else {
-    computedElementaryTypeDefinition = fetchOptionalNode<
-      ComputedElementaryTypeDefinition
-    >(
+    computedElementaryTypeDefinition = fetchOptionalNode<ComputedElementaryTypeDefinition>(
       buildContext,
       NodeKind.STATEMENT,
       StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION,
@@ -69,10 +54,7 @@ export function buildForStatement(
     }
   }
 
-  const expression2 = fetchOptionalNode<AbstractExpression>(
-    buildContext,
-    NodeKind.EXPRESSION,
-  );
+  const expression2 = fetchOptionalNode<AbstractExpression>(buildContext, NodeKind.EXPRESSION);
   if (expression2) {
     children.push(expression2);
   }
@@ -82,10 +64,7 @@ export function buildForStatement(
     TokenKind.SEMICOLON,
   );
   children.push(semicolon2Punctuator);
-  const expression3 = fetchOptionalNode<AbstractExpression>(
-    buildContext,
-    NodeKind.EXPRESSION,
-  );
+  const expression3 = fetchOptionalNode<AbstractExpression>(buildContext, NodeKind.EXPRESSION);
   if (expression3) {
     children.push(expression3);
   }
@@ -95,10 +74,7 @@ export function buildForStatement(
     TokenKind.CLOSE_PARENTHESIS,
   );
   children.push(closeParenthesisPunctuator);
-  const statement = fetchRequiredNode<AbstractStatement>(
-    buildContext,
-    NodeKind.STATEMENT,
-  );
+  const statement = fetchRequiredNode<AbstractStatement>(buildContext, NodeKind.STATEMENT);
   children.push(statement);
 
   return new ForStatement(

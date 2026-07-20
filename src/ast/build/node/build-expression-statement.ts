@@ -8,12 +8,8 @@ import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import type { Token } from "../../node/token.ts";
 
-export function buildExpressionStatement(
-  buildContext: BuildContext,
-): ExpressionStatement {
-  const expression = fetchRequiredNode<
-    AbstractExpression | Identifier | NumberLiteral
-  >(
+export function buildExpressionStatement(buildContext: BuildContext): ExpressionStatement {
+  const expression = fetchRequiredNode<AbstractExpression | Identifier | NumberLiteral>(
     buildContext,
     [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
   );
@@ -23,9 +19,8 @@ export function buildExpressionStatement(
     TokenKind.SEMICOLON,
   );
 
-  return new ExpressionStatement(
+  return new ExpressionStatement(expression, semicolonPunctuator, [
     expression,
     semicolonPunctuator,
-    [expression, semicolonPunctuator],
-  );
+  ]);
 }

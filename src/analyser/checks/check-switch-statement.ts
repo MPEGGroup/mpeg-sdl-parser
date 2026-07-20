@@ -6,16 +6,10 @@ import type { DefaultClause } from "../../ast/node/default-clause.ts";
 import type { AbstractStatement } from "../../ast/node/abstract-statement.ts";
 import type { SymbolTable } from "../symbol-table.ts";
 import type { Check, CheckResult } from "./check.ts";
-import {
-  isCaseClause,
-  isDefaultClause,
-  isStatement,
-} from "../../ast/util/types.ts";
+import { isCaseClause, isDefaultClause, isStatement } from "../../ast/util/types.ts";
 import { collectMemberVariableNames } from "./check-if-statement.ts";
 
-function collectMemberVariableNamesFromCaseClause(
-  caseClause: CaseClause,
-): Set<string> {
+function collectMemberVariableNamesFromCaseClause(caseClause: CaseClause): Set<string> {
   const names = new Set<string>();
 
   for (const stmt of caseClause.statements) {
@@ -28,9 +22,7 @@ function collectMemberVariableNamesFromCaseClause(
   return names;
 }
 
-function collectMemberVariableNamesFromDefaultClause(
-  defaultClause: DefaultClause,
-): Set<string> {
+function collectMemberVariableNamesFromDefaultClause(defaultClause: DefaultClause): Set<string> {
   const names = new Set<string>();
 
   for (const stmt of defaultClause.statements) {
@@ -45,15 +37,12 @@ function collectMemberVariableNamesFromDefaultClause(
   return names;
 }
 
-function checkPossibleDuplicateMembers(
-  switchStatement: SwitchStatement,
-): CheckResult[] {
+function checkPossibleDuplicateMembers(switchStatement: SwitchStatement): CheckResult[] {
   const results: CheckResult[] = [];
 
   // Collect member variable names from all case clauses and default clause
-  const allMemberNamesByClause: Array<
-    { names: Set<string>; clause: CaseClause | DefaultClause }
-  > = [];
+  const allMemberNamesByClause: Array<{ names: Set<string>; clause: CaseClause | DefaultClause }> =
+    [];
 
   // Process case clauses
   for (const caseClause of switchStatement.caseClauses) {
@@ -68,9 +57,7 @@ function checkPossibleDuplicateMembers(
 
   // Process default clause
   if (isDefaultClause(switchStatement.defaultClause)) {
-    const names = collectMemberVariableNamesFromDefaultClause(
-      switchStatement.defaultClause,
-    );
+    const names = collectMemberVariableNamesFromDefaultClause(switchStatement.defaultClause);
 
     if (names.size > 0) {
       allMemberNamesByClause.push({
@@ -108,9 +95,7 @@ function checkPossibleDuplicateMembers(
   return results;
 }
 
-function checkDefiniteDuplicateMembers(
-  switchStatement: SwitchStatement,
-): CheckResult[] {
+function checkDefiniteDuplicateMembers(switchStatement: SwitchStatement): CheckResult[] {
   const results: CheckResult[] = [];
 
   // Collect member variable names from all case clauses
@@ -130,9 +115,7 @@ function checkDefiniteDuplicateMembers(
   let defaultMemberNames = new Set<string>();
 
   if (isDefaultClause(switchStatement.defaultClause)) {
-    defaultMemberNames = collectMemberVariableNamesFromDefaultClause(
-      switchStatement.defaultClause,
-    );
+    defaultMemberNames = collectMemberVariableNamesFromDefaultClause(switchStatement.defaultClause);
   }
 
   // If we have at least 2 clauses with variables
@@ -154,7 +137,8 @@ function checkDefiniteDuplicateMembers(
 
       // If there's a default clause, it must also have the variable
       if (
-        appearsInAll && isDefaultClause(switchStatement.defaultClause) &&
+        appearsInAll &&
+        isDefaultClause(switchStatement.defaultClause) &&
         defaultMemberNames.size > 0
       ) {
         if (!defaultMemberNames.has(name)) {

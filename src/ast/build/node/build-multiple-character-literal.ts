@@ -22,11 +22,11 @@ function parseUnsignedIntFromMultipleCharacterLiteral(literal: string): number {
   let value = 0;
   for (let i = 0; i < literal.length; i++) {
     const charCode = literal.charCodeAt(i);
-    if (charCode < 0x20 || charCode > 0x7E) {
+    if (charCode < 0x20 || charCode > 0x7e) {
       throw new InternalScannerError(
-        `Invalid character ${
-          literal.charCodeAt(i)
-        } in multiple character number literal: ${literal}`,
+        `Invalid character ${literal.charCodeAt(
+          i,
+        )} in multiple character number literal: ${literal}`,
       );
     }
 
@@ -36,30 +36,25 @@ function parseUnsignedIntFromMultipleCharacterLiteral(literal: string): number {
   return value;
 }
 
-export function buildMultipleCharacterLiteral(
-  buildContext: BuildContext,
-): NumberLiteral {
-  const literals = fetchOneToManyList<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    [TokenKind.SINGLE_QUOTE, TokenKind.MULTIPLE_CHARACTER_LITERAL_CHARACTERS],
-  );
+export function buildMultipleCharacterLiteral(buildContext: BuildContext): NumberLiteral {
+  const literals = fetchOneToManyList<Token>(buildContext, NodeKind.TOKEN, [
+    TokenKind.SINGLE_QUOTE,
+    TokenKind.MULTIPLE_CHARACTER_LITERAL_CHARACTERS,
+  ]);
 
   const literalText = literals
-    .filter((token) =>
-      isToken(token) &&
-      (token.tokenKind === TokenKind.MULTIPLE_CHARACTER_LITERAL_CHARACTERS)
+    .filter(
+      (token) =>
+        isToken(token) && token.tokenKind === TokenKind.MULTIPLE_CHARACTER_LITERAL_CHARACTERS,
     )
     .map((token) =>
-      (token as Token).text.replaceAll(ESCAPED_SINGLE_QUOTE_REGEX, "'")
-        .replaceAll(ESCAPED_BACKSLASH_REGEX, "\\")
-    ).join("");
+      (token as Token).text
+        .replaceAll(ESCAPED_SINGLE_QUOTE_REGEX, "'")
+        .replaceAll(ESCAPED_BACKSLASH_REGEX, "\\"),
+    )
+    .join("");
 
   const value = parseUnsignedIntFromMultipleCharacterLiteral(literalText);
 
-  return new NumberLiteral(
-    NumberLiteralKind.MULTIPLE_CHARACTER,
-    value,
-    literals,
-  );
+  return new NumberLiteral(NumberLiteralKind.MULTIPLE_CHARACTER, value, literals);
 }

@@ -10,17 +10,10 @@ import type { Token } from "./token.ts";
 export class ExplicitArrayDimension extends AbstractArrayDimension {
   constructor(
     openBracketPunctuator: RequiredNode<Token>,
-    public readonly size: RequiredNode<
-      AbstractExpression | Identifier | NumberLiteral
-    >,
+    public readonly size: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     closeBracketPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      ArrayDimensionKind.EXPLICIT,
-      openBracketPunctuator,
-      closeBracketPunctuator,
-      children,
-    );
+    super(ArrayDimensionKind.EXPLICIT, openBracketPunctuator, closeBracketPunctuator, children);
   }
 }

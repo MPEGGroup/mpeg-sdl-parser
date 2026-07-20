@@ -29,21 +29,17 @@ function checkMapTypeMatchesDeclaration(
 
   // Compare element types
   const defHasElementaryType = definition.elementaryType !== undefined;
-  const declHasElementaryType =
-    mapDeclaration.outputElementaryType !== undefined;
+  const declHasElementaryType = mapDeclaration.outputElementaryType !== undefined;
   const defHasClassType = definition.classIdentifier !== undefined;
   const declHasClassType = mapDeclaration.outputClassIdentifier !== undefined;
 
-  if (
-    defHasElementaryType !== declHasElementaryType ||
-    defHasClassType !== declHasClassType
-  ) {
-    const location = definition.elementaryType?.startToken?.getLocation() ||
+  if (defHasElementaryType !== declHasElementaryType || defHasClassType !== declHasClassType) {
+    const location =
+      definition.elementaryType?.startToken?.getLocation() ||
       definition.classIdentifier?.startToken?.getLocation() ||
       definition.mapIdentifier.startToken!.getLocation();
     results.push({
-      message:
-        "The type of the map definition must match the output_type of the map declaration.",
+      message: "The type of the map definition must match the output_type of the map declaration.",
       location,
     });
   } else if (defHasElementaryType && declHasElementaryType) {
@@ -59,17 +55,13 @@ function checkMapTypeMatchesDeclaration(
       k2: ElementaryTypeKind | undefined,
     ): boolean => {
       if (k1 === undefined || k2 === undefined) return false;
-      const intTypes = new Set([
-        ElementaryTypeKind.INTEGER,
-        ElementaryTypeKind.UNSIGNED_INTEGER,
-      ]);
+      const intTypes = new Set([ElementaryTypeKind.INTEGER, ElementaryTypeKind.UNSIGNED_INTEGER]);
       return intTypes.has(k1) && intTypes.has(k2);
     };
 
     if (
       defType.nodeKind !== declType.nodeKind ||
-      (defTypeKind !== declTypeKind &&
-        !isIntegerCompatible(defTypeKind, declTypeKind))
+      (defTypeKind !== declTypeKind && !isIntegerCompatible(defTypeKind, declTypeKind))
     ) {
       results.push({
         message:
@@ -83,10 +75,7 @@ function checkMapTypeMatchesDeclaration(
       isIdentifier(definition.classIdentifier) &&
       isIdentifier(mapDeclaration.outputClassIdentifier)
     ) {
-      if (
-        definition.classIdentifier.name !==
-          mapDeclaration.outputClassIdentifier.name
-      ) {
+      if (definition.classIdentifier.name !== mapDeclaration.outputClassIdentifier.name) {
         results.push({
           message:
             "The type of the map definition must match the output_type of the map declaration.",
@@ -109,9 +98,7 @@ export const checkMapDefinition: Check = {
   ): CheckResult[] {
     const results: CheckResult[] = [];
 
-    results.push(
-      ...checkMapTypeMatchesDeclaration(definition, symbolTable, strict),
-    );
+    results.push(...checkMapTypeMatchesDeclaration(definition, symbolTable, strict));
 
     return results;
   },

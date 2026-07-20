@@ -10,15 +10,10 @@ import type { Token } from "./token.ts";
 export class ArrayElementAccess extends AbstractCompositeNode {
   constructor(
     public readonly openBracketPunctuator: RequiredNode<Token>,
-    public readonly index: RequiredNode<
-      AbstractExpression | NumberLiteral | Identifier
-    >,
+    public readonly index: RequiredNode<AbstractExpression | NumberLiteral | Identifier>,
     public readonly closeBracketPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.ARRAY_ELEMENT_ACCESS,
-      children,
-    );
+    super(NodeKind.ARRAY_ELEMENT_ACCESS, children);
   }
 }

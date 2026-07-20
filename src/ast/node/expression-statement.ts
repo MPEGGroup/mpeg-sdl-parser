@@ -9,15 +9,10 @@ import type { RequiredNode } from "../util/types.ts";
 
 export class ExpressionStatement extends AbstractStatement {
   constructor(
-    public readonly expression: RequiredNode<
-      AbstractExpression | Identifier | NumberLiteral
-    >,
+    public readonly expression: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.EXPRESSION,
-      children,
-    );
+    super(StatementKind.EXPRESSION, children);
   }
 }

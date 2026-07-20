@@ -8,9 +8,7 @@ import type { Token } from "../../node/token.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildPartialArrayDimension(
-  buildContext: BuildContext,
-): PartialArrayDimension {
+export function buildPartialArrayDimension(buildContext: BuildContext): PartialArrayDimension {
   const openBracketPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
@@ -21,12 +19,11 @@ export function buildPartialArrayDimension(
     NodeKind.TOKEN,
     TokenKind.OPEN_BRACKET,
   );
-  const index = fetchRequiredNode<
-    AbstractExpression | Identifier | NumberLiteral
-  >(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-  );
+  const index = fetchRequiredNode<AbstractExpression | Identifier | NumberLiteral>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+    NodeKind.NUMBER_LITERAL,
+  ]);
   const innerCloseBracketPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,

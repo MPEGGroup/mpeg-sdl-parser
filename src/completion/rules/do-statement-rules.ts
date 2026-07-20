@@ -26,10 +26,7 @@ export const doStatementRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.CloseParenthesis,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.CloseParenthesis, ...binaryOperatorTypes],
   })),
   {
     previous: TokenTypeId.CloseParenthesis,

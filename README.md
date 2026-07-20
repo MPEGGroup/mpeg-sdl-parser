@@ -107,9 +107,9 @@ console.log(prettifiedSpecification);
 
 // A Prettier (prettier.io) plugin for SDL is also available:
 import * as prettier from "prettier/standalone.js";
-import { prettierPluginSdl } from "@mpeggroup/mpeg-sdl-parser"; 
+import { prettierPluginSdl } from "@mpeggroup/mpeg-sdl-parser";
 
-prettifiedSpecification = await prettier.format("class A{}", { 
+prettifiedSpecification = await prettier.format("class A{}", {
   parser: "sdl",
   plugins: [prettierPluginSdl],
 });
@@ -131,20 +131,17 @@ Test:
 
 `bun test`
 
-**NOTE**: The following tasks use Deno as it excels at these and Bun does not
-currently provide such functionality:
-
 Format:
 
-`deno fmt`
+`bunx oxfmt`
 
 Lint:
 
-`deno lint index.ts src/ tests/`
+`bunx oxlint index.ts src/ tests/`
 
 Generate HTML API Documentation:
 
-`deno doc --html --name=mpeg-sdl-parser index.ts`
+`bunx typedoc index.ts`
 
 ## Documentation
 
@@ -173,12 +170,12 @@ source i.e. including text location and trivia items (comments and blank lines).
 classDiagram
 
   class Trivia {
-    <<interface>> 
+    <<interface>>
     text: string;
   }
 
   class Location {
-    <<interface>> 
+    <<interface>>
     row: number
     column: number
     position: number
@@ -209,12 +206,12 @@ classDiagram
   }
 
   class NodeVisitor {
-    <<interface>> 
+    <<interface>>
     visit(node: AbstractNode)
   }
 
   class NodeHandler {
-    <<interface>> 
+    <<interface>>
     beforeVisit(node: AbstractCompositeNode)
     visit(node: AbstractLeafNode)
     afterVisit(node: AbstractCompositeNode)

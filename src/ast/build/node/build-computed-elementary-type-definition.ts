@@ -25,27 +25,17 @@ export function buildComputedElementaryTypeDefinition(
 
   children.push(computedKeyword);
 
-  const constKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.CONST,
-  );
+  const constKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.CONST);
 
   if (constKeyword !== undefined) {
     children.push(constKeyword);
   }
 
-  const elementaryType = fetchRequiredNode<ElementaryType>(
-    buildContext,
-    NodeKind.ELEMENTARY_TYPE,
-  );
+  const elementaryType = fetchRequiredNode<ElementaryType>(buildContext, NodeKind.ELEMENTARY_TYPE);
 
   children.push(elementaryType);
 
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   children.push(identifier);
 
   const assignmentOperator = fetchOptionalNode<Token>(
@@ -54,22 +44,16 @@ export function buildComputedElementaryTypeDefinition(
     TokenKind.ASSIGNMENT,
   );
 
-  let value: OptionalNode<AbstractExpression | Identifier | NumberLiteral> =
-    undefined;
+  let value: OptionalNode<AbstractExpression | Identifier | NumberLiteral> = undefined;
 
   if (assignmentOperator !== undefined) {
     children.push(assignmentOperator);
 
-    value = fetchOptionalNode<
-      AbstractExpression | Identifier | NumberLiteral
-    >(
-      buildContext,
-      [
-        NodeKind.EXPRESSION,
-        NodeKind.IDENTIFIER,
-        NodeKind.NUMBER_LITERAL,
-      ],
-    );
+    value = fetchOptionalNode<AbstractExpression | Identifier | NumberLiteral>(buildContext, [
+      NodeKind.EXPRESSION,
+      NodeKind.IDENTIFIER,
+      NodeKind.NUMBER_LITERAL,
+    ]);
     if (value !== undefined) {
       children.push(value);
     } else {

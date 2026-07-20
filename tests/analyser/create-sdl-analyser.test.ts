@@ -11,15 +11,9 @@ import type { Specification } from "../../src/ast/node/specification.ts";
 const lenientSdlParser = createLenientSdlParser();
 
 function buildAstWithErrors() {
-  const sdlStringInput = new SdlStringInput(
-    "class A{bit transport_priority;}",
-  );
+  const sdlStringInput = new SdlStringInput("class A{bit transport_priority;}");
   const parseTree = lenientSdlParser.parse(sdlStringInput);
-  const specification = buildAst(
-    parseTree,
-    sdlStringInput,
-    true,
-  );
+  const specification = buildAst(parseTree, sdlStringInput, true);
 
   return specification;
 }
@@ -46,9 +40,8 @@ describe("createSdlAnalyser Tests", () => {
 
     const sdlAnalyser = createStrictSdlAnalyser();
 
-    expect(() => sdlAnalyser.analyse(specificationWithErrors as Specification))
-      .toThrow(
-        "SEMANTIC ERROR: Required identifier property is a Token node: ERROR_MISSING_TOKEN",
-      );
+    expect(() => sdlAnalyser.analyse(specificationWithErrors as Specification)).toThrow(
+      "SEMANTIC ERROR: Required identifier property is a Token node: ERROR_MISSING_TOKEN",
+    );
   });
 });

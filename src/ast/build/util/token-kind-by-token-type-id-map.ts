@@ -67,10 +67,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.ALIGNMENT_BIT_COUNT_64);
       break;
     case TokenTypeId.AlignmentBitCount128:
-      tokenKindByTokenTypeId.set(
-        tokenTypeId,
-        TokenKind.ALIGNMENT_BIT_COUNT_128,
-      );
+      tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.ALIGNMENT_BIT_COUNT_128);
       break;
     case TokenTypeId.aligned:
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.ALIGNED);
@@ -82,10 +79,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.BASE64_STRING);
       break;
     case TokenTypeId.Base64StringLiteralCharacters:
-      tokenKindByTokenTypeId.set(
-        tokenTypeId,
-        TokenKind.BASE64_STRING_LITERAL_CHARACTERS,
-      );
+      tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.BASE64_STRING_LITERAL_CHARACTERS);
       break;
     case TokenTypeId.BinaryLiteral:
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.BINARY_LITERAL);
@@ -175,10 +169,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.MODULUS);
       break;
     case TokenTypeId.MultipleCharacterLiteralCharacters:
-      tokenKindByTokenTypeId.set(
-        tokenTypeId,
-        TokenKind.MULTIPLE_CHARACTER_LITERAL_CHARACTERS,
-      );
+      tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.MULTIPLE_CHARACTER_LITERAL_CHARACTERS);
       break;
     case TokenTypeId.Multiplication:
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.MULTIPLICATION);
@@ -211,25 +202,16 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.RELATIONAL_EQUAL);
       break;
     case TokenTypeId.RelationalGreaterThan:
-      tokenKindByTokenTypeId.set(
-        tokenTypeId,
-        TokenKind.RELATIONAL_GREATER_THAN,
-      );
+      tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.RELATIONAL_GREATER_THAN);
       break;
     case TokenTypeId.RelationalGreaterThanOrEqual:
-      tokenKindByTokenTypeId.set(
-        tokenTypeId,
-        TokenKind.RELATIONAL_GREATER_THAN_OR_EQUAL,
-      );
+      tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.RELATIONAL_GREATER_THAN_OR_EQUAL);
       break;
     case TokenTypeId.RelationalLessThan:
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.RELATIONAL_LESS_THAN);
       break;
     case TokenTypeId.RelationalLessThanOrEqual:
-      tokenKindByTokenTypeId.set(
-        tokenTypeId,
-        TokenKind.RELATIONAL_LESS_THAN_OR_EQUAL,
-      );
+      tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.RELATIONAL_LESS_THAN_OR_EQUAL);
       break;
     case TokenTypeId.RelationalNotEqual:
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.RELATIONAL_NOT_EQUAL);
@@ -268,10 +250,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.UTF_PREFIX);
       break;
     case TokenTypeId.UtfStringLiteralCharacters:
-      tokenKindByTokenTypeId.set(
-        tokenTypeId,
-        TokenKind.UTF_STRING_LITERAL_CHARACTERS,
-      );
+      tokenKindByTokenTypeId.set(tokenTypeId, TokenKind.UTF_STRING_LITERAL_CHARACTERS);
       break;
 
     // Parser tokens that do not map to AST TokenKinds
@@ -326,9 +305,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;
-      throw new InternalScannerError(
-        "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, tokenTypeId == " + exhaustiveCheck);
     }
   }
 });

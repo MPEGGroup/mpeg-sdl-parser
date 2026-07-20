@@ -9,22 +9,14 @@ import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import type { AbstractStatement } from "../../node/abstract-statement.ts";
 
-export function buildWhileStatement(
-  buildContext: BuildContext,
-): WhileStatement {
-  const whileKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.WHILE,
-  );
+export function buildWhileStatement(buildContext: BuildContext): WhileStatement {
+  const whileKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.WHILE);
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.OPEN_PARENTHESIS,
   );
-  const condition = fetchRequiredNode<
-    AbstractExpression | Identifier | NumberLiteral
-  >(
+  const condition = fetchRequiredNode<AbstractExpression | Identifier | NumberLiteral>(
     buildContext,
     [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
   );
@@ -33,10 +25,7 @@ export function buildWhileStatement(
     NodeKind.TOKEN,
     TokenKind.CLOSE_PARENTHESIS,
   );
-  const statement = fetchRequiredNode<AbstractStatement>(
-    buildContext,
-    NodeKind.STATEMENT,
-  );
+  const statement = fetchRequiredNode<AbstractStatement>(buildContext, NodeKind.STATEMENT);
 
   return new WhileStatement(
     whileKeyword,
@@ -44,12 +33,6 @@ export function buildWhileStatement(
     condition,
     closeParenthesisPunctuator,
     statement,
-    [
-      whileKeyword,
-      openParenthesisPunctuator,
-      condition,
-      closeParenthesisPunctuator,
-      statement,
-    ],
+    [whileKeyword, openParenthesisPunctuator, condition, closeParenthesisPunctuator, statement],
   );
 }

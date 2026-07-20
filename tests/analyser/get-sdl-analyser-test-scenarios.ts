@@ -2,7 +2,10 @@ function toLineContext(file: string, index: number): string {
   const endEol = file.indexOf("\n", index + 80);
   const endIndex = endEol === -1 ? file.length : endEol;
 
-  return file.substring(index, endIndex).split(/\n/).map((str) => "  | " + str)
+  return file
+    .substring(index, endIndex)
+    .split(/\n/)
+    .map((str) => "  | " + str)
     .join("\n");
 }
 
@@ -25,9 +28,7 @@ export function getSdlAnalyserTestScenarios(file: string, fileName: string) {
 
     if (!scenarioRegexResult) {
       throw new Error(
-        `Unexpected file format in ${fileName} around\n\n${
-          toLineContext(file, lastIndex)
-        }`,
+        `Unexpected file format in ${fileName} around\n\n${toLineContext(file, lastIndex)}`,
       );
     }
 

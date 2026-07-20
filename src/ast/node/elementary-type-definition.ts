@@ -21,17 +21,9 @@ export class ElementaryTypeDefinition extends AbstractElementaryTypeDefinition {
     public readonly lookAheadOperator: OptionalNode<Token>,
     identifier: RequiredNode<Identifier>,
     assignmentOperator: OptionalNode<Token>,
-    value: OptionalNode<
-      | AbstractExpression
-      | NumberLiteral
-      | Identifier
-    >,
+    value: OptionalNode<AbstractExpression | NumberLiteral | Identifier>,
     public readonly rangeOperator: OptionalNode<Token>,
-    public readonly endValue: OptionalNode<
-      | AbstractExpression
-      | NumberLiteral
-      | Identifier
-    >,
+    public readonly endValue: OptionalNode<AbstractExpression | NumberLiteral | Identifier>,
     semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {

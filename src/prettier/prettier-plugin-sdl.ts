@@ -4,11 +4,7 @@ import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import { createLenientSdlParser } from "../lezer/create-sdl-parser.ts";
 import { buildAst } from "../ast/build-ast.ts";
 import { SdlStringInput } from "../lezer/sdl-string-input.ts";
-import {
-  isCompositeNode,
-  isToken,
-  type RequiredNode,
-} from "../ast/util/types.ts";
+import { isCompositeNode, isToken, type RequiredNode } from "../ast/util/types.ts";
 import type { Token } from "../ast/node/token.ts";
 import { InternalScannerError } from "../scanner-error.ts";
 import { NodeKind } from "../ast/node/enum/node-kind.ts";
@@ -34,9 +30,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       let token: Token;
       if (isCompositeNode(node)) {
         if (!node.startToken) {
-          throw new InternalScannerError(
-            "Composite node does not have a start token.",
-          );
+          throw new InternalScannerError("Composite node does not have a start token.");
         }
         token = node.startToken;
       } else if (isToken(node)) {
@@ -46,8 +40,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
           "Unsupported node for prettierPluginSdl: " + NodeKind[node.nodeKind],
         );
       }
-      return (token.leadingTrivia &&
-          (token.leadingTrivia.length > 0))
+      return token.leadingTrivia && token.leadingTrivia.length > 0
         ? token.leadingTrivia[0].location.position
         : token.getLocation().position;
     },
@@ -55,9 +48,7 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
       let token: Token;
       if (isCompositeNode(node)) {
         if (!node.endToken) {
-          throw new InternalScannerError(
-            "Composite node does not have an end token.",
-          );
+          throw new InternalScannerError("Composite node does not have an end token.");
         }
         token = node.endToken;
       } else if (isToken(node)) {
@@ -67,17 +58,15 @@ const parsers: Record<string, Parser<RequiredNode<AbstractNode>>> = {
           "Unsupported node for prettierPluginSdl: " + NodeKind[node.nodeKind],
         );
       }
-      return (token.trailingTrivia &&
-          (token.trailingTrivia.length > 0))
-        ? token.trailingTrivia[token.trailingTrivia.length - 1].location
-          .position
+      return token.trailingTrivia && token.trailingTrivia.length > 0
+        ? token.trailingTrivia[token.trailingTrivia.length - 1].location.position
         : token.getLocation().position;
     },
   },
 };
 
 const printers: Record<string, Printer<RequiredNode<AbstractNode>>> = {
-  "sdl": {
+  sdl: {
     print: printAbstractNode,
   },
 };

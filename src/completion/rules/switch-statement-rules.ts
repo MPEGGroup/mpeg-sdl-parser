@@ -18,10 +18,7 @@ export const switchStatementRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.CloseParenthesis,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.CloseParenthesis, ...binaryOperatorTypes],
   })),
   {
     previous: TokenTypeId.CloseParenthesis,
@@ -29,19 +26,11 @@ export const switchStatementRules = [
   },
   {
     previous: TokenTypeId.OpenBrace,
-    expected: [
-      TokenTypeId.CaseClause,
-      TokenTypeId.DefaultClause,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [TokenTypeId.CaseClause, TokenTypeId.DefaultClause, TokenTypeId.CloseBrace],
   },
   {
     previous: TokenTypeId.CaseClause,
-    expected: [
-      TokenTypeId.CaseClause,
-      TokenTypeId.DefaultClause,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [TokenTypeId.CaseClause, TokenTypeId.DefaultClause, TokenTypeId.CloseBrace],
   },
   {
     previous: TokenTypeId.DefaultClause,

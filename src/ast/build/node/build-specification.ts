@@ -7,13 +7,9 @@ import { fetchZeroToManyList } from "../util/fetch-node.ts";
 import { StatementKind } from "../../node/enum/statement-kind.ts";
 import { NodeKind } from "../../../../index.ts";
 
-export function buildSpecification(
-  buildContext: BuildContext,
-): Specification {
+export function buildSpecification(buildContext: BuildContext): Specification {
   const globals = fetchZeroToManyList<
-    | ComputedElementaryTypeDefinition
-    | MapDeclaration
-    | ClassDeclaration
+    ComputedElementaryTypeDefinition | MapDeclaration | ClassDeclaration
   >(buildContext, NodeKind.STATEMENT, [
     StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION,
     StatementKind.MAP_DECLARATION,

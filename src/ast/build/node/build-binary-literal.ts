@@ -4,9 +4,7 @@ import { InternalScannerError } from "../../../scanner-error.ts";
 import type { Token } from "../../node/token.ts";
 
 const DOT_SEPARATOR_REGEX = /\./g;
-export function buildBinaryLiteral(
-  token: Token,
-): NumberLiteral {
+export function buildBinaryLiteral(token: Token): NumberLiteral {
   const literalText = token.text;
 
   if (!literalText.startsWith("0b")) {
@@ -23,15 +21,8 @@ export function buildBinaryLiteral(
     );
   }
 
-  const stringValue = literalText.substring(2).trim().replaceAll(
-    DOT_SEPARATOR_REGEX,
-    "",
-  );
+  const stringValue = literalText.substring(2).trim().replaceAll(DOT_SEPARATOR_REGEX, "");
   const value = parseInt(stringValue, 2);
 
-  return new NumberLiteral(
-    NumberLiteralKind.BINARY,
-    value,
-    [token],
-  );
+  return new NumberLiteral(NumberLiteralKind.BINARY, value, [token]);
 }

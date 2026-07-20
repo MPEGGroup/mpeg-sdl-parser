@@ -4,16 +4,8 @@ import { ClassId } from "../../node/class-id.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 
-export function buildClassId(
-  buildContext: BuildContext,
-): ClassId {
-  const value = fetchRequiredNode<NumberLiteral>(
-    buildContext,
-    NodeKind.NUMBER_LITERAL,
-  );
+export function buildClassId(buildContext: BuildContext): ClassId {
+  const value = fetchRequiredNode<NumberLiteral>(buildContext, NodeKind.NUMBER_LITERAL);
 
-  return new ClassId(
-    value,
-    [value],
-  );
+  return new ClassId(value, [value]);
 }

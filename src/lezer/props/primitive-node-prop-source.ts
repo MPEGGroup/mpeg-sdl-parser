@@ -14,6 +14,6 @@ const primitiveTokenTypeIds = new Set<number>([
 
 export const primitiveNodeProp = new NodeProp<boolean>();
 
-export const primitiveNodePropSource = primitiveNodeProp.add(
-  (type: NodeType) => primitiveTokenTypeIds.has(type.id) ? true : undefined,
+export const primitiveNodePropSource = primitiveNodeProp.add((type: NodeType) =>
+  primitiveTokenTypeIds.has(type.id) ? true : undefined,
 );

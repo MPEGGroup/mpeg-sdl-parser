@@ -29,20 +29,12 @@ export function buildElementaryTypeDefinition(
     children.push(reservedKeyword);
   }
 
-  const legacyKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.LEGACY,
-  );
+  const legacyKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.LEGACY);
   if (legacyKeyword !== undefined) {
     children.push(legacyKeyword);
   }
 
-  const constKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.CONST,
-  );
+  const constKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.CONST);
   if (constKeyword !== undefined) {
     children.push(constKeyword);
   }
@@ -55,10 +47,7 @@ export function buildElementaryTypeDefinition(
     children.push(alignedModifier);
   }
 
-  const elementaryType = fetchRequiredNode<ElementaryType>(
-    buildContext,
-    NodeKind.ELEMENTARY_TYPE,
-  );
+  const elementaryType = fetchRequiredNode<ElementaryType>(buildContext, NodeKind.ELEMENTARY_TYPE);
   children.push(elementaryType);
 
   const lengthAttribute = fetchRequiredNode<LengthAttribute>(
@@ -77,10 +66,7 @@ export function buildElementaryTypeDefinition(
     children.push(lookAheadOperator);
   }
 
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
 
   children.push(identifier);
 
@@ -90,19 +76,18 @@ export function buildElementaryTypeDefinition(
     TokenKind.ASSIGNMENT,
   );
 
-  let value: OptionalNode<AbstractExpression | Identifier | NumberLiteral> =
-    undefined;
+  let value: OptionalNode<AbstractExpression | Identifier | NumberLiteral> = undefined;
   let rangeOperator: OptionalNode<Token> = undefined;
-  let endValue: OptionalNode<AbstractExpression | Identifier | NumberLiteral> =
-    undefined;
+  let endValue: OptionalNode<AbstractExpression | Identifier | NumberLiteral> = undefined;
 
   if (assignmentOperator !== undefined) {
     children.push(assignmentOperator);
 
-    value = fetchOptionalNode<AbstractExpression | Identifier | NumberLiteral>(
-      buildContext,
-      [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-    );
+    value = fetchOptionalNode<AbstractExpression | Identifier | NumberLiteral>(buildContext, [
+      NodeKind.EXPRESSION,
+      NodeKind.IDENTIFIER,
+      NodeKind.NUMBER_LITERAL,
+    ]);
     if (value !== undefined) {
       children.push(value);
     } else {
@@ -119,12 +104,11 @@ export function buildElementaryTypeDefinition(
     if (rangeOperator !== undefined) {
       children.push(rangeOperator);
 
-      endValue = fetchOptionalNode<
-        AbstractExpression | Identifier | NumberLiteral
-      >(
-        buildContext,
-        [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-      );
+      endValue = fetchOptionalNode<AbstractExpression | Identifier | NumberLiteral>(buildContext, [
+        NodeKind.EXPRESSION,
+        NodeKind.IDENTIFIER,
+        NodeKind.NUMBER_LITERAL,
+      ]);
 
       if (endValue !== undefined) {
         children.push(endValue);

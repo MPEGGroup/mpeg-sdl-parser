@@ -21,90 +21,67 @@ function getStringValueFromLiteralText(
   cursor: TreeCursor,
   text: Text,
 ): string {
-  let value = literalText.replaceAll(ESCAPED_DOUBLE_QUOTE_REGEX, "'")
+  let value = literalText
+    .replaceAll(ESCAPED_DOUBLE_QUOTE_REGEX, "'")
     .replaceAll(ESCAPED_BACKSLASH_REGEX, "\\");
 
-  value = value.replaceAll(
-    FOUR_HEXADECIMAL_UNIVERSAL_CHARACTER_NAME_REGEX,
-    (match) => {
-      if (!match.startsWith("\\u")) {
-        throw new InternalScannerError(
-          `Missing prefix "\\u" in universal character name: ${match}`,
-          getLocationFromTextPosition(text, cursor.from),
-        );
-      }
+  value = value.replaceAll(FOUR_HEXADECIMAL_UNIVERSAL_CHARACTER_NAME_REGEX, (match) => {
+    if (!match.startsWith("\\u")) {
+      throw new InternalScannerError(
+        `Missing prefix "\\u" in universal character name: ${match}`,
+        getLocationFromTextPosition(text, cursor.from),
+      );
+    }
 
-      const codePoint = parseInt(match.substring(2), 16);
+    const codePoint = parseInt(match.substring(2), 16);
 
-      if (isNaN(codePoint)) {
-        throw new InternalScannerError(
-          `Unable to convert universal character name: ${codePoint} to code point number`,
-          getLocationFromTextPosition(text, cursor.from),
-        );
-      }
+    if (isNaN(codePoint)) {
+      throw new InternalScannerError(
+        `Unable to convert universal character name: ${codePoint} to code point number`,
+        getLocationFromTextPosition(text, cursor.from),
+      );
+    }
 
-      return String.fromCodePoint(0x1234);
-    },
-  );
+    return String.fromCodePoint(0x1234);
+  });
 
-  value = value.replaceAll(
-    EIGHT_HEXADECIMAL_UNIVERSAL_CHARACTER_NAME_REGEX,
-    (match) => {
-      if (!match.startsWith("\\U")) {
-        throw new InternalScannerError(
-          `Missing prefix "\\U" in universal character name: ${match}`,
-          getLocationFromTextPosition(text, cursor.from),
-        );
-      }
+  value = value.replaceAll(EIGHT_HEXADECIMAL_UNIVERSAL_CHARACTER_NAME_REGEX, (match) => {
+    if (!match.startsWith("\\U")) {
+      throw new InternalScannerError(
+        `Missing prefix "\\U" in universal character name: ${match}`,
+        getLocationFromTextPosition(text, cursor.from),
+      );
+    }
 
-      const codePoint = parseInt(match.substring(2), 16);
+    const codePoint = parseInt(match.substring(2), 16);
 
-      if (isNaN(codePoint)) {
-        throw new InternalScannerError(
-          `Unable to convert universal character name: ${match} to code point number`,
-          getLocationFromTextPosition(text, cursor.from),
-        );
-      }
+    if (isNaN(codePoint)) {
+      throw new InternalScannerError(
+        `Unable to convert universal character name: ${match} to code point number`,
+        getLocationFromTextPosition(text, cursor.from),
+      );
+    }
 
-      return String.fromCodePoint(codePoint);
-    },
-  );
+    return String.fromCodePoint(codePoint);
+  });
 
   return value;
 }
 
-export function buildUtfStringLiteral(
-  buildContext: BuildContext,
-): StringLiteral {
-  const literals = fetchOneToManyList<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    [
-      TokenKind.UTF_PREFIX,
-      TokenKind.DOUBLE_QUOTE,
-      TokenKind.UTF_STRING_LITERAL_CHARACTERS,
-    ],
-  );
+export function buildUtfStringLiteral(buildContext: BuildContext): StringLiteral {
+  const literals = fetchOneToManyList<Token>(buildContext, NodeKind.TOKEN, [
+    TokenKind.UTF_PREFIX,
+    TokenKind.DOUBLE_QUOTE,
+    TokenKind.UTF_STRING_LITERAL_CHARACTERS,
+  ]);
 
   let value = "";
 
   for (const literal of literals) {
-    if (
-      isToken(literal) &&
-      (literal.tokenKind === TokenKind.UTF_STRING_LITERAL_CHARACTERS)
-    ) {
-      value += getStringValueFromLiteralText(
-        literal.text,
-        buildContext.cursor,
-        buildContext.text,
-      );
+    if (isToken(literal) && literal.tokenKind === TokenKind.UTF_STRING_LITERAL_CHARACTERS) {
+      value += getStringValueFromLiteralText(literal.text, buildContext.cursor, buildContext.text);
     }
   }
 
-  return new StringLiteral(
-    StringLiteralKind.UTF,
-    value,
-    literals,
-    [...literals],
-  );
+  return new StringLiteral(StringLiteralKind.UTF, value, literals, [...literals]);
 }

@@ -6,11 +6,7 @@ import type { Check, CheckResult } from "./check.ts";
 
 export const checkArrayElementAccess: Check = {
   nodeKind: NodeKind.ARRAY_ELEMENT_ACCESS,
-  checkFunc: function (
-    node: ArrayElementAccess,
-    _symbolTable,
-    _strict,
-  ): CheckResult[] {
+  checkFunc: function (node: ArrayElementAccess, _symbolTable, _strict): CheckResult[] {
     const results: CheckResult[] = [];
 
     if (isNumberLiteral(node.index)) {

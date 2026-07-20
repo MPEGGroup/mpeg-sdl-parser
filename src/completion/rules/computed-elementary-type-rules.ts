@@ -23,11 +23,7 @@ export const computedElementaryTypeRules = [
   },
   // non-const has optional assignment
   {
-    previous: [
-      TokenTypeId.computed,
-      TokenTypeId.ElementaryType,
-      TokenTypeId.Identifier,
-    ],
+    previous: [TokenTypeId.computed, TokenTypeId.ElementaryType, TokenTypeId.Identifier],
     expected: [TokenTypeId.Assignment, TokenTypeId.Semicolon],
   },
   {
@@ -36,9 +32,6 @@ export const computedElementaryTypeRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.Semicolon,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.Semicolon, ...binaryOperatorTypes],
   })),
 ];

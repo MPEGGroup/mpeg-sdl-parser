@@ -17,9 +17,7 @@ const logger = getLogger("getPotentialTokenTypeIds");
  *
  * @returns An array of potential NodeType IDs, or undefined if none found.
  */
-export function getPotentialTokenTypeIds(
-  cursor: TreeCursor,
-): number[] | undefined {
+export function getPotentialTokenTypeIds(cursor: TreeCursor): number[] | undefined {
   // No potential tokens if currently on a comment
   if (cursor.type.id === TokenTypeId.Comment) {
     logger.debug("No potential tokens in comments");
@@ -34,10 +32,7 @@ export function getPotentialTokenTypeIds(
   const parentTokenTypesIds: number[] = [];
 
   while (parentCursorClone.parent()) {
-    if (
-      (parentCursorClone.type.id !== TokenTypeId.Whitespace) &&
-      !parentCursorClone.type.isError
-    ) {
+    if (parentCursorClone.type.id !== TokenTypeId.Whitespace && !parentCursorClone.type.isError) {
       parentTokenTypesIds.unshift(parentCursorClone.type.id);
       break;
     }
@@ -53,30 +48,29 @@ export function getPotentialTokenTypeIds(
 
   while (siblingCursorClone.prevSibling()) {
     if (
-      (siblingCursorClone.type.id !== TokenTypeId.Whitespace) &&
+      siblingCursorClone.type.id !== TokenTypeId.Whitespace &&
       !siblingCursorClone.type.isError &&
-      (siblingCursorClone.type.id !== TokenTypeId.Comment)
+      siblingCursorClone.type.id !== TokenTypeId.Comment
     ) {
       previousSiblingTokenTypes.unshift(siblingCursorClone.type);
     }
   }
 
   logger.debug(
-    "parentTokenTypes: " +
-      parentTokenTypesIds.map((id) => nodeTypes[id].name).join(", "),
+    "parentTokenTypes: " + parentTokenTypesIds.map((id) => nodeTypes[id].name).join(", "),
   );
 
   if (previousSiblingTokenTypes.length > 0) {
     logger.debug(
-      "previousSiblingTokenTypes: " +
-        previousSiblingTokenTypes.map((type) => type.name).join(", "),
+      "previousSiblingTokenTypes: " + previousSiblingTokenTypes.map((type) => type.name).join(", "),
     );
   } else {
     logger.debug("No previous sibling token type found");
   }
 
-  const potentialCompletionRules = completionRulesByParentMap
-    .get(parentTokenTypesIds[parentTokenTypesIds.length - 1]);
+  const potentialCompletionRules = completionRulesByParentMap.get(
+    parentTokenTypesIds[parentTokenTypesIds.length - 1],
+  );
 
   if (!potentialCompletionRules) {
     logger.debug(
@@ -105,12 +99,7 @@ export function getPotentialTokenTypeIds(
   }
 
   // sort and remove duplicates
-  const uniqueSortedTokenTypes = Array.from(new Set(potentialTokenTypes)).sort((
-    a,
-    b,
-  ) => a - b);
-  logger.debug(
-    `Potential token types: ${uniqueSortedTokenTypes.join(" ")}`,
-  );
+  const uniqueSortedTokenTypes = Array.from(new Set(potentialTokenTypes)).sort((a, b) => a - b);
+  logger.debug(`Potential token types: ${uniqueSortedTokenTypes.join(" ")}`);
   return uniqueSortedTokenTypes;
 }

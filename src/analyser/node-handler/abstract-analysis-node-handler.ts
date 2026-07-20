@@ -14,11 +14,7 @@ import type { MapDeclaration } from "../../ast/node/map-declaration.ts";
 import type { SwitchStatement } from "../../ast/node/switch-statement.ts";
 import type { Token } from "../../ast/node/token.ts";
 import type { WhileStatement } from "../../ast/node/while-statement.ts";
-import {
-  isCaseClause,
-  isDefaultClause,
-  isStatement,
-} from "../../ast/util/types.ts";
+import { isCaseClause, isDefaultClause, isStatement } from "../../ast/util/types.ts";
 import type { NodeHandler } from "../../ast/visitor/node-handler.ts";
 import { SemanticError, SemanticWarning } from "../../scanner-error.ts";
 import getLogger from "../../util/logger.ts";
@@ -47,15 +43,21 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
   public readonly semanticErrors: Array<SemanticError> = [];
   public readonly semanticWarnings: Array<SemanticWarning> = [];
 
-  private handlersByNodeKind: Map<NodeKind, {
-    beforeVisit?: ((node: AbstractCompositeNode) => void)[];
-    afterVisit?: ((node: AbstractCompositeNode) => void)[];
-  }> = new Map();
+  private handlersByNodeKind: Map<
+    NodeKind,
+    {
+      beforeVisit?: ((node: AbstractCompositeNode) => void)[];
+      afterVisit?: ((node: AbstractCompositeNode) => void)[];
+    }
+  > = new Map();
 
-  private handlersByNodeKindAndSubKind: Map<string, {
-    beforeVisit?: ((node: AbstractCompositeNode) => void)[];
-    afterVisit?: ((node: AbstractCompositeNode) => void)[];
-  }> = new Map();
+  private handlersByNodeKindAndSubKind: Map<
+    string,
+    {
+      beforeVisit?: ((node: AbstractCompositeNode) => void)[];
+      afterVisit?: ((node: AbstractCompositeNode) => void)[];
+    }
+  > = new Map();
 
   // Set of nodes that we encounter that should implicitly create a new scope
   // - if statements with non-compound bodies
@@ -83,21 +85,13 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
       this.handleAfterStatementKinds(node as AbstractStatement);
     });
 
-    this.registerBeforeNodeHandler(
-      NodeKind.ARRAY_DIMENSION,
-      undefined,
-      (node) => {
-        this.handleBeforeArrayDimensionKinds(node as AbstractArrayDimension);
-      },
-    );
+    this.registerBeforeNodeHandler(NodeKind.ARRAY_DIMENSION, undefined, (node) => {
+      this.handleBeforeArrayDimensionKinds(node as AbstractArrayDimension);
+    });
 
-    this.registerAfterNodeHandler(
-      NodeKind.ARRAY_DIMENSION,
-      undefined,
-      (node) => {
-        this.handleAfterArrayDimensionKinds(node as AbstractArrayDimension);
-      },
-    );
+    this.registerAfterNodeHandler(NodeKind.ARRAY_DIMENSION, undefined, (node) => {
+      this.handleAfterArrayDimensionKinds(node as AbstractArrayDimension);
+    });
 
     this.registerBeforeNodeHandler(NodeKind.CLASS_ID, undefined, (node) => {
       this.handleBeforeClassIdKinds(node as AbstractClassId);
@@ -117,115 +111,70 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
     // Implicit scope registration
 
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.IF,
-      (node) => this.registerIfStatementImplicitScopes(node as IfStatement),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.IF, (node) =>
+      this.registerIfStatementImplicitScopes(node as IfStatement),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.SWITCH,
-      (node) =>
-        this.registerSwitchStatementImplicitScopes(node as SwitchStatement),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.SWITCH, (node) =>
+      this.registerSwitchStatementImplicitScopes(node as SwitchStatement),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.WHILE,
-      (node) =>
-        this.registerWhileStatementImplicitScopes(node as WhileStatement),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.WHILE, (node) =>
+      this.registerWhileStatementImplicitScopes(node as WhileStatement),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.FOR,
-      (node) => this.registerForStatementImplicitScopes(node as ForStatement),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.FOR, (node) =>
+      this.registerForStatementImplicitScopes(node as ForStatement),
     );
 
     // Scope enter
 
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.FOR,
-      (_node) =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.FOR]),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.FOR, (_node) =>
+      this.symbolTable.enterBlockScope(StatementKind[StatementKind.FOR]),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.COMPOUND,
-      (_node) =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.COMPOUND]),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.COMPOUND, (_node) =>
+      this.symbolTable.enterBlockScope(StatementKind[StatementKind.COMPOUND]),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.WHILE,
-      (_node) =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.WHILE]),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.WHILE, (_node) =>
+      this.symbolTable.enterBlockScope(StatementKind[StatementKind.WHILE]),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.DO,
-      (_node) =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.DO]),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.DO, (_node) =>
+      this.symbolTable.enterBlockScope(StatementKind[StatementKind.DO]),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.SWITCH,
-      (_node) =>
-        this.symbolTable.enterBlockScope(StatementKind[StatementKind.SWITCH]),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.SWITCH, (_node) =>
+      this.symbolTable.enterBlockScope(StatementKind[StatementKind.SWITCH]),
     );
 
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DECLARATION,
-      (node) => this.handleBeforeClassDeclaration(node as ClassDeclaration),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.CLASS_DECLARATION, (node) =>
+      this.handleBeforeClassDeclaration(node as ClassDeclaration),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.MAP_DECLARATION,
-      (node) => this.handleBeforeMapDeclaration(node as MapDeclaration),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.MAP_DECLARATION, (node) =>
+      this.handleBeforeMapDeclaration(node as MapDeclaration),
     );
 
     // Scope exit
 
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.COMPOUND,
-      () => this.symbolTable.exitScope(),
+    this.registerAfterNodeHandler(NodeKind.STATEMENT, StatementKind.COMPOUND, () =>
+      this.symbolTable.exitScope(),
     );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DECLARATION,
-      () => this.symbolTable.exitScope(),
+    this.registerAfterNodeHandler(NodeKind.STATEMENT, StatementKind.CLASS_DECLARATION, () =>
+      this.symbolTable.exitScope(),
     );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.MAP_DECLARATION,
-      () => this.symbolTable.exitScope(),
+    this.registerAfterNodeHandler(NodeKind.STATEMENT, StatementKind.MAP_DECLARATION, () =>
+      this.symbolTable.exitScope(),
     );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.FOR,
-      () => this.symbolTable.exitScope(),
+    this.registerAfterNodeHandler(NodeKind.STATEMENT, StatementKind.FOR, () =>
+      this.symbolTable.exitScope(),
     );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.WHILE,
-      () => this.symbolTable.exitScope(),
+    this.registerAfterNodeHandler(NodeKind.STATEMENT, StatementKind.WHILE, () =>
+      this.symbolTable.exitScope(),
     );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.DO,
-      () => this.symbolTable.exitScope(),
+    this.registerAfterNodeHandler(NodeKind.STATEMENT, StatementKind.DO, () =>
+      this.symbolTable.exitScope(),
     );
-    this.registerAfterNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.SWITCH,
-      () => this.symbolTable.exitScope(),
+    this.registerAfterNodeHandler(NodeKind.STATEMENT, StatementKind.SWITCH, () =>
+      this.symbolTable.exitScope(),
     );
   }
 
-  private handleBeforeClassDeclaration(
-    classDeclaration: ClassDeclaration,
-  ): void {
+  private handleBeforeClassDeclaration(classDeclaration: ClassDeclaration): void {
     const identifier = getRequiredIdentifier(
       classDeclaration.identifier,
       classDeclaration,
@@ -255,9 +204,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleBeforeStatementKinds(node: AbstractStatement): void {
     const key = this.subKindKey(node.nodeKind, node.statementKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.beforeVisit) {
@@ -270,9 +217,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleAfterStatementKinds(node: AbstractStatement): void {
     const key = this.subKindKey(node.nodeKind, node.statementKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.afterVisit) {
@@ -285,9 +230,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleBeforeArrayDimensionKinds(node: AbstractArrayDimension): void {
     const key = this.subKindKey(node.nodeKind, node.arrayDimensionKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.beforeVisit) {
@@ -300,9 +243,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleAfterArrayDimensionKinds(node: AbstractArrayDimension): void {
     const key = this.subKindKey(node.nodeKind, node.arrayDimensionKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.afterVisit) {
@@ -315,9 +256,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleBeforeClassIdKinds(node: AbstractClassId): void {
     const key = this.subKindKey(node.nodeKind, node.classIdKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.beforeVisit) {
@@ -330,9 +269,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleAfterClassIdKinds(node: AbstractClassId): void {
     const key = this.subKindKey(node.nodeKind, node.classIdKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.afterVisit) {
@@ -345,9 +282,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleBeforeExpressionKinds(node: AbstractExpression): void {
     const key = this.subKindKey(node.nodeKind, node.expressionKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.beforeVisit) {
@@ -360,9 +295,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
   private handleAfterExpressionKinds(node: AbstractExpression): void {
     const key = this.subKindKey(node.nodeKind, node.expressionKind);
-    if (
-      this.handlersByNodeKindAndSubKind.has(key)
-    ) {
+    if (this.handlersByNodeKindAndSubKind.has(key)) {
       const handlers = this.handlersByNodeKindAndSubKind.get(key);
 
       if (handlers && handlers.afterVisit) {
@@ -378,8 +311,8 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
       const ifNode = ifStatement.ifStatement as AbstractStatement;
 
       if (
-        (ifNode.statementKind !== StatementKind.IF) &&
-        (ifNode.statementKind !== StatementKind.COMPOUND)
+        ifNode.statementKind !== StatementKind.IF &&
+        ifNode.statementKind !== StatementKind.COMPOUND
       ) {
         this.implicitScopeNodes.add(ifNode);
       }
@@ -389,17 +322,15 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
       const elseNode = ifStatement.elseStatement as AbstractStatement;
 
       if (
-        (elseNode.statementKind !== StatementKind.IF) &&
-        (elseNode.statementKind !== StatementKind.COMPOUND)
+        elseNode.statementKind !== StatementKind.IF &&
+        elseNode.statementKind !== StatementKind.COMPOUND
       ) {
         this.implicitScopeNodes.add(elseNode);
       }
     }
   }
 
-  private registerSwitchStatementImplicitScopes(
-    switchStatement: SwitchStatement,
-  ): void {
+  private registerSwitchStatementImplicitScopes(switchStatement: SwitchStatement): void {
     for (const caseClause of switchStatement.caseClauses) {
       if (isCaseClause(caseClause)) {
         this.implicitScopeNodes.add(caseClause);
@@ -411,9 +342,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
     }
   }
 
-  private registerWhileStatementImplicitScopes(
-    whileStatement: WhileStatement,
-  ): void {
+  private registerWhileStatementImplicitScopes(whileStatement: WhileStatement): void {
     if (isStatement(whileStatement.statement)) {
       const ifNode = whileStatement.statement as AbstractStatement;
 
@@ -458,9 +387,8 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
         // have been processed by then.
 
         if (
-          (nodeKind === NodeKind.STATEMENT) &&
-          ((subKind === StatementKind.CLASS_DECLARATION) ||
-            (subKind === StatementKind.MAP_DECLARATION))
+          nodeKind === NodeKind.STATEMENT &&
+          (subKind === StatementKind.CLASS_DECLARATION || subKind === StatementKind.MAP_DECLARATION)
         ) {
           handlers.beforeVisit.unshift(handler);
         } else {
@@ -577,10 +505,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
       if (token.tokenKind === TokenKind.ERROR_UNKNOWN_TOKEN) {
         if (this.strict) {
-          throw new SemanticError(
-            "ERROR_UNKNOWN_TOKEN encountered",
-            token.getLocation(),
-          );
+          throw new SemanticError("ERROR_UNKNOWN_TOKEN encountered", token.getLocation());
         }
 
         // In lenient mode, we simply ignore the ERROR_UNKNOWN_TOKEN
@@ -591,10 +516,7 @@ export abstract class AbstractAnalysisNodeHandler implements NodeHandler {
 
       if (token.tokenKind === TokenKind.ERROR_MISSING_TOKEN) {
         if (this.strict) {
-          throw new SemanticError(
-            "ERROR_MISSING_TOKEN encountered",
-            token.getLocation(),
-          );
+          throw new SemanticError("ERROR_MISSING_TOKEN encountered", token.getLocation());
         }
 
         // In lenient mode, we simply ignore the ERROR_MISSING_TOKEN

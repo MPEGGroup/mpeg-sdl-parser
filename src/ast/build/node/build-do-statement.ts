@@ -10,32 +10,20 @@ import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import { StatementKind } from "../../node/enum/statement-kind.ts";
 
-export function buildDoStatement(
-  buildContext: BuildContext,
-): DoStatement {
-  const doKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.DO,
-  );
+export function buildDoStatement(buildContext: BuildContext): DoStatement {
+  const doKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.DO);
   const compoundStatement = fetchRequiredNode<CompoundStatement>(
     buildContext,
     NodeKind.STATEMENT,
     StatementKind.COMPOUND,
   );
-  const whileKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.WHILE,
-  );
+  const whileKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.WHILE);
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.OPEN_PARENTHESIS,
   );
-  const condition = fetchRequiredNode<
-    AbstractExpression | NumberLiteral | Identifier
-  >(
+  const condition = fetchRequiredNode<AbstractExpression | NumberLiteral | Identifier>(
     buildContext,
     [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
   );

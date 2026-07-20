@@ -11,9 +11,6 @@ export const lengthAttributeRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.CloseParenthesis,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.CloseParenthesis, ...binaryOperatorTypes],
   })),
 ];

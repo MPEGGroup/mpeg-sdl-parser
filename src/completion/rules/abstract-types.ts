@@ -166,9 +166,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;
-      throw new InternalScannerError(
-        "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, tokenTypeId == " + exhaustiveCheck);
     }
   }
 });

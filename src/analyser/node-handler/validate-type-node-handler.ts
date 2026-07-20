@@ -1,8 +1,4 @@
-import {
-  InternalScannerError,
-  SemanticError,
-  SemanticWarning,
-} from "../../scanner-error.ts";
+import { InternalScannerError, SemanticError, SemanticWarning } from "../../scanner-error.ts";
 import { NumericType, type SymbolTable } from "../symbol-table.ts";
 import type { AbstractNode } from "../../ast/node/abstract-node.ts";
 import { NodeKind } from "../../ast/node/enum/node-kind.ts";
@@ -26,11 +22,7 @@ import {
   getRequiredOperand,
   getRequiredToken,
 } from "../util/symbol-table-utils.ts";
-import {
-  isElementaryType,
-  isIdentifier,
-  type OneToManyList,
-} from "../../ast/util/types.ts";
+import { isElementaryType, isIdentifier, type OneToManyList } from "../../ast/util/types.ts";
 import {
   getNumericTypeFromElementaryTypeKind,
   isArithmeticOperator,
@@ -46,37 +38,31 @@ import type { NumberLiteral } from "../../ast/node/number-literal.ts";
 import type { Identifier } from "../../ast/node/identifier.ts";
 
 export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
-  constructor(public readonly symbolTable: SymbolTable, strict: boolean) {
+  constructor(
+    public readonly symbolTable: SymbolTable,
+    strict: boolean,
+  ) {
     super(symbolTable, strict);
 
-    this.registerBeforeNodeHandler(
-      NodeKind.EXPRESSION,
-      ExpressionKind.BINARY,
-      (node) => this.validateBinaryExpression(node as BinaryExpression),
+    this.registerBeforeNodeHandler(NodeKind.EXPRESSION, ExpressionKind.BINARY, (node) =>
+      this.validateBinaryExpression(node as BinaryExpression),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.EXPRESSION,
-      ExpressionKind.UNARY,
-      (node) => this.validateUnaryExpression(node as UnaryExpression),
+    this.registerBeforeNodeHandler(NodeKind.EXPRESSION, ExpressionKind.UNARY, (node) =>
+      this.validateUnaryExpression(node as UnaryExpression),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.ELEMENTARY_TYPE_DEFINITION,
-      (node) =>
-        this.validateElementaryTypeDefinition(node as ElementaryTypeDefinition),
+      (node) => this.validateElementaryTypeDefinition(node as ElementaryTypeDefinition),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION,
       (node) =>
-        this.validateComputedElementaryTypeDefinition(
-          node as ComputedElementaryTypeDefinition,
-        ),
+        this.validateComputedElementaryTypeDefinition(node as ComputedElementaryTypeDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DEFINITION,
-      (node) => this.validateClassDefinition(node as ClassDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.CLASS_DEFINITION, (node) =>
+      this.validateClassDefinition(node as ClassDefinition),
     );
   }
 
@@ -122,16 +108,14 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
       );
     }
 
-    let values: OneToManyList<AbstractExpression | Identifier | NumberLiteral> =
-      [];
+    let values: OneToManyList<AbstractExpression | Identifier | NumberLiteral> = [];
 
     if (classDefinition.parameterValueList) {
-      const valueList = classDefinition
-        .parameterValueList as ParameterValueList;
+      const valueList = classDefinition.parameterValueList as ParameterValueList;
       values = valueList.values;
     }
 
-    if ((parameters.length === 0) && (values.length > 0)) {
+    if (parameters.length === 0 && values.length > 0) {
       const error = new SemanticError(
         `Class '${classIdentifier.name}' does not expect parameters, but ${values.length} provided`,
         identifier.startToken!.getLocation(),
@@ -146,7 +130,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
       return;
     }
 
-    if ((parameters.length > 0) && (values.length === 0)) {
+    if (parameters.length > 0 && values.length === 0) {
       const error = new SemanticError(
         `Class '${classIdentifier.name}' expects ${parameters.length} parameter(s), but none provided`,
         identifier.startToken!.getLocation(),
@@ -178,11 +162,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
 
     for (let i = 0; i < parameters.length; i++) {
       const parameter = parameters[i];
-      const parameterIdentifier = getRequiredIdentifier(
-        parameter.identifier,
-        parameter,
-        false,
-      );
+      const parameterIdentifier = getRequiredIdentifier(parameter.identifier, parameter, false);
 
       if (!parameterIdentifier) {
         continue;
@@ -194,26 +174,15 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
       let warning: SemanticWarning | undefined = undefined;
 
       if (isElementaryType(parameter.elementaryType)) {
-        const elementaryTypeKind = getElementaryTypeKind(
-          parameter.elementaryType,
-          false,
-        );
+        const elementaryTypeKind = getElementaryTypeKind(parameter.elementaryType, false);
 
         if (elementaryTypeKind !== undefined) {
-          const parameterNumericType = getNumericTypeFromElementaryTypeKind(
-            elementaryTypeKind,
-          );
-          const valueNumericType = resolveNumericType(
-            value,
-            this.symbolTable,
-          );
+          const parameterNumericType = getNumericTypeFromElementaryTypeKind(elementaryTypeKind);
+          const valueNumericType = resolveNumericType(value, this.symbolTable);
 
           // If the type cannot be determined (due to identifier not being defined etc.)
           // then just continue as there will already be a semantic error undefined symbol
-          if (
-            (valueNumericType === undefined) ||
-            (parameterNumericType === undefined)
-          ) {
+          if (valueNumericType === undefined || parameterNumericType === undefined) {
             continue;
           } else if (valueNumericType !== parameterNumericType) {
             warning = new SemanticWarning(
@@ -225,17 +194,13 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
           }
         }
       } else if (isIdentifier(parameter.classIdentifier)) {
-        const parameterClassSymbol = this.symbolTable.lookupClass(
-          parameter.classIdentifier.name,
-        );
+        const parameterClassSymbol = this.symbolTable.lookupClass(parameter.classIdentifier.name);
 
         if (parameterClassSymbol) {
           const valueClassIdentifier = isIdentifier(value) ? value : undefined;
 
           if (valueClassIdentifier) {
-            const valueClassSymbol = this.symbolTable.lookupClass(
-              valueClassIdentifier.name,
-            );
+            const valueClassSymbol = this.symbolTable.lookupClass(valueClassIdentifier.name);
 
             if (valueClassSymbol) {
               // make sure the class declarations are the same by comparing valueClassSymbol.attributes.classType with parameterClassSymbol.attributes.classType
@@ -244,16 +209,13 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
                   `Class type could not be resolved for value of parameter '${parameterIdentifier.name}'`,
                   value.getLocation(),
                 );
-              } else if (
-                parameterClassSymbol.attributes.classType === undefined
-              ) {
+              } else if (parameterClassSymbol.attributes.classType === undefined) {
                 error = new SemanticError(
                   `Class type could not be resolved for parameter '${parameterIdentifier.name}'`,
                   parameterIdentifier.getLocation(),
                 );
               } else if (
-                valueClassSymbol.attributes.classType !==
-                  parameterClassSymbol.attributes.classType
+                valueClassSymbol.attributes.classType !== parameterClassSymbol.attributes.classType
               ) {
                 warning = new SemanticWarning(
                   `Coercion required: parameter class type: ${parameterClassSymbol.attributes.classType}, value class type: ${valueClassSymbol.attributes.classType}`,
@@ -290,9 +252,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
   private validateComputedElementaryTypeDefinition(
     computedElementaryTypeDefinition: ComputedElementaryTypeDefinition,
   ): void {
-    this.validateElementaryTypeValueAndEndValue(
-      computedElementaryTypeDefinition,
-    );
+    this.validateElementaryTypeValueAndEndValue(computedElementaryTypeDefinition);
   }
 
   private validateElementaryTypeValueAndEndValue(
@@ -303,11 +263,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
       return;
     }
 
-    const identifier = getRequiredIdentifier(
-      definition.identifier,
-      definition,
-      this.strict,
-    );
+    const identifier = getRequiredIdentifier(definition.identifier, definition, this.strict);
 
     if (!identifier) {
       return;
@@ -330,7 +286,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
 
     // If the type cannot be determined (due to identifier not being defined etc.)
     // then just continue as there will already be a semantic error undefined symbol
-    if ((valueType !== undefined) && (valueType !== declaredType)) {
+    if (valueType !== undefined && valueType !== declaredType) {
       const warning = new SemanticWarning(
         `Type coercion required for '${identifier.name}' value: expected ${
           NumericType[declaredType]
@@ -353,7 +309,7 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
 
     // If the type cannot be determined (due to identifier not being defined etc.)
     // then just continue as there will already be a semantic error undefined symbol
-    if ((endValueType !== undefined) && (endValueType !== declaredType)) {
+    if (endValueType !== undefined && endValueType !== declaredType) {
       const warning = new SemanticWarning(
         `Type coercion required for '${identifier.name}' end value: expected ${
           NumericType[declaredType]
@@ -399,43 +355,33 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
     const operatorKind = binaryExpression.binaryOperatorKind;
 
     if (operatorKind === undefined) {
-      throw new InternalScannerError(
-        "Unreachable code reached, operatorKind is undefined",
-      );
+      throw new InternalScannerError("Unreachable code reached, operatorKind is undefined");
     }
 
-    const leftOperandNumericType = resolveNumericType(
-      leftOperand,
-      this.symbolTable,
-    );
-    const rightOperandNumericType = resolveNumericType(
-      rightOperand,
-      this.symbolTable,
-    );
+    const leftOperandNumericType = resolveNumericType(leftOperand, this.symbolTable);
+    const rightOperandNumericType = resolveNumericType(rightOperand, this.symbolTable);
 
     // If the type cannot be determined (due to identifier not being defined etc.)
     // then just return as there will already be a semantic error undefined symbol
-    if (
-      (leftOperandNumericType === undefined) ||
-      (rightOperandNumericType === undefined)
-    ) {
+    if (leftOperandNumericType === undefined || rightOperandNumericType === undefined) {
       return;
     }
 
     let isCoercionRequired = false;
 
     if (
-      (operatorKind === BinaryOperatorKind.ASSIGNMENT) ||
+      operatorKind === BinaryOperatorKind.ASSIGNMENT ||
       isArithmeticOperator(operatorKind) ||
-      isRelationalOperator(operatorKind) || isLogicalOperator(operatorKind)
+      isRelationalOperator(operatorKind) ||
+      isLogicalOperator(operatorKind)
     ) {
       isCoercionRequired = leftOperandNumericType !== rightOperandNumericType;
     }
 
     if (isShiftOperator(operatorKind) || isBitwiseOperator(operatorKind)) {
       if (
-        (leftOperandNumericType !== NumericType.INTEGER) ||
-        (rightOperandNumericType !== NumericType.INTEGER)
+        leftOperandNumericType !== NumericType.INTEGER ||
+        rightOperandNumericType !== NumericType.INTEGER
       ) {
         isCoercionRequired = true;
       }
@@ -453,20 +399,13 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
   }
 
   private validateUnaryExpression(unaryExpression: UnaryExpression): void {
-    const operand = getRequiredOperand(
-      unaryExpression.operand,
-      unaryExpression,
-      this.strict,
-    );
+    const operand = getRequiredOperand(unaryExpression.operand, unaryExpression, this.strict);
 
     if (!operand) {
       return;
     }
 
-    const operandNumericType = resolveNumericType(
-      operand,
-      this.symbolTable,
-    );
+    const operandNumericType = resolveNumericType(operand, this.symbolTable);
     // If the type cannot be determined (due to identifier not being defined etc.)
     // then just return as there will already be a semantic error undefined symbol
     if (operandNumericType === undefined) {
@@ -477,15 +416,13 @@ export class ValidateTypeNodeHandler extends AbstractAnalysisNodeHandler {
       const token = unaryExpression.postfixOperator as Token;
 
       if (
-        (token.tokenKind === TokenKind.POSTFIX_INCREMENT) ||
-        (token.tokenKind === TokenKind.POSTFIX_DECREMENT)
+        token.tokenKind === TokenKind.POSTFIX_INCREMENT ||
+        token.tokenKind === TokenKind.POSTFIX_DECREMENT
       ) {
         if (operandNumericType !== NumericType.INTEGER) {
           const warning = new SemanticWarning(
             `Non-integer ${
-              token.tokenKind === TokenKind.POSTFIX_INCREMENT
-                ? "increment"
-                : "decrement"
+              token.tokenKind === TokenKind.POSTFIX_INCREMENT ? "increment" : "decrement"
             } operand, coercion required: ${NumericType[operandNumericType]}`,
             token.getLocation(),
           );

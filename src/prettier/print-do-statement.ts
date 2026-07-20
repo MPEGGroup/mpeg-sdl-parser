@@ -1,8 +1,5 @@
 import { AstPath, type Doc, doc } from "prettier";
-import {
-  addBreakingWhitespace,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addBreakingWhitespace, addNonBreakingWhitespace } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { DoStatement } from "../ast/node/do-statement.ts";
 

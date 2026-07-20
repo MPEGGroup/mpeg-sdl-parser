@@ -16,11 +16,7 @@ export const elementaryTypeDefinitionRules = [
   },
   {
     previous: TokenTypeId.reserved,
-    expected: [
-      TokenTypeId._const,
-      TokenTypeId.AlignedModifier,
-      TokenTypeId.ElementaryType,
-    ],
+    expected: [TokenTypeId._const, TokenTypeId.AlignedModifier, TokenTypeId.ElementaryType],
   },
   {
     previous: TokenTypeId._const,
@@ -52,11 +48,7 @@ export const elementaryTypeDefinitionRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: [TokenTypeId.Assignment, expressionType],
-    expected: [
-      TokenTypeId.RangeOperator,
-      TokenTypeId.Semicolon,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.RangeOperator, TokenTypeId.Semicolon, ...binaryOperatorTypes],
   })),
   { previous: TokenTypeId.RangeOperator, expected: expressionTypes },
 ];

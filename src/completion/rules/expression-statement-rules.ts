@@ -10,10 +10,7 @@ export const expressionStatementRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.Semicolon,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.Semicolon, ...binaryOperatorTypes],
   })),
   {
     previous: TokenTypeId.AssignmentExpression,

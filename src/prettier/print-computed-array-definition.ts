@@ -1,10 +1,7 @@
 import { type AstPath, type Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ComputedArrayDefinition } from "../ast/node/computed-array-definition.ts";
-import {
-  addBreakingWhitespace,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addBreakingWhitespace, addNonBreakingWhitespace } from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
 

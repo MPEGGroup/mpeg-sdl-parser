@@ -10,31 +10,20 @@ export function printExpandableModifier(
 
   const doc: Doc = [];
 
-  doc.push(
-    path.call(print, "expandableKeyword"),
-  );
+  doc.push(path.call(print, "expandableKeyword"));
 
   if (expandableModifier.maxClassSize !== undefined) {
-    doc.push(
-      [
-        path.call(
-          print,
-          "openParenthesisPunctuator" as keyof ExpandableModifier[
-            "openParenthesisPunctuator"
-          ],
-        ),
-        path.call(
-          print,
-          "maxClassSize" as keyof ExpandableModifier["maxClassSize"],
-        ),
-        path.call(
-          print,
-          "closeParenthesisPunctuator" as keyof ExpandableModifier[
-            "closeParenthesisPunctuator"
-          ],
-        ),
-      ],
-    );
+    doc.push([
+      path.call(
+        print,
+        "openParenthesisPunctuator" as keyof ExpandableModifier["openParenthesisPunctuator"],
+      ),
+      path.call(print, "maxClassSize" as keyof ExpandableModifier["maxClassSize"]),
+      path.call(
+        print,
+        "closeParenthesisPunctuator" as keyof ExpandableModifier["closeParenthesisPunctuator"],
+      ),
+    ]);
   }
 
   return doc;

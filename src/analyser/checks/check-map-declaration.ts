@@ -42,9 +42,9 @@ function checkOutputValuesTypeMatch(
     isIdentifier(declaration.outputClassIdentifier)
   ) {
     const className = declaration.outputClassIdentifier.name;
-    const classScope = symbolTable.getGlobalScope().children.find(
-      (scope) => scope.name === className && scope.kind === ScopeKind.CLASS,
-    );
+    const classScope = symbolTable
+      .getGlobalScope()
+      .children.find((scope) => scope.name === className && scope.kind === ScopeKind.CLASS);
 
     if (classScope?.classMemberSymbols) {
       const expectedMemberCount = classScope.classMemberSymbols.size;
@@ -84,9 +84,9 @@ function hasParsableMembers(
   }
   visited.add(className);
 
-  const classScope = symbolTable.getGlobalScope().children.find(
-    (scope) => scope.name === className && scope.kind === ScopeKind.CLASS,
-  );
+  const classScope = symbolTable
+    .getGlobalScope()
+    .children.find((scope) => scope.name === className && scope.kind === ScopeKind.CLASS);
 
   if (!classScope?.classMemberSymbols) {
     return false;
@@ -99,11 +99,7 @@ function hasParsableMembers(
       }
       if (
         entry.symbol.attributes.classType &&
-        hasParsableMembers(
-          entry.symbol.attributes.classType,
-          symbolTable,
-          visited,
-        )
+        hasParsableMembers(entry.symbol.attributes.classType, symbolTable, visited)
       ) {
         return true;
       }
@@ -127,12 +123,14 @@ function checkParsableClassOutput(
   const className = declaration.outputClassIdentifier.name;
 
   if (hasParsableMembers(className, symbolTable, new Set())) {
-    return [{
-      message:
-        "Declaring a map with an output_value consisting of a class with parsable members will result in undefined behaviour.",
-      location: declaration.outputClassIdentifier.startToken!.getLocation(),
-      isWarning: true,
-    }];
+    return [
+      {
+        message:
+          "Declaring a map with an output_value consisting of a class with parsable members will result in undefined behaviour.",
+        location: declaration.outputClassIdentifier.startToken!.getLocation(),
+        isWarning: true,
+      },
+    ];
   }
 
   return [];

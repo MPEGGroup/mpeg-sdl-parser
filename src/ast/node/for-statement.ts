@@ -12,9 +12,7 @@ export class ForStatement extends AbstractStatement {
     public readonly openParenthesisPunctuator: RequiredNode<Token>,
     // either ((assignment_expression semicolon) | computed_elementary_type_definition | semicolon)
     public readonly expression1: OptionalNode<AbstractExpression>,
-    public readonly computedElementaryDefinition: OptionalNode<
-      ComputedElementaryTypeDefinition
-    >,
+    public readonly computedElementaryDefinition: OptionalNode<ComputedElementaryTypeDefinition>,
     // optional as the first semicolon can be considered part of the optional computedElementaryDefinition
     public readonly semicolon1Punctuator: OptionalNode<Token>,
     public readonly expression2: OptionalNode<AbstractExpression>,

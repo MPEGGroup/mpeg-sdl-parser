@@ -5,31 +5,17 @@ import { DefaultClause } from "../../node/default-clause.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import type { Token } from "../../node/token.ts";
-import {
-  fetchOptionalNode,
-  fetchRequiredNode,
-  fetchZeroToManyList,
-} from "../util/fetch-node.ts";
+import { fetchOptionalNode, fetchRequiredNode, fetchZeroToManyList } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildDefaultClause(
-  buildContext: BuildContext,
-): DefaultClause {
+export function buildDefaultClause(buildContext: BuildContext): DefaultClause {
   const children: Array<AbstractNode> = [];
 
-  const defaultKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.DEFAULT,
-  );
+  const defaultKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.DEFAULT);
   children.push(defaultKeyword);
 
-  const colonPunctuator = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.COLON,
-  );
+  const colonPunctuator = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.COLON);
   children.push(colonPunctuator);
 
   const openBracePunctuator = fetchOptionalNode<Token>(
@@ -41,10 +27,7 @@ export function buildDefaultClause(
     children.push(openBracePunctuator);
   }
 
-  const statements = fetchZeroToManyList<AbstractStatement>(
-    buildContext,
-    NodeKind.STATEMENT,
-  );
+  const statements = fetchZeroToManyList<AbstractStatement>(buildContext, NodeKind.STATEMENT);
 
   children.push(...statements);
 

@@ -12,56 +12,40 @@ import type { BinaryExpression } from "../../ast/node/binary-expression.ts";
 import type { LengthofExpression } from "../../ast/node/length-of-expression.ts";
 import { SemanticError } from "../../scanner-error.ts";
 import { AbstractAnalysisNodeHandler } from "./abstract-analysis-node-handler.ts";
-import {
-  getRequiredIdentifier,
-  getRequiredOperand,
-} from "../util/symbol-table-utils.ts";
+import { getRequiredIdentifier, getRequiredOperand } from "../util/symbol-table-utils.ts";
 import { isIdentifier } from "../../ast/util/types.ts";
 import type { MapDeclaration } from "../../ast/node/map-declaration.ts";
 
 export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
-  constructor(public readonly symbolTable: SymbolTable, strict: boolean) {
+  constructor(
+    public readonly symbolTable: SymbolTable,
+    strict: boolean,
+  ) {
     super(symbolTable, strict);
 
-    this.registerBeforeNodeHandler(
-      NodeKind.EXTENDS_MODIFIER,
-      undefined,
-      (node) => this.validateExtendsModifier(node as ExtendsModifier),
+    this.registerBeforeNodeHandler(NodeKind.EXTENDS_MODIFIER, undefined, (node) =>
+      this.validateExtendsModifier(node as ExtendsModifier),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.EXPRESSION,
-      ExpressionKind.UNARY,
-      (node) => this.validateUnaryExpression(node as UnaryExpression),
+    this.registerBeforeNodeHandler(NodeKind.EXPRESSION, ExpressionKind.UNARY, (node) =>
+      this.validateUnaryExpression(node as UnaryExpression),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.EXPRESSION,
-      ExpressionKind.BINARY,
-      (node) => this.validateBinaryExpression(node as BinaryExpression),
+    this.registerBeforeNodeHandler(NodeKind.EXPRESSION, ExpressionKind.BINARY, (node) =>
+      this.validateBinaryExpression(node as BinaryExpression),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.EXPRESSION,
-      ExpressionKind.LENGTHOF,
-      (node) => this.validateLengthofExpression(node as LengthofExpression),
+    this.registerBeforeNodeHandler(NodeKind.EXPRESSION, ExpressionKind.LENGTHOF, (node) =>
+      this.validateLengthofExpression(node as LengthofExpression),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.MAP_DECLARATION,
-      (node) => this.handleMapDeclaration(node as MapDeclaration),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.MAP_DECLARATION, (node) =>
+      this.handleMapDeclaration(node as MapDeclaration),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DEFINITION,
-      (node) => this.validateClassDefinition(node as ClassDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.CLASS_DEFINITION, (node) =>
+      this.validateClassDefinition(node as ClassDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.MAP_DEFINITION,
-      (node) => this.validateMapDefinition(node as MapDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.MAP_DEFINITION, (node) =>
+      this.validateMapDefinition(node as MapDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.ARRAY_DEFINITION,
-      (node) => this.validateArrayDefinition(node as ArrayDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.ARRAY_DEFINITION, (node) =>
+      this.validateArrayDefinition(node as ArrayDefinition),
     );
   }
 
@@ -164,11 +148,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
   }
 
   private validateUnaryExpression(unaryExpression: UnaryExpression): void {
-    const operand = getRequiredOperand(
-      unaryExpression.operand,
-      unaryExpression,
-      this.strict,
-    );
+    const operand = getRequiredOperand(unaryExpression.operand, unaryExpression, this.strict);
 
     if (!operand) {
       return;
@@ -204,14 +184,8 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     // Nested expressions will be visited recursively by the traversal
   }
 
-  private validateLengthofExpression(
-    lengthofExpression: LengthofExpression,
-  ): void {
-    const operand = getRequiredOperand(
-      lengthofExpression.operand,
-      lengthofExpression,
-      this.strict,
-    );
+  private validateLengthofExpression(lengthofExpression: LengthofExpression): void {
+    const operand = getRequiredOperand(lengthofExpression.operand, lengthofExpression, this.strict);
 
     if (!operand) {
       return;
@@ -266,7 +240,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
     if (!symbol) {
       const classMembers = this.symbolTable.lookupClassMember(name);
 
-      if (classMembers && (classMembers.length > 0)) {
+      if (classMembers && classMembers.length > 0) {
         return;
       }
 
@@ -274,10 +248,7 @@ export class ValidateScopeNodeHandler extends AbstractAnalysisNodeHandler {
       const mapSymbol = this.symbolTable.lookupMap(name);
 
       if (!classSymbol && !mapSymbol) {
-        const error = new SemanticError(
-          `Identifier: ${name} is not declared`,
-          location,
-        );
+        const error = new SemanticError(`Identifier: ${name} is not declared`, location);
 
         if (this.strict) {
           throw error;

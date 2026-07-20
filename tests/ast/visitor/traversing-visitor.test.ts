@@ -12,25 +12,19 @@ import { buildAst } from "../../../src/ast/build-ast.ts";
 
 describe("TraversingVisitor Tests", () => {
   test("Test traversing visitor", async () => {
-    const sdlSource = await fs.readFile(
-      path.join(__dirname, "../../sample-specifications/sample.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sdlSource = await fs
+      .readFile(path.join(__dirname, "../../sample-specifications/sample.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
     const sdlStringInput = new SdlStringInput(sdlSource);
     const sdlParser = createStrictSdlParser();
     const sdlParseTree = sdlParser.parse(sdlStringInput);
     const specification = buildAst(sdlParseTree, sdlStringInput);
 
     const historyRecordingNodeHandler = new HistoryRecordingNodeHandler();
-    const traversingVisitor = new TraversingVisitor(
-      historyRecordingNodeHandler,
-    );
+    const traversingVisitor = new TraversingVisitor(historyRecordingNodeHandler);
 
     traversingVisitor.visit(specification);
 
-    expect(
-      historyRecordingNodeHandler.nodeHistory,
-    ).toEqual(
-      expectedHistory,
-    );
+    expect(historyRecordingNodeHandler.nodeHistory).toEqual(expectedHistory);
   });
 });

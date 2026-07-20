@@ -28,13 +28,9 @@ function getBlankLineTrivia(cursor: TreeCursor, text: Text): Trivia {
  * Iterate through the syntax tree and convert comments or whitespace to Trivia
  * until a non-comment or non-whitespace parse node is found.
  */
-export function consumeTrivia(
-  buildContext: BuildContext,
-  isTrailing: boolean,
-): Trivia[] {
+export function consumeTrivia(buildContext: BuildContext, isTrailing: boolean): Trivia[] {
   const { cursor, text } = buildContext;
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
 
   if (currentState.isEndOfSiblings) {
     return [];
@@ -61,7 +57,7 @@ export function consumeTrivia(
       const newLineCount = (whitespace.match(/\n/g) || []).length;
 
       // If trailing, stop at first line break
-      if (isTrailing && (newLineCount > 0)) {
+      if (isTrailing && newLineCount > 0) {
         noSibling = false;
         break;
       }
@@ -70,10 +66,7 @@ export function consumeTrivia(
         trivia.push(getBlankLineTrivia(cursor, text));
       }
     } // Otherwise stop at the first non-comment, non-whitespace node
-    else if (
-      (cursor.type.id !== Comment) &&
-      (cursor.type.id !== Whitespace)
-    ) {
+    else if (cursor.type.id !== Comment && cursor.type.id !== Whitespace) {
       noSibling = false;
       break;
     }
@@ -85,10 +78,7 @@ export function consumeTrivia(
     logger.debug(
       currentState.indent +
         `consumed ${isTrailing ? "trailing" : "leading"} trivia: ` +
-        trivia.map((triviaEntry) => triviaEntry.text.replaceAll("\n", "\\n"))
-          .join(
-            ", ",
-          ),
+        trivia.map((triviaEntry) => triviaEntry.text.replaceAll("\n", "\\n")).join(", "),
     );
   }
 

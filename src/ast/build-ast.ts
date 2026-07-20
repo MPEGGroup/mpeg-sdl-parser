@@ -24,9 +24,7 @@ export function buildAst(
   sdlStringInput: SdlStringInput,
   lenient = false,
 ): RequiredNode<Specification> {
-  const text = Text.of(
-    sdlStringInput.read(0, sdlStringInput.length).split("\n"),
-  );
+  const text = Text.of(sdlStringInput.read(0, sdlStringInput.length).split("\n"));
   const cursor = parseTree.cursor();
   const buildContext: BuildContext = {
     cursor,
@@ -46,16 +44,11 @@ export function buildAst(
   // check the root node is a Specification
   if (nodeKind !== NodeKind.SPECIFICATION) {
     throw new InternalScannerError(
-      `Expected start node to be a Specification, but found ${
-        NodeKind[nodeKind]
-      }.`,
+      `Expected start node to be a Specification, but found ${NodeKind[nodeKind]}.`,
     );
   }
 
-  const specification = fetchRequiredNode<Specification>(
-    buildContext,
-    NodeKind.SPECIFICATION,
-  );
+  const specification = fetchRequiredNode<Specification>(buildContext, NodeKind.SPECIFICATION);
 
   if (buildContext.stateStack.length !== 1) {
     throw new InternalScannerError(
@@ -64,16 +57,12 @@ export function buildAst(
   }
 
   if (!specification) {
-    throw new InternalScannerError(
-      `Expected to parse a Specification node, but none was found.`,
-    );
+    throw new InternalScannerError(`Expected to parse a Specification node, but none was found.`);
   }
 
-  if ((nodeKind !== NodeKind.SPECIFICATION) && (!cursor.type.isError)) {
+  if (nodeKind !== NodeKind.SPECIFICATION && !cursor.type.isError) {
     throw new InternalScannerError(
-      `Expected final node to be a Specification or an error, but found ${
-        NodeKind[nodeKind]
-      }.`,
+      `Expected final node to be a Specification or an error, but found ${NodeKind[nodeKind]}.`,
     );
   }
 
@@ -85,17 +74,13 @@ export function buildAst(
 
     // filter from the end any empty blank line trivia
     while (
-      (buildContext.unconsumedTrivia.length > 0) &&
-      (buildContext.unconsumedTrivia[
-        buildContext.unconsumedTrivia.length - 1
-      ].text.trim() === "")
+      buildContext.unconsumedTrivia.length > 0 &&
+      buildContext.unconsumedTrivia[buildContext.unconsumedTrivia.length - 1].text.trim() === ""
     ) {
       buildContext.unconsumedTrivia.pop();
     }
 
-    specification.trailingTrivia.push(
-      ...buildContext.unconsumedTrivia,
-    );
+    specification.trailingTrivia.push(...buildContext.unconsumedTrivia);
 
     delete buildContext.unconsumedTrivia;
   }

@@ -9,25 +9,18 @@ import { isIdentifier, isNumberLiteral } from "../../ast/util/types.ts";
 import type { SymbolTable } from "../symbol-table.ts";
 import type { Check, CheckResult } from "./check.ts";
 
-function checkArrayDimensionsPositiveInteger(
-  definition: ArrayDefinition,
-): CheckResult[] {
+function checkArrayDimensionsPositiveInteger(definition: ArrayDefinition): CheckResult[] {
   const results: CheckResult[] = [];
 
   for (const dimension of definition.dimensions) {
     if (dimension.nodeKind === NodeKind.ARRAY_DIMENSION) {
       const explicitDimension = dimension as ExplicitArrayDimension;
-      if (
-        explicitDimension.arrayDimensionKind === ArrayDimensionKind.EXPLICIT
-      ) {
+      if (explicitDimension.arrayDimensionKind === ArrayDimensionKind.EXPLICIT) {
         const size = explicitDimension.size;
 
         // Only check direct NumberLiterals, skip expressions as per spec note
         if (isNumberLiteral(size)) {
-          if (
-            size.value <= 0 ||
-            size.numberLiteralKind !== NumberLiteralKind.INTEGER
-          ) {
+          if (size.value <= 0 || size.numberLiteralKind !== NumberLiteralKind.INTEGER) {
             results.push({
               message: "Array dimensions must be a positive integer.",
               location: size.startToken!.getLocation(),
@@ -52,17 +45,14 @@ function checkImplicitArrayClassId(
     definition.classIdentifier &&
     isIdentifier(definition.classIdentifier)
   ) {
-    const classSymbol = symbolTable.lookupClass(
-      definition.classIdentifier.name,
-    );
+    const classSymbol = symbolTable.lookupClass(definition.classIdentifier.name);
 
     if (classSymbol) {
       const classDeclaration = classSymbol.node as ClassDeclaration;
 
       if (!classDeclaration.bitModifier) {
         results.push({
-          message:
-            "Implicit arrays can only contain classes which have a classId defined.",
+          message: "Implicit arrays can only contain classes which have a classId defined.",
           location: definition.classIdentifier.startToken!.getLocation(),
         });
       }

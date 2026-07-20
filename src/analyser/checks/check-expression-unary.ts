@@ -20,10 +20,8 @@ function checkConstMutationViaPostfix(
 
   if (
     expression.postfixOperator !== undefined &&
-    ((expression.postfixOperator as Token).tokenKind ===
-        TokenKind.POSTFIX_INCREMENT ||
-      (expression.postfixOperator as Token).tokenKind ===
-        TokenKind.POSTFIX_DECREMENT)
+    ((expression.postfixOperator as Token).tokenKind === TokenKind.POSTFIX_INCREMENT ||
+      (expression.postfixOperator as Token).tokenKind === TokenKind.POSTFIX_DECREMENT)
   ) {
     let targetIdentifier: Identifier | undefined;
     if (isIdentifier(expression.operand)) {
@@ -32,18 +30,13 @@ function checkConstMutationViaPostfix(
       expression.operand.nodeKind === NodeKind.EXPRESSION &&
       isIdentifier((expression.operand as UnaryExpression).operand)
     ) {
-      targetIdentifier = (expression.operand as UnaryExpression)
-        .operand as Identifier;
+      targetIdentifier = (expression.operand as UnaryExpression).operand as Identifier;
     }
 
     if (targetIdentifier) {
       const variable = symbolTable.lookupVariable(targetIdentifier.name);
 
-      if (
-        variable &&
-        variable.attributes.isConst &&
-        variable.attributes.isComputed
-      ) {
+      if (variable && variable.attributes.isConst && variable.attributes.isComputed) {
         results.push({
           message: "a const computed variable cannot be mutated.",
           location: expression.startToken!.getLocation(),
@@ -123,9 +116,9 @@ function checkUninitializedComputedVariableAccess(
       // Check if the variable definition has no initial value
       // For computed variables, this would be AbstractElementaryTypeDefinition
       if (
-        (variable.node.nodeKind === NodeKind.STATEMENT) &&
-        ((variable.node as AbstractStatement).statementKind ===
-          StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION)
+        variable.node.nodeKind === NodeKind.STATEMENT &&
+        (variable.node as AbstractStatement).statementKind ===
+          StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION
       ) {
         const definition = variable.node as { value?: unknown };
 
@@ -133,8 +126,7 @@ function checkUninitializedComputedVariableAccess(
           results.push({
             message:
               "Accessing a computed variable value before it is initialised will result in undefined behaviour.",
-            location: expression.operand.startToken?.getLocation() ||
-              expression.operand.leadingTrivia?.[0]?.location!,
+            location: expression.operand.getLocation(),
             isWarning: true,
           });
         }
@@ -157,9 +149,7 @@ export const checkExpressionUnary: Check = {
 
     results.push(...checkConstMutationViaPostfix(expression, symbolTable));
     results.push(...checkArrayDimensionCountMismatch(expression, symbolTable));
-    results.push(
-      ...checkUninitializedComputedVariableAccess(expression, symbolTable),
-    );
+    results.push(...checkUninitializedComputedVariableAccess(expression, symbolTable));
 
     return results;
   },

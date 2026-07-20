@@ -80,8 +80,8 @@ export function printAbstractNode(
   if (leadingTriviaDoc) {
     // prevent extra lines at beginning of compount statement
     if (
-      (nodeKind === NodeKind.STATEMENT) &&
-      ((node as AbstractStatement).statementKind === StatementKind.COMPOUND)
+      nodeKind === NodeKind.STATEMENT &&
+      (node as AbstractStatement).statementKind === StatementKind.COMPOUND
     ) {
       leadingTriviaDoc = removeLeadingBlanklines(leadingTriviaDoc);
     }
@@ -90,25 +90,16 @@ export function printAbstractNode(
 
   switch (nodeKind) {
     case NodeKind.AGGREGATE_OUTPUT_VALUE:
-      doc.push(printAggregateOutputValue(
-        path as AstPath<AggregateOutputValue>,
-        print,
-      ));
+      doc.push(printAggregateOutputValue(path as AstPath<AggregateOutputValue>, print));
       break;
     case NodeKind.ALIGNED_MODIFIER:
       doc.push(printAlignedModifier(path as AstPath<AlignedModifier>, print));
       break;
     case NodeKind.ARRAY_DIMENSION:
-      doc.push(printAbstractArrayDimension(
-        path as AstPath<AbstractArrayDimension>,
-        print,
-      ));
+      doc.push(printAbstractArrayDimension(path as AstPath<AbstractArrayDimension>, print));
       break;
     case NodeKind.ARRAY_ELEMENT_ACCESS:
-      doc.push(printArrayElementAccess(
-        path as AstPath<ArrayElementAccess>,
-        print,
-      ));
+      doc.push(printArrayElementAccess(path as AstPath<ArrayElementAccess>, print));
       break;
     case NodeKind.BIT_MODIFIER:
       doc.push(printBitModifier(path as AstPath<BitModifier>, print));
@@ -120,36 +111,22 @@ export function printAbstractNode(
       doc.push(printAbstractClassId(path as AstPath<AbstractClassId>, print));
       break;
     case NodeKind.CLASS_MEMBER_ACCESS:
-      doc.push(
-        printClassMemberAccess(path as AstPath<ClassMemberAccess>, print),
-      );
+      doc.push(printClassMemberAccess(path as AstPath<ClassMemberAccess>, print));
       break;
     case NodeKind.DEFAULT_CLAUSE:
-      doc.push(printDefaultClause(
-        path as AstPath<DefaultClause>,
-        print,
-      ));
+      doc.push(printDefaultClause(path as AstPath<DefaultClause>, print));
       break;
     case NodeKind.ELEMENTARY_TYPE:
       doc.push(printElementaryType(path as AstPath<ElementaryType>, print));
       break;
     case NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE:
-      doc.push(printElementaryTypeOutputValue(
-        path as AstPath<ElementaryTypeOutputValue>,
-        print,
-      ));
+      doc.push(printElementaryTypeOutputValue(path as AstPath<ElementaryTypeOutputValue>, print));
       break;
     case NodeKind.EXPRESSION:
-      doc.push(printAbstractExpression(
-        path as AstPath<AbstractExpression>,
-        print,
-      ));
+      doc.push(printAbstractExpression(path as AstPath<AbstractExpression>, print));
       break;
     case NodeKind.EXPANDABLE_MODIFIER:
-      doc.push(printExpandableModifier(
-        path as AstPath<ExpandableModifier>,
-        print,
-      ));
+      doc.push(printExpandableModifier(path as AstPath<ExpandableModifier>, print));
       break;
     case NodeKind.EXTENDS_MODIFIER:
       doc.push(printExtendsModifier(path as AstPath<ExtendsModifier>, print));
@@ -173,18 +150,13 @@ export function printAbstractNode(
       doc.push(printParameterList(path as AstPath<ParameterList>, print));
       break;
     case NodeKind.PARAMETER_VALUE_LIST:
-      doc.push(printParameterValueList(
-        path as AstPath<ParameterValueList>,
-        print,
-      ));
+      doc.push(printParameterValueList(path as AstPath<ParameterValueList>, print));
       break;
     case NodeKind.SPECIFICATION:
       doc.push(printSpecification(path as AstPath<Specification>, print));
       break;
     case NodeKind.STATEMENT:
-      doc.push(
-        printAbstractStatement(path as AstPath<AbstractStatement>, print),
-      );
+      doc.push(printAbstractStatement(path as AstPath<AbstractStatement>, print));
       break;
     case NodeKind.STRING_LITERAL:
       doc.push(printStringLiteral(path as AstPath<StringLiteral>, print));
@@ -197,9 +169,7 @@ export function printAbstractNode(
       break;
     default: {
       const exhaustiveCheck: never = nodeKind;
-      throw new InternalScannerError(
-        "Unreachable code reached, nodeKind == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, nodeKind == " + exhaustiveCheck);
     }
   }
 
@@ -207,7 +177,8 @@ export function printAbstractNode(
   if (trailingTriviaDoc) {
     // prevent extra lines at end of specification
     if (
-      (nodeKind === NodeKind.SPECIFICATION) && endsWithHardline(doc) &&
+      nodeKind === NodeKind.SPECIFICATION &&
+      endsWithHardline(doc) &&
       endsWithHardline(trailingTriviaDoc)
     ) {
       doc = removeTrailingHardline(doc);
@@ -216,7 +187,7 @@ export function printAbstractNode(
   }
 
   // trim unneeded arrays
-  while (Array.isArray(doc) && (doc.length === 1)) {
+  while (Array.isArray(doc) && doc.length === 1) {
     doc = doc[0];
   }
 

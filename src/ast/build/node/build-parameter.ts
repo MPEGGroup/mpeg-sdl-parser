@@ -8,23 +8,15 @@ import type { AbstractNode } from "../../node/abstract-node.ts";
 import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 
-export function buildParameter(
-  buildContext: BuildContext,
-): Parameter {
+export function buildParameter(buildContext: BuildContext): Parameter {
   const children: Array<AbstractNode> = [];
 
-  const classIdentifier = fetchOptionalNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const classIdentifier = fetchOptionalNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   let elementaryType: OptionalNode<ElementaryType> = undefined;
   if (classIdentifier) {
     children.push(classIdentifier);
   } else {
-    elementaryType = fetchOptionalNode<ElementaryType>(
-      buildContext,
-      NodeKind.ELEMENTARY_TYPE,
-    );
+    elementaryType = fetchOptionalNode<ElementaryType>(buildContext, NodeKind.ELEMENTARY_TYPE);
     if (elementaryType) {
       children.push(elementaryType);
     } else {
@@ -33,15 +25,7 @@ export function buildParameter(
       );
     }
   }
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   children.push(identifier);
-  return new Parameter(
-    classIdentifier,
-    elementaryType,
-    identifier,
-    children,
-  );
+  return new Parameter(classIdentifier, elementaryType, identifier, children);
 }

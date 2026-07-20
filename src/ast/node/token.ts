@@ -9,9 +9,7 @@ export class Token extends AbstractLeafNode {
     public readonly text: string,
     private readonly location: Location,
   ) {
-    super(
-      NodeKind.TOKEN,
-    );
+    super(NodeKind.TOKEN);
   }
 
   getLocation(): Location {

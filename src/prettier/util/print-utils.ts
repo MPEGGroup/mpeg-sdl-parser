@@ -1,13 +1,7 @@
 import { type Doc, doc } from "prettier";
 import type { Trivia } from "../../ast/node/trivia.ts";
 import type { AbstractNode } from "../../ast/node/abstract-node.ts";
-import {
-  isBreakParent,
-  isFill,
-  isHardline,
-  isIndent,
-  isLabel,
-} from "./types.ts";
+import { isBreakParent, isFill, isHardline, isIndent, isLabel } from "./types.ts";
 import { InternalScannerError } from "../../scanner-error.ts";
 
 const { hardline, ifBreak, label, line, indent } = doc.builders;
@@ -15,8 +9,7 @@ const { hardline, ifBreak, label, line, indent } = doc.builders;
 function getCommentString(trivia: Trivia): string {
   if (!trivia.text.startsWith("//")) {
     throw new InternalScannerError(
-      "Logic Error: Expected comment to start with // : " +
-        JSON.stringify(trivia),
+      "Logic Error: Expected comment to start with // : " + JSON.stringify(trivia),
     );
   }
   // Remove leading "//" from the comment text
@@ -44,7 +37,7 @@ function addTrivia(doc: Doc, trivia: Trivia): Doc[] {
  * Gets the leading trivia doc for the given node if it has any leading trivia.
  */
 export function getLeadingTriviaDoc(node: AbstractNode): Doc | undefined {
-  if (!node || !node.leadingTrivia || (node.leadingTrivia.length === 0)) {
+  if (!node || !node.leadingTrivia || node.leadingTrivia.length === 0) {
     return undefined;
   }
 
@@ -62,7 +55,7 @@ export function getLeadingTriviaDoc(node: AbstractNode): Doc | undefined {
  * Gets the trailing trivia doc for the given node if it has any trailing trivia.
  */
 export function getTrailingTriviaDoc(node: AbstractNode): Doc | undefined {
-  if (!node || !node.trailingTrivia || (node.trailingTrivia.length === 0)) {
+  if (!node || !node.trailingTrivia || node.trailingTrivia.length === 0) {
     return undefined;
   }
 
@@ -79,22 +72,17 @@ export function getTrailingTriviaDoc(node: AbstractNode): Doc | undefined {
 /**
  * Adds the trailing trivia doc to the given doc.
  */
-export function addTrailingTriviaDoc(
-  doc: Doc,
-  trailingTriviaDoc: Doc,
-): Doc {
+export function addTrailingTriviaDoc(doc: Doc, trailingTriviaDoc: Doc): Doc {
   if (Array.isArray(doc)) {
     if (doc.length === 0) {
-      doc = [
-        trailingTriviaDoc,
-      ];
+      doc = [trailingTriviaDoc];
 
       return doc;
     }
 
     // find last element which is not a break-parent and not a hardline
     let i = doc.length - 1;
-    while ((i >= 0) && (isBreakParent(doc[i]) || isHardline(doc[i]))) {
+    while (i >= 0 && (isBreakParent(doc[i]) || isHardline(doc[i]))) {
       i--;
     }
 
@@ -104,19 +92,13 @@ export function addTrailingTriviaDoc(
     const lastNonBreakParentElement = doc[i];
 
     if (Array.isArray(lastNonBreakParentElement)) {
-      doc[i] = addTrailingTriviaDoc(
-        lastNonBreakParentElement,
-        trailingTriviaDoc,
-      );
+      doc[i] = addTrailingTriviaDoc(lastNonBreakParentElement, trailingTriviaDoc);
 
       return doc;
     }
 
     // element might be an indent or label
-    if (
-      isIndent(lastNonBreakParentElement) ||
-      isLabel(lastNonBreakParentElement)
-    ) {
+    if (isIndent(lastNonBreakParentElement) || isLabel(lastNonBreakParentElement)) {
       lastNonBreakParentElement.contents = addTrailingTriviaDoc(
         lastNonBreakParentElement.contents,
         trailingTriviaDoc,
@@ -130,17 +112,9 @@ export function addTrailingTriviaDoc(
     } // otherwise we found the last element to add trivia after
     // behavior is different if the token is a close brace
     else if (lastNonBreakParentElement === "}") {
-      doc[i] = [
-        lastNonBreakParentElement,
-        ifBreak([line, ""], " "),
-        trailingTriviaDoc,
-      ];
+      doc[i] = [lastNonBreakParentElement, ifBreak([line, ""], " "), trailingTriviaDoc];
     } else {
-      doc[i] = [
-        lastNonBreakParentElement,
-        ifBreak([line, "  "], " "),
-        trailingTriviaDoc,
-      ];
+      doc[i] = [lastNonBreakParentElement, ifBreak([line, "  "], " "), trailingTriviaDoc];
     }
 
     return doc;
@@ -172,7 +146,7 @@ export function endsWithHardline(doc: Doc): boolean {
 
     // find last element which is not a break-parent as we ignore trailing break-parents
     let i = doc.length - 1;
-    while ((i >= 0) && isBreakParent(doc[i])) {
+    while (i >= 0 && isBreakParent(doc[i])) {
       i--;
     }
 
@@ -209,7 +183,7 @@ export function startsWithBlankLine(doc: Doc): boolean {
 
     // check if the array starts with ["", hardline, ...]
     if (doc.length >= 2) {
-      if ((doc[0] === "") && isHardline(doc[1])) {
+      if (doc[0] === "" && isHardline(doc[1])) {
         return true;
       }
     }
@@ -238,7 +212,7 @@ function removeLeadingBlankline(doc: Doc): Doc {
 
     // check if the array starts with ["", hardline, ...]
     if (doc.length >= 2) {
-      if ((doc[0] === "") && isHardline(doc[1])) {
+      if (doc[0] === "" && isHardline(doc[1])) {
         // remove the first two elements
         doc.splice(0, 2);
 
@@ -255,7 +229,7 @@ function removeLeadingBlankline(doc: Doc): Doc {
     const firstItem = removeLeadingBlankline(doc[0]);
 
     // don't leave an empty array at the start
-    if (Array.isArray(firstItem) && (firstItem.length === 0)) {
+    if (Array.isArray(firstItem) && firstItem.length === 0) {
       doc.splice(0, 1);
     } else {
       doc[0] = firstItem;
@@ -273,10 +247,7 @@ function removeLeadingBlankline(doc: Doc): Doc {
   if (isIndent(doc) || isLabel(doc)) {
     doc.contents = removeLeadingBlankline(doc.contents);
 
-    if (
-      (doc.contents === "") ||
-      (Array.isArray(doc.contents) && (doc.contents.length === 0))
-    ) {
+    if (doc.contents === "" || (Array.isArray(doc.contents) && doc.contents.length === 0)) {
       doc = "";
     }
   } else if (isFill(doc)) {
@@ -312,7 +283,7 @@ export function removeTrailingBlankline(doc: Doc): Doc {
 
     // check if the array ends with [..., "", hardline]
     if (doc.length >= 2) {
-      if ((doc[doc.length - 2] === "") && isHardline(doc[doc.length - 1])) {
+      if (doc[doc.length - 2] === "" && isHardline(doc[doc.length - 1])) {
         // remove the last two elements
         doc.splice(doc.length - 2, 2);
 
@@ -331,7 +302,7 @@ export function removeTrailingBlankline(doc: Doc): Doc {
     lastItem = removeTrailingBlankline(lastItem);
 
     // don't leave an empty array at the end
-    if (Array.isArray(lastItem) && (lastItem.length === 0)) {
+    if (Array.isArray(lastItem) && lastItem.length === 0) {
       doc.splice(doc.length - 1, 1);
     } else {
       doc[doc.length - 1] = lastItem;
@@ -349,10 +320,7 @@ export function removeTrailingBlankline(doc: Doc): Doc {
   if (isIndent(doc) || isLabel(doc)) {
     doc.contents = removeTrailingBlankline(doc.contents);
 
-    if (
-      (doc.contents === "") ||
-      (Array.isArray(doc.contents) && (doc.contents.length === 0))
-    ) {
+    if (doc.contents === "" || (Array.isArray(doc.contents) && doc.contents.length === 0)) {
       doc = "";
     }
   } else if (isFill(doc)) {
@@ -409,10 +377,7 @@ export function removeTrailingHardline(doc: Doc): Doc {
   if (isIndent(doc) || isLabel(doc)) {
     doc.contents = removeTrailingHardline(doc.contents);
 
-    if (
-      (doc.contents === "") ||
-      (Array.isArray(doc.contents) && (doc.contents.length === 0))
-    ) {
+    if (doc.contents === "" || (Array.isArray(doc.contents) && doc.contents.length === 0)) {
       doc = "";
     }
   } else if (isFill(doc)) {
@@ -487,7 +452,7 @@ export function addIndentedStatements(
     }
 
     indentedDoc.push(statementDoc);
-    if ((i < statementDocs.length - 1) && !endsWithHardline(indentedDoc)) {
+    if (i < statementDocs.length - 1 && !endsWithHardline(indentedDoc)) {
       indentedDoc.push(hardline);
     }
   }
@@ -496,7 +461,7 @@ export function addIndentedStatements(
     // look for leading trivia element and remove it from closeBracePunctuatorDoc array
     let firstElement = closeBracePunctuatorDoc[0];
 
-    if (isLabel(firstElement) && (firstElement.label === "leadingTrivia")) {
+    if (isLabel(firstElement) && firstElement.label === "leadingTrivia") {
       // remove leading trivia from closeBracePunctuatorDoc to inside indented block
       closeBracePunctuatorDoc.splice(0, 1);
 
@@ -568,10 +533,7 @@ export function addNonBreakingWhitespace(doc: Doc): Doc[] {
 /**
  * Interleaves the given value docs with the given comma separator docs and adds breaking whitespace after each comma separator.
  */
-export function interleaveCommaSeparatorDocs(
-  valueDocs: Doc[],
-  commaSeparatorDocs: Doc[],
-): Doc {
+export function interleaveCommaSeparatorDocs(valueDocs: Doc[], commaSeparatorDocs: Doc[]): Doc {
   if (commaSeparatorDocs.length === 0) {
     if (valueDocs.length > 1) {
       throw new InternalScannerError(

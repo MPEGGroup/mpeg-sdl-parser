@@ -13,9 +13,6 @@ export class ExtendsModifier extends AbstractCompositeNode {
     public readonly parameterValueList: OptionalNode<ParameterValueList>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.EXTENDS_MODIFIER,
-      children,
-    );
+    super(NodeKind.EXTENDS_MODIFIER, children);
   }
 }

@@ -14,11 +14,7 @@ export class DoStatement extends AbstractStatement {
     public readonly compoundStatement: RequiredNode<CompoundStatement>,
     public readonly whileKeyword: RequiredNode<Token>,
     public readonly openParenthesisPunctuator: RequiredNode<Token>,
-    public readonly condition: RequiredNode<
-      | AbstractExpression
-      | Identifier
-      | NumberLiteral
-    >,
+    public readonly condition: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly closeParenthesisPunctuator: RequiredNode<Token>,
     public readonly semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,

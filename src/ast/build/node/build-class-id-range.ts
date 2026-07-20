@@ -6,27 +6,18 @@ import type { Token } from "../../node/token.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildClassIdRange(
-  buildContext: BuildContext,
-): ClassIdRange {
-  const startClassId = fetchRequiredNode<ClassId>(
-    buildContext,
-    NodeKind.CLASS_ID,
-  );
+export function buildClassIdRange(buildContext: BuildContext): ClassIdRange {
+  const startClassId = fetchRequiredNode<ClassId>(buildContext, NodeKind.CLASS_ID);
   const rangeOperator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.RANGE_OPERATOR,
   );
-  const endClassId = fetchRequiredNode<ClassId>(
-    buildContext,
-    NodeKind.CLASS_ID,
-  );
+  const endClassId = fetchRequiredNode<ClassId>(buildContext, NodeKind.CLASS_ID);
 
-  return new ClassIdRange(
+  return new ClassIdRange(startClassId, rangeOperator, endClassId, [
     startClassId,
     rangeOperator,
     endClassId,
-    [startClassId, rangeOperator, endClassId],
-  );
+  ]);
 }

@@ -3,35 +3,19 @@ import * as TokenTypeId from "../../lezer/parser.terms.ts";
 
 export const stringDefinitionRules = [
   {
-    previous: [
-      TokenTypeId.utf8string,
-      TokenTypeId.Identifier,
-      TokenTypeId.Assignment,
-    ],
+    previous: [TokenTypeId.utf8string, TokenTypeId.Identifier, TokenTypeId.Assignment],
     expected: TokenTypeId.UtfStringLiteral,
   },
   {
-    previous: [
-      TokenTypeId.utf16string,
-      TokenTypeId.Identifier,
-      TokenTypeId.Assignment,
-    ],
+    previous: [TokenTypeId.utf16string, TokenTypeId.Identifier, TokenTypeId.Assignment],
     expected: TokenTypeId.UtfStringLiteral,
   },
   {
-    previous: [
-      TokenTypeId.utfstring,
-      TokenTypeId.Identifier,
-      TokenTypeId.Assignment,
-    ],
+    previous: [TokenTypeId.utfstring, TokenTypeId.Identifier, TokenTypeId.Assignment],
     expected: TokenTypeId.UtfStringLiteral,
   },
   {
-    previous: [
-      TokenTypeId.base64string,
-      TokenTypeId.Identifier,
-      TokenTypeId.Assignment,
-    ],
+    previous: [TokenTypeId.base64string, TokenTypeId.Identifier, TokenTypeId.Assignment],
     expected: TokenTypeId.Base64StringLiteral,
   },
   {
@@ -65,31 +49,19 @@ export const stringDefinitionRules = [
     ],
   },
   {
-    previous: [
-      TokenTypeId.utf8string,
-      TokenTypeId.Identifier,
-    ],
+    previous: [TokenTypeId.utf8string, TokenTypeId.Identifier],
     expected: TokenTypeId.Semicolon,
   },
   {
-    previous: [
-      TokenTypeId.utf16string,
-      TokenTypeId.Identifier,
-    ],
+    previous: [TokenTypeId.utf16string, TokenTypeId.Identifier],
     expected: TokenTypeId.Semicolon,
   },
   {
-    previous: [
-      TokenTypeId.utfstring,
-      TokenTypeId.Identifier,
-    ],
+    previous: [TokenTypeId.utfstring, TokenTypeId.Identifier],
     expected: TokenTypeId.Semicolon,
   },
   {
-    previous: [
-      TokenTypeId.base64string,
-      TokenTypeId.Identifier,
-    ],
+    previous: [TokenTypeId.base64string, TokenTypeId.Identifier],
     expected: TokenTypeId.Semicolon,
   },
   {

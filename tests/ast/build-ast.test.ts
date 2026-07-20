@@ -91,95 +91,65 @@ describe("buildAst Tests", () => {
       { text: "// hello world", location: { row: 1, column: 2, position: 1 } },
     ];
 
-    expect(
-      specification,
-    ).toEqual(
-      expected,
-    );
+    expect(specification).toEqual(expected);
   });
 
   test("Simple", () => {
     const sdlStringInput = new SdlStringInput("class A {}");
     const parseTree = strictSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
-    const classToken = new Token(
-      TokenKind.CLASS,
-      "class",
-      { row: 1, column: 1, position: 0 },
-    );
+    const classToken = new Token(TokenKind.CLASS, "class", { row: 1, column: 1, position: 0 });
     const identifier = new Identifier(
       "A",
-      new Token(
-        TokenKind.IDENTIFIER,
-        "A",
-        { row: 1, column: 7, position: 6 },
-      ),
+      new Token(TokenKind.IDENTIFIER, "A", { row: 1, column: 7, position: 6 }),
     );
-    const openBraceToken = new Token(
-      TokenKind.OPEN_BRACE,
-      "{",
-      { row: 1, column: 9, position: 8 },
-    );
-    const closeBraceToken = new Token(
-      TokenKind.CLOSE_BRACE,
-      "}",
-      { row: 1, column: 10, position: 9 },
-    );
+    const openBraceToken = new Token(TokenKind.OPEN_BRACE, "{", { row: 1, column: 9, position: 8 });
+    const closeBraceToken = new Token(TokenKind.CLOSE_BRACE, "}", {
+      row: 1,
+      column: 10,
+      position: 9,
+    });
 
-    expect(
-      specification,
-    ).toEqual(
-      new Specification(
-        [
-          new ClassDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            classToken,
-            identifier,
-            undefined,
-            undefined,
-            undefined,
-            openBraceToken,
-            [],
-            closeBraceToken,
-            [classToken, identifier, openBraceToken, closeBraceToken],
-          ),
-        ],
-      ),
+    expect(specification).toEqual(
+      new Specification([
+        new ClassDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          classToken,
+          identifier,
+          undefined,
+          undefined,
+          undefined,
+          openBraceToken,
+          [],
+          closeBraceToken,
+          [classToken, identifier, openBraceToken, closeBraceToken],
+        ),
+      ]),
     );
   });
 
   test("Simple with comments", () => {
-    const sdlStringInput = new SdlStringInput(
-      "// hello\nclass A {// world\n}// again",
-    );
+    const sdlStringInput = new SdlStringInput("// hello\nclass A {// world\n}// again");
     const parseTree = strictSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
 
-    const classToken = new Token(
-      TokenKind.CLASS,
-      "class",
-      { row: 2, column: 1, position: 9 },
-    );
+    const classToken = new Token(TokenKind.CLASS, "class", { row: 2, column: 1, position: 9 });
     const identifier = new Identifier(
       "A",
-      new Token(
-        TokenKind.IDENTIFIER,
-        "A",
-        { row: 2, column: 7, position: 15 },
-      ),
+      new Token(TokenKind.IDENTIFIER, "A", { row: 2, column: 7, position: 15 }),
     );
-    const openBraceToken = new Token(
-      TokenKind.OPEN_BRACE,
-      "{",
-      { row: 2, column: 9, position: 17 },
-    );
-    const closeBraceToken = new Token(
-      TokenKind.CLOSE_BRACE,
-      "}",
-      { row: 3, column: 1, position: 27 },
-    );
+    const openBraceToken = new Token(TokenKind.OPEN_BRACE, "{", {
+      row: 2,
+      column: 9,
+      position: 17,
+    });
+    const closeBraceToken = new Token(TokenKind.CLOSE_BRACE, "}", {
+      row: 3,
+      column: 1,
+      position: 27,
+    });
 
     const classDeclaration = new ClassDeclaration(
       undefined,
@@ -206,59 +176,39 @@ describe("buildAst Tests", () => {
       { text: "// world", location: { row: 2, column: 10, position: 18 } },
     ];
 
-    expect(
-      specification,
-    ).toEqual(
-      new Specification(
-        [
-          classDeclaration,
-        ],
-      ),
-    );
+    expect(specification).toEqual(new Specification([classDeclaration]));
   });
 
   test("Lenient with missing identifier", () => {
     const sdlStringInput = new SdlStringInput("class {}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
-    const classToken = new Token(
-      TokenKind.CLASS,
-      "class",
-      { row: 1, column: 1, position: 0 },
-    );
+    const classToken = new Token(TokenKind.CLASS, "class", { row: 1, column: 1, position: 0 });
     const identifier = new MissingError({ row: 1, column: 7, position: 6 });
-    const openBraceToken = new Token(
-      TokenKind.OPEN_BRACE,
-      "{",
-      { row: 1, column: 7, position: 6 },
-    );
-    const closeBraceToken = new Token(
-      TokenKind.CLOSE_BRACE,
-      "}",
-      { row: 1, column: 8, position: 7 },
-    );
+    const openBraceToken = new Token(TokenKind.OPEN_BRACE, "{", { row: 1, column: 7, position: 6 });
+    const closeBraceToken = new Token(TokenKind.CLOSE_BRACE, "}", {
+      row: 1,
+      column: 8,
+      position: 7,
+    });
 
-    expect(
-      specification,
-    ).toEqual(
-      new Specification(
-        [
-          new ClassDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            classToken,
-            identifier,
-            undefined,
-            undefined,
-            undefined,
-            openBraceToken,
-            [],
-            closeBraceToken,
-            [classToken, identifier, openBraceToken, closeBraceToken],
-          ),
-        ],
-      ),
+    expect(specification).toEqual(
+      new Specification([
+        new ClassDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          classToken,
+          identifier,
+          undefined,
+          undefined,
+          undefined,
+          openBraceToken,
+          [],
+          closeBraceToken,
+          [classToken, identifier, openBraceToken, closeBraceToken],
+        ),
+      ]),
     );
   });
 
@@ -267,29 +217,17 @@ describe("buildAst Tests", () => {
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
 
-    const classToken = new Token(
-      TokenKind.CLASS,
-      "class",
-      { row: 1, column: 1, position: 0 },
-    );
+    const classToken = new Token(TokenKind.CLASS, "class", { row: 1, column: 1, position: 0 });
     const identifier = new Identifier(
       "A",
-      new Token(
-        TokenKind.IDENTIFIER,
-        "A",
-        { row: 1, column: 7, position: 6 },
-      ),
+      new Token(TokenKind.IDENTIFIER, "A", { row: 1, column: 7, position: 6 }),
     );
-    const openBraceToken = new Token(
-      TokenKind.OPEN_BRACE,
-      "{",
-      { row: 1, column: 9, position: 8 },
-    );
-    const unaryOperatorToken = new Token(
-      TokenKind.UNARY_NEGATION,
-      "-",
-      { row: 1, column: 11, position: 10 },
-    );
+    const openBraceToken = new Token(TokenKind.OPEN_BRACE, "{", { row: 1, column: 9, position: 8 });
+    const unaryOperatorToken = new Token(TokenKind.UNARY_NEGATION, "-", {
+      row: 1,
+      column: 11,
+      position: 10,
+    });
     const missingOperandToken = new MissingError({
       row: 1,
       column: 13,
@@ -316,41 +254,29 @@ describe("buildAst Tests", () => {
       missingSemicolonPunctuator,
       [unaryExpression, missingSemicolonPunctuator],
     );
-    const closeBraceToken = new Token(
-      TokenKind.CLOSE_BRACE,
-      "}",
-      { row: 1, column: 13, position: 12 },
-    );
+    const closeBraceToken = new Token(TokenKind.CLOSE_BRACE, "}", {
+      row: 1,
+      column: 13,
+      position: 12,
+    });
 
-    expect(
-      specification,
-    ).toEqual(
-      new Specification(
-        [
-          new ClassDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            classToken,
-            identifier,
-            undefined,
-            undefined,
-            undefined,
-            openBraceToken,
-            [
-              expressionStatement,
-            ],
-            closeBraceToken,
-            [
-              classToken,
-              identifier,
-              openBraceToken,
-              expressionStatement,
-              closeBraceToken,
-            ],
-          ),
-        ],
-      ),
+    expect(specification).toEqual(
+      new Specification([
+        new ClassDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          classToken,
+          identifier,
+          undefined,
+          undefined,
+          undefined,
+          openBraceToken,
+          [expressionStatement],
+          closeBraceToken,
+          [classToken, identifier, openBraceToken, expressionStatement, closeBraceToken],
+        ),
+      ]),
     );
   });
 
@@ -402,9 +328,7 @@ describe("buildAst Tests", () => {
   });
 
   test("Invalid elementary type definition", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A{bit transport_priority;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A{bit transport_priority;}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
 
@@ -412,29 +336,23 @@ describe("buildAst Tests", () => {
   });
 
   test("Single invalid token", () => {
-    const sdlStringInput = new SdlStringInput(
-      "§\n",
-    );
+    const sdlStringInput = new SdlStringInput("§\n");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
 
-    const unknownToken = new Token(
-      TokenKind.ERROR_UNKNOWN_TOKEN,
-      "§",
-      { row: 1, column: 1, position: 0 },
-    );
+    const unknownToken = new Token(TokenKind.ERROR_UNKNOWN_TOKEN, "§", {
+      row: 1,
+      column: 1,
+      position: 0,
+    });
 
     const unexpectedError = new UnexpectedError(unknownToken);
 
-    expect(specification).toEqual(
-      new Specification([unexpectedError]),
-    );
+    expect(specification).toEqual(new Specification([unexpectedError]));
   });
 
   test("Invalid various elements 1", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A{if(a fie==1) {}}\n",
-    );
+    const sdlStringInput = new SdlStringInput("class A{if(a fie==1) {}}\n");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
 
@@ -442,9 +360,7 @@ describe("buildAst Tests", () => {
   });
 
   test("Invalid various elements 2", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A{if(a fie==1){}}\n",
-    );
+    const sdlStringInput = new SdlStringInput("class A{if(a fie==1){}}\n");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
 
@@ -452,9 +368,7 @@ describe("buildAst Tests", () => {
   });
 
   test("While statement", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A{while(i<2){i++;}}\n",
-    );
+    const sdlStringInput = new SdlStringInput("class A{while(i<2){i++;}}\n");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput, true);
 

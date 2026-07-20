@@ -1,68 +1,63 @@
-import type { LengthAttribute } from "../../../dist/index.js";
 import type { ElementaryTypeDefinition } from "../../ast/node/elementary-type-definition.ts";
 import { ElementaryTypeKind } from "../../ast/node/enum/elementary-type-kind.ts";
 import { NodeKind } from "../../ast/node/enum/node-kind.ts";
 import { StatementKind } from "../../ast/node/enum/statement-kind.ts";
+import type { LengthAttribute } from "../../ast/node/length-attribute.ts";
 import type { NumberLiteral } from "../../ast/node/number-literal.ts";
 import { isNumberLiteral } from "../../ast/util/types.ts";
-import {
-  getElementaryTypeKind,
-  getRequiredElementaryType,
-} from "../util/symbol-table-utils.ts";
+import { getElementaryTypeKind, getRequiredElementaryType } from "../util/symbol-table-utils.ts";
 import type { Check, CheckResult } from "./check.ts";
 
-function checkOptionalCannotDefineRange(
-  definition: ElementaryTypeDefinition,
-): CheckResult[] {
-  if (
-    definition.assignmentOperator === undefined &&
-    definition.rangeOperator !== undefined
-  ) {
+function checkOptionalCannotDefineRange(definition: ElementaryTypeDefinition): CheckResult[] {
+  if (definition.assignmentOperator === undefined && definition.rangeOperator !== undefined) {
     const location = definition.startToken?.getLocation();
     if (location) {
-      return [{
-        message:
-          "An optional elementary type definition cannot define a range for a value.",
-        location,
-      }];
+      return [
+        {
+          message: "An optional elementary type definition cannot define a range for a value.",
+          location,
+        },
+      ];
     }
   }
   return [];
 }
 
-function checkRangeMinMaxValidation(
-  definition: ElementaryTypeDefinition,
-): CheckResult[] {
+function checkRangeMinMaxValidation(definition: ElementaryTypeDefinition): CheckResult[] {
   if (
-    definition.value && definition.endValue &&
-    isNumberLiteral(definition.value) && isNumberLiteral(definition.endValue)
+    definition.value &&
+    definition.endValue &&
+    isNumberLiteral(definition.value) &&
+    isNumberLiteral(definition.endValue)
   ) {
     const minValue = definition.value as NumberLiteral;
     const maxValue = definition.endValue as NumberLiteral;
 
     // Check that types match
     if (minValue.numberLiteralKind !== maxValue.numberLiteralKind) {
-      const location = maxValue.startToken?.getLocation() ||
-        definition.startToken!.getLocation();
+      const location = maxValue.startToken?.getLocation() || definition.startToken!.getLocation();
       if (location) {
-        return [{
-          message:
-            "The min_value and max_value must be of the same type and the max_value must be greater than or equal to the min_value.",
-          location,
-        }];
+        return [
+          {
+            message:
+              "The min_value and max_value must be of the same type and the max_value must be greater than or equal to the min_value.",
+            location,
+          },
+        ];
       }
     }
 
     // Check that max >= min
     if (maxValue.value < minValue.value) {
-      const location = maxValue.startToken?.getLocation() ||
-        definition.startToken!.getLocation();
+      const location = maxValue.startToken?.getLocation() || definition.startToken!.getLocation();
       if (location) {
-        return [{
-          message:
-            "The min_value and max_value must be of the same type and the max_value must be greater than or equal to the min_value.",
-          location,
-        }];
+        return [
+          {
+            message:
+              "The min_value and max_value must be of the same type and the max_value must be greater than or equal to the min_value.",
+            location,
+          },
+        ];
       }
     }
   }
@@ -73,11 +68,7 @@ function checkValueRepresentability(
   definition: ElementaryTypeDefinition,
   strict: boolean,
 ): CheckResult[] {
-  const elementaryType = getRequiredElementaryType(
-    definition.elementaryType,
-    definition,
-    strict,
-  );
+  const elementaryType = getRequiredElementaryType(definition.elementaryType, definition, strict);
 
   if (!elementaryType) {
     return [];
@@ -131,14 +122,16 @@ function checkValueRepresentability(
     }
 
     if (!isValid) {
-      const location = valueLiteral.startToken?.getLocation() ||
-        definition.startToken!.getLocation();
+      const location =
+        valueLiteral.startToken?.getLocation() || definition.startToken!.getLocation();
       if (location) {
-        return [{
-          message:
-            "The specified value cannot be represented using the specific width of the variable.",
-          location,
-        }];
+        return [
+          {
+            message:
+              "The specified value cannot be represented using the specific width of the variable.",
+            location,
+          },
+        ];
       }
     }
   }

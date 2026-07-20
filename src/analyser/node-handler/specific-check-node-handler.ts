@@ -12,35 +12,25 @@ export class SpecificCheckNodeHandler extends AbstractAnalysisNodeHandler {
     super(symbolTable, strict);
 
     this.checks.forEach((check) => {
-      this.registerBeforeNodeHandler(
-        check.nodeKind,
-        check.subKind,
-        (node) => {
-          const checkResults = check.checkFunc(node, symbolTable, strict);
+      this.registerBeforeNodeHandler(check.nodeKind, check.subKind, (node) => {
+        const checkResults = check.checkFunc(node, symbolTable, strict);
 
-          for (const checkResult of checkResults) {
-            if (checkResult.isWarning) {
-              const warning = new SemanticWarning(
-                checkResult.message,
-                checkResult.location,
-              );
+        for (const checkResult of checkResults) {
+          if (checkResult.isWarning) {
+            const warning = new SemanticWarning(checkResult.message, checkResult.location);
 
-              this.semanticWarnings.push(warning);
-            } else {
-              const error = new SemanticError(
-                checkResult.message,
-                checkResult.location,
-              );
+            this.semanticWarnings.push(warning);
+          } else {
+            const error = new SemanticError(checkResult.message, checkResult.location);
 
-              if (this.strict) {
-                throw error;
-              }
-
-              this.semanticErrors.push(error);
+            if (this.strict) {
+              throw error;
             }
+
+            this.semanticErrors.push(error);
           }
-        },
-      );
+        }
+      });
     });
   }
 }

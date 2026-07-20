@@ -1,8 +1,5 @@
 import { AstPath, type Doc, doc } from "prettier";
-import {
-  addBreakingWhitespace,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addBreakingWhitespace, addNonBreakingWhitespace } from "./util/print-utils.ts";
 import type { AbstractExpression } from "../ast/node/abstract-expression.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import { ExpressionKind } from "../ast/node/enum/expression-kind.ts";
@@ -23,40 +20,26 @@ function printUnaryExpression(
   const doc: Doc = [];
 
   if (unaryExpression.unaryOperator !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "unaryOperator" as keyof UnaryExpression["unaryOperator"],
-      ),
-    );
+    doc.push(path.call(print, "unaryOperator" as keyof UnaryExpression["unaryOperator"]));
   }
 
   if (unaryExpression.openParenthesisPunctuator !== undefined) {
     doc.push(
       path.call(
         print,
-        "openParenthesisPunctuator" as keyof UnaryExpression[
-          "openParenthesisPunctuator"
-        ],
+        "openParenthesisPunctuator" as keyof UnaryExpression["openParenthesisPunctuator"],
       ),
     );
   }
 
-  doc.push(
-    path.call(
-      print,
-      "operand",
-    ),
-  );
+  doc.push(path.call(print, "operand"));
 
   if (unaryExpression.arrayElementAccess !== undefined) {
     doc.push(
-      ...(
-        path.call(
-          print,
-          "arrayElementAccess" as keyof UnaryExpression["arrayElementAccess"],
-        ) as Doc[]
-      ),
+      ...(path.call(
+        print,
+        "arrayElementAccess" as keyof UnaryExpression["arrayElementAccess"],
+      ) as Doc[]),
     );
   }
 
@@ -73,20 +56,13 @@ function printUnaryExpression(
     doc.push(
       path.call(
         print,
-        "closeParenthesisPunctuator" as keyof UnaryExpression[
-          "closeParenthesisPunctuator"
-        ],
+        "closeParenthesisPunctuator" as keyof UnaryExpression["closeParenthesisPunctuator"],
       ),
     );
   }
 
   if (unaryExpression.postfixOperator !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "postfixOperator" as keyof UnaryExpression["postfixOperator"],
-      ),
-    );
+    doc.push(path.call(print, "postfixOperator" as keyof UnaryExpression["postfixOperator"]));
   }
 
   return doc;
@@ -108,8 +84,9 @@ function printBinaryExpression(
 
   const rightDoc = path.call(print, "rightOperand");
   if (
-    Array.isArray(rightDoc) && (rightDoc.length === 3) &&
-    ((rightDoc[1] as IfBreak).type === "if-break")
+    Array.isArray(rightDoc) &&
+    rightDoc.length === 3 &&
+    (rightDoc[1] as IfBreak).type === "if-break"
   ) {
     subDoc = addBreakingWhitespace(subDoc);
     subDoc.push(rightDoc[0]);
@@ -129,16 +106,10 @@ function printLengthOfExpression(
 ): Doc {
   const doc: Doc = [];
 
-  doc.push(
-    path.call(print, "lengthOfKeyword"),
-  );
-  doc.push(
-    path.call(print, "openParenthesisPunctuator"),
-  );
+  doc.push(path.call(print, "lengthOfKeyword"));
+  doc.push(path.call(print, "openParenthesisPunctuator"));
   doc.push(path.call(print, "operand"));
-  doc.push(
-    path.call(print, "closeParenthesisPunctuator"),
-  );
+  doc.push(path.call(print, "closeParenthesisPunctuator"));
 
   return doc;
 }
@@ -152,10 +123,7 @@ export function printAbstractExpression(
     case ExpressionKind.BINARY:
       return printBinaryExpression(path as AstPath<BinaryExpression>, print);
     case ExpressionKind.LENGTHOF:
-      return printLengthOfExpression(
-        path as AstPath<LengthofExpression>,
-        print,
-      );
+      return printLengthOfExpression(path as AstPath<LengthofExpression>, print);
     case ExpressionKind.UNARY:
       return printUnaryExpression(path as AstPath<UnaryExpression>, print);
     default: {

@@ -8,30 +8,26 @@ import { TokenKind } from "../../node/enum/token-kind.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import type { Token } from "../../node/token.ts";
 
-export function buildExplicitArrayDimension(
-  buildContext: BuildContext,
-): ExplicitArrayDimension {
+export function buildExplicitArrayDimension(buildContext: BuildContext): ExplicitArrayDimension {
   const openBracketPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.OPEN_BRACKET,
   );
-  const size = fetchRequiredNode<
-    AbstractExpression | Identifier | NumberLiteral
-  >(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-  );
+  const size = fetchRequiredNode<AbstractExpression | Identifier | NumberLiteral>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+    NodeKind.NUMBER_LITERAL,
+  ]);
   const closeBracketPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.CLOSE_BRACKET,
   );
 
-  return new ExplicitArrayDimension(
+  return new ExplicitArrayDimension(openBracketPunctuator, size, closeBracketPunctuator, [
     openBracketPunctuator,
     size,
-    closeBracketPunctuator,
-    [openBracketPunctuator, size, closeBracketPunctuator!],
-  );
+    closeBracketPunctuator!,
+  ]);
 }

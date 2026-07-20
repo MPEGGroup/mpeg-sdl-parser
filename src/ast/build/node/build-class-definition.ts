@@ -7,29 +7,17 @@ import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import type { Token } from "../../node/token.ts";
 
-export function buildClassDefinition(
-  buildContext: BuildContext,
-): ClassDefinition {
+export function buildClassDefinition(buildContext: BuildContext): ClassDefinition {
   const children: Array<AbstractNode> = [];
 
-  const legacyKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.LEGACY,
-  );
+  const legacyKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.LEGACY);
   if (legacyKeyword) {
     children.push(legacyKeyword);
   }
 
-  const classIdentifier = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const classIdentifier = fetchRequiredNode<Token>(buildContext, NodeKind.IDENTIFIER);
   children.push(classIdentifier);
-  const identifier = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Token>(buildContext, NodeKind.IDENTIFIER);
   children.push(identifier);
   const parameterValueList = fetchOptionalNode<ParameterValueList>(
     buildContext,

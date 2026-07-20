@@ -285,14 +285,12 @@ Object.values(TokenTypeId).forEach((value) => {
       break;
     default: {
       const exhaustiveCheck: never = value;
-      throw new InternalScannerError(
-        "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, tokenTypeId == " + exhaustiveCheck);
     }
   }
 });
 
 export const syntacticTokenNodeProp = new NodeProp<string>();
-export const syntacticTokenNodePropSource = syntacticTokenNodeProp.add(
-  (type: NodeType) => tokenIdToSyntaxStringMapping.get(type.id),
+export const syntacticTokenNodePropSource = syntacticTokenNodeProp.add((type: NodeType) =>
+  tokenIdToSyntaxStringMapping.get(type.id),
 );

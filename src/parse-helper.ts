@@ -14,9 +14,7 @@ import { createSyntaxErrorFromTextAndCursor } from "./lezer/create-syntax-error-
 /**
  * Create a dynamic prettier plugin for SDL using the pre-parsed AST.
  */
-function getPreParsedAstPrettierPlugin(
-  specification: Specification,
-): Plugin<AbstractNode> {
+function getPreParsedAstPrettierPlugin(specification: Specification): Plugin<AbstractNode> {
   const prettierPluginSdlParser = prettierPluginSdl.parsers!.sdl!;
 
   return {
@@ -43,9 +41,7 @@ export function collateSyntaxErrors(
   parseTree: Tree,
   sdlStringInput: SdlStringInput,
 ): SyntaxError[] {
-  const text = Text.of(
-    sdlStringInput.read(0, sdlStringInput.length).split("\n"),
-  );
+  const text = Text.of(sdlStringInput.read(0, sdlStringInput.length).split("\n"));
 
   const syntaxErrors = [];
   const cursor = parseTree.cursor();
@@ -83,10 +79,7 @@ export function prettyPrint(
  * @param specification The specification to be traversed.
  * @param nodeHandler The handler to perform operations on each node.
  */
-export function dispatchNodeHandler(
-  specification: Specification,
-  nodeHandler: NodeHandler,
-) {
+export function dispatchNodeHandler(specification: Specification, nodeHandler: NodeHandler) {
   const traversingVisitor = new TraversingVisitor(nodeHandler);
 
   traversingVisitor.visit(specification);

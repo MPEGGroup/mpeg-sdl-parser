@@ -11,9 +11,7 @@ import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildImplicitArrayDimension(
-  buildContext: BuildContext,
-): ImplicitArrayDimension {
+export function buildImplicitArrayDimension(buildContext: BuildContext): ImplicitArrayDimension {
   const children: Array<AbstractNode> = [];
 
   const openBracketPunctuator = fetchRequiredNode<Token>(
@@ -22,16 +20,12 @@ export function buildImplicitArrayDimension(
     TokenKind.OPEN_BRACKET,
   );
   children.push(openBracketPunctuator);
-  const rangeStart = fetchOptionalNode<
-    AbstractExpression | NumberLiteral | Identifier
-  >(
+  const rangeStart = fetchOptionalNode<AbstractExpression | NumberLiteral | Identifier>(
     buildContext,
     [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
   );
   let rangeOperator: OptionalNode<Token> = undefined;
-  let rangeEnd: OptionalNode<
-    AbstractExpression | NumberLiteral | Identifier
-  > = undefined;
+  let rangeEnd: OptionalNode<AbstractExpression | NumberLiteral | Identifier> = undefined;
   if (rangeStart) {
     children.push(rangeStart);
     rangeOperator = fetchOptionalNode<Token>(
@@ -46,12 +40,11 @@ export function buildImplicitArrayDimension(
         "Expected range operator after range start in implicit array dimension",
       );
     }
-    rangeEnd = fetchOptionalNode<
-      AbstractExpression | NumberLiteral | Identifier
-    >(
-      buildContext,
-      [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-    );
+    rangeEnd = fetchOptionalNode<AbstractExpression | NumberLiteral | Identifier>(buildContext, [
+      NodeKind.EXPRESSION,
+      NodeKind.IDENTIFIER,
+      NodeKind.NUMBER_LITERAL,
+    ]);
     if (rangeEnd) {
       children.push(rangeEnd);
     } else {

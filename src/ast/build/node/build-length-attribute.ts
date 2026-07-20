@@ -9,9 +9,7 @@ import type { Token } from "../../node/token.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import type { BuildContext } from "../util/build-context.ts";
 
-export function buildLengthAttribute(
-  buildContext: BuildContext,
-): LengthAttribute {
+export function buildLengthAttribute(buildContext: BuildContext): LengthAttribute {
   const children: Array<AbstractNode> = [];
 
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
@@ -22,12 +20,11 @@ export function buildLengthAttribute(
 
   children.push(openParenthesisPunctuator);
 
-  const length = fetchRequiredNode<
-    NumberLiteral | Identifier | AbstractExpression
-  >(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-  );
+  const length = fetchRequiredNode<NumberLiteral | Identifier | AbstractExpression>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+    NodeKind.NUMBER_LITERAL,
+  ]);
 
   children.push(length);
 

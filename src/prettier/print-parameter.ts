@@ -11,19 +11,9 @@ export function printParameter(
   const doc: Doc = [];
 
   if (parameter.classIdentifier !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "classIdentifier" as keyof Parameter["classIdentifier"],
-      ),
-    );
+    doc.push(path.call(print, "classIdentifier" as keyof Parameter["classIdentifier"]));
   } else if (parameter.elementaryType !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "elementaryType" as keyof Parameter["elementaryType"],
-      ),
-    );
+    doc.push(path.call(print, "elementaryType" as keyof Parameter["elementaryType"]));
   }
 
   addNonBreakingWhitespace(doc);

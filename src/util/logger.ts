@@ -33,7 +33,7 @@ export const debugEnabled = (() => {
   if (typeof localStorage !== "undefined") {
     try {
       return localStorage.getItem("MPEG_SDL_PARSER_DEBUG") !== null;
-    } catch (_e) {
+    } catch {
       // Ignore SecurityError if localStorage is disabled.
       return false;
     }
@@ -71,26 +71,22 @@ function wrapDefaultLogger(
   return (message, ...optionalParams) => {
     if (message instanceof Function) {
       loggerFunction(
-        `${levelPadding} [${loggerName}]${
-          LOGGER_NAME_PADDINGS[loggerName]
-        } ${message()}`,
+        `${levelPadding} [${loggerName}]${LOGGER_NAME_PADDINGS[loggerName]} ${message()}`,
         ...optionalParams,
       );
       return;
     }
     if (message instanceof Object) {
       loggerFunction(
-        `${levelPadding} [${loggerName}]${LOGGER_NAME_PADDINGS[loggerName]} ${
-          JSON.stringify(message)
-        }`,
+        `${levelPadding} [${loggerName}]${LOGGER_NAME_PADDINGS[loggerName]} ${JSON.stringify(
+          message,
+        )}`,
         ...optionalParams,
       );
       return;
     }
     loggerFunction(
-      `${levelPadding} [${loggerName}]${
-        LOGGER_NAME_PADDINGS[loggerName]
-      } ${message}`,
+      `${levelPadding} [${loggerName}]${LOGGER_NAME_PADDINGS[loggerName]} ${message}`,
       ...optionalParams,
     );
   };
@@ -117,38 +113,16 @@ export default function getLogger(loggerName: string): Logger {
 
     LOGGER_NAME_PADDINGS[loggerName] = "";
   } else if (LOGGER_NAME_PADDINGS[loggerName] === undefined) {
-    LOGGER_NAME_PADDINGS[loggerName] = " ".repeat(
-      maxLoggerNameLength - loggerName.length,
-    );
+    LOGGER_NAME_PADDINGS[loggerName] = " ".repeat(maxLoggerNameLength - loggerName.length);
   }
 
   if (debugEnabled) {
     return {
-      trace: wrapDefaultLogger(
-        loggerName,
-        LEVEL_PADDINGS.TRACE,
-        globalThis.defaultLogger.trace,
-      ),
-      debug: wrapDefaultLogger(
-        loggerName,
-        LEVEL_PADDINGS.DEBUG,
-        globalThis.defaultLogger.debug,
-      ),
-      info: wrapDefaultLogger(
-        loggerName,
-        LEVEL_PADDINGS.INFO,
-        globalThis.defaultLogger.info,
-      ),
-      warn: wrapDefaultLogger(
-        loggerName,
-        LEVEL_PADDINGS.WARN,
-        globalThis.defaultLogger.warn,
-      ),
-      error: wrapDefaultLogger(
-        loggerName,
-        LEVEL_PADDINGS.ERROR,
-        globalThis.defaultLogger.error,
-      ),
+      trace: wrapDefaultLogger(loggerName, LEVEL_PADDINGS.TRACE, globalThis.defaultLogger.trace),
+      debug: wrapDefaultLogger(loggerName, LEVEL_PADDINGS.DEBUG, globalThis.defaultLogger.debug),
+      info: wrapDefaultLogger(loggerName, LEVEL_PADDINGS.INFO, globalThis.defaultLogger.info),
+      warn: wrapDefaultLogger(loggerName, LEVEL_PADDINGS.WARN, globalThis.defaultLogger.warn),
+      error: wrapDefaultLogger(loggerName, LEVEL_PADDINGS.ERROR, globalThis.defaultLogger.error),
     };
   }
   return {
@@ -156,10 +130,6 @@ export default function getLogger(loggerName: string): Logger {
     debug: () => {},
     info: () => {},
     warn: () => {},
-    error: wrapDefaultLogger(
-      loggerName,
-      LEVEL_PADDINGS.ERROR,
-      globalThis.defaultLogger.error,
-    ),
+    error: wrapDefaultLogger(loggerName, LEVEL_PADDINGS.ERROR, globalThis.defaultLogger.error),
   };
 }

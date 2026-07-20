@@ -9,22 +9,14 @@ import { fetchOneToManyList, fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import { ArrayDimensionKind } from "../../node/enum/array-dimension-kind.ts";
 
-export function buildComputedArrayDefinition(
-  buildContext: BuildContext,
-): ComputedArrayDefinition {
+export function buildComputedArrayDefinition(buildContext: BuildContext): ComputedArrayDefinition {
   const computedKeyword = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
     TokenKind.COMPUTED,
   );
-  const elementaryType = fetchRequiredNode<ElementaryType>(
-    buildContext,
-    NodeKind.ELEMENTARY_TYPE,
-  );
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const elementaryType = fetchRequiredNode<ElementaryType>(buildContext, NodeKind.ELEMENTARY_TYPE);
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   const dimensions = fetchOneToManyList<ExplicitArrayDimension>(
     buildContext,
     NodeKind.ARRAY_DIMENSION,
@@ -42,12 +34,6 @@ export function buildComputedArrayDefinition(
     identifier,
     dimensions,
     semicolonPunctuator,
-    [
-      computedKeyword,
-      elementaryType,
-      identifier,
-      ...dimensions,
-      semicolonPunctuator,
-    ],
+    [computedKeyword, elementaryType, identifier, ...dimensions, semicolonPunctuator],
   );
 }

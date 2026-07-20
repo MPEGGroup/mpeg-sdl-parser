@@ -27,10 +27,5 @@ export function createSyntaxErrorFromTextAndPosition(
     }
   }
 
-  return new SyntaxError(
-    message,
-    location,
-    line.text,
-    precedingLines,
-  );
+  return new SyntaxError(message, location, line.text, precedingLines);
 }

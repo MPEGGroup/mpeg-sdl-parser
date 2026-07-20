@@ -59,31 +59,22 @@ const logger = getLogger("completionRules");
 /**
  * A map from parent token type ID to a HierarchicalSearch of previous sibling token type IDs to expected token type IDs.
  */
-export const completionRulesByParentMap: Map<
-  number,
-  HierarchicalSearch<number[]>
-> = new Map();
+export const completionRulesByParentMap: Map<number, HierarchicalSearch<number[]>> = new Map();
 
 /**
  * A map from token type ID to potential starting syntactic tokens.
  */
-export const potentialSyntacticTokensByTokenTypeId: Map<number, string[]> =
-  new Map();
+export const potentialSyntacticTokensByTokenTypeId: Map<number, string[]> = new Map();
 
 type CompletionRule = {
   previous: number | number[];
   expected: number | number[];
 };
 
-function addRulesForParent(
-  parentTokenId: number,
-  rules: CompletionRule | CompletionRule[],
-) {
+function addRulesForParent(parentTokenId: number, rules: CompletionRule | CompletionRule[]) {
   if (completionRulesByParentMap.has(parentTokenId)) {
     throw new InternalScannerError(
-      `Completion rules for parent token ${
-        nodeTypes[parentTokenId].name
-      } already exist`,
+      `Completion rules for parent token ${nodeTypes[parentTokenId].name} already exist`,
     );
   }
 
@@ -92,32 +83,22 @@ function addRulesForParent(
   }
 
   if (rules.length === 0) {
-    logger.warn(
-      `No completion rules provided for parent token ${
-        nodeTypes[parentTokenId].name
-      }`,
-    );
+    logger.warn(`No completion rules provided for parent token ${nodeTypes[parentTokenId].name}`);
     return;
   }
 
   const hierarchicalSearch = new HierarchicalSearch<number[]>();
 
   for (const rule of rules) {
-    const previousTokens = Array.isArray(rule.previous)
-      ? rule.previous
-      : [rule.previous];
-    const expectedTokens = Array.isArray(rule.expected)
-      ? rule.expected
-      : [rule.expected];
+    const previousTokens = Array.isArray(rule.previous) ? rule.previous : [rule.previous];
+    const expectedTokens = Array.isArray(rule.expected) ? rule.expected : [rule.expected];
 
     hierarchicalSearch.set(previousTokens, expectedTokens);
   }
 
   completionRulesByParentMap.set(parentTokenId, hierarchicalSearch);
 
-  logger.debug(
-    `Added completion rules for parent token ${nodeTypes[parentTokenId].name}`,
-  );
+  logger.debug(`Added completion rules for parent token ${nodeTypes[parentTokenId].name}`);
 }
 
 /**
@@ -129,25 +110,16 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       addRulesForParent(TokenTypeId.AlignedModifier, alignedModifierRules);
       break;
     case TokenTypeId.AggregateOutputValue:
-      addRulesForParent(
-        TokenTypeId.AggregateOutputValue,
-        aggregateOutputValueRules,
-      );
+      addRulesForParent(TokenTypeId.AggregateOutputValue, aggregateOutputValueRules);
       break;
     case TokenTypeId.ArrayDefinition:
       addRulesForParent(TokenTypeId.ArrayDefinition, arrayDefinitionRules);
       break;
     case TokenTypeId.AssignmentExpression:
-      addRulesForParent(
-        TokenTypeId.AssignmentExpression,
-        assignmentExpressionRules,
-      );
+      addRulesForParent(TokenTypeId.AssignmentExpression, assignmentExpressionRules);
       break;
     case TokenTypeId.ArrayElementAccess:
-      addRulesForParent(
-        TokenTypeId.ArrayElementAccess,
-        arrayElementAccessRules,
-      );
+      addRulesForParent(TokenTypeId.ArrayElementAccess, arrayElementAccessRules);
       break;
     case TokenTypeId.BinaryExpression:
       addRulesForParent(TokenTypeId.BinaryExpression, binaryExpressionRules);
@@ -177,16 +149,10 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       addRulesForParent(TokenTypeId.CompoundStatement, compoundStatementRules);
       break;
     case TokenTypeId.ComputedArrayDefinition:
-      addRulesForParent(
-        TokenTypeId.ComputedArrayDefinition,
-        computedArrayDefinitionRules,
-      );
+      addRulesForParent(TokenTypeId.ComputedArrayDefinition, computedArrayDefinitionRules);
       break;
     case TokenTypeId.ComputedElementaryTypeDefinition:
-      addRulesForParent(
-        TokenTypeId.ComputedElementaryTypeDefinition,
-        computedElementaryTypeRules,
-      );
+      addRulesForParent(TokenTypeId.ComputedElementaryTypeDefinition, computedElementaryTypeRules);
       break;
     case TokenTypeId.DefaultClause:
       addRulesForParent(TokenTypeId.DefaultClause, defaultClauseRules);
@@ -198,40 +164,22 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       addRulesForParent(TokenTypeId.ElementaryType, elementaryTypeRules);
       break;
     case TokenTypeId.ElementaryTypeDefinition:
-      addRulesForParent(
-        TokenTypeId.ElementaryTypeDefinition,
-        elementaryTypeDefinitionRules,
-      );
+      addRulesForParent(TokenTypeId.ElementaryTypeDefinition, elementaryTypeDefinitionRules);
       break;
     case TokenTypeId.ElementaryTypeOutputValue:
-      addRulesForParent(
-        TokenTypeId.ElementaryTypeOutputValue,
-        elementaryTypeOutputValueRules,
-      );
+      addRulesForParent(TokenTypeId.ElementaryTypeOutputValue, elementaryTypeOutputValueRules);
       break;
     case TokenTypeId.ExpandableModifier:
-      addRulesForParent(
-        TokenTypeId.ExpandableModifier,
-        expandableModifierRules,
-      );
+      addRulesForParent(TokenTypeId.ExpandableModifier, expandableModifierRules);
       break;
     case TokenTypeId.ExplicitArrayDimension:
-      addRulesForParent(
-        TokenTypeId.ExplicitArrayDimension,
-        explicitArrayDimensionRules,
-      );
+      addRulesForParent(TokenTypeId.ExplicitArrayDimension, explicitArrayDimensionRules);
       break;
     case TokenTypeId.ExpressionStatement:
-      addRulesForParent(
-        TokenTypeId.ExpressionStatement,
-        expressionStatementRules,
-      );
+      addRulesForParent(TokenTypeId.ExpressionStatement, expressionStatementRules);
       break;
     case TokenTypeId.ExtendedClassIdRange:
-      addRulesForParent(
-        TokenTypeId.ExtendedClassIdRange,
-        extendedClassIdRangeRules,
-      );
+      addRulesForParent(TokenTypeId.ExtendedClassIdRange, extendedClassIdRangeRules);
       break;
     case TokenTypeId.ExtendsModifier:
       addRulesForParent(TokenTypeId.ExtendsModifier, extendsModifierRules);
@@ -243,19 +191,13 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       addRulesForParent(TokenTypeId.IfStatement, ifStatementRules);
       break;
     case TokenTypeId.ImplicitArrayDimension:
-      addRulesForParent(
-        TokenTypeId.ImplicitArrayDimension,
-        implicitArrayDimensionRules,
-      );
+      addRulesForParent(TokenTypeId.ImplicitArrayDimension, implicitArrayDimensionRules);
       break;
     case TokenTypeId.LengthAttribute:
       addRulesForParent(TokenTypeId.LengthAttribute, lengthAttributeRules);
       break;
     case TokenTypeId.LengthofExpression:
-      addRulesForParent(
-        TokenTypeId.LengthofExpression,
-        lengthofExpressionRules,
-      );
+      addRulesForParent(TokenTypeId.LengthofExpression, lengthofExpressionRules);
       break;
     case TokenTypeId.MapDeclaration:
       addRulesForParent(TokenTypeId.MapDeclaration, mapDeclarationRules);
@@ -273,16 +215,10 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       addRulesForParent(TokenTypeId.ParameterList, parameterListRules);
       break;
     case TokenTypeId.ParameterValueList:
-      addRulesForParent(
-        TokenTypeId.ParameterValueList,
-        parameterValueListRules,
-      );
+      addRulesForParent(TokenTypeId.ParameterValueList, parameterValueListRules);
       break;
     case TokenTypeId.PartialArrayDimension:
-      addRulesForParent(
-        TokenTypeId.PartialArrayDimension,
-        partialArrayDimensionRules,
-      );
+      addRulesForParent(TokenTypeId.PartialArrayDimension, partialArrayDimensionRules);
       break;
     case TokenTypeId.StringDefinition:
       addRulesForParent(TokenTypeId.StringDefinition, stringDefinitionRules);
@@ -390,9 +326,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;
-      throw new InternalScannerError(
-        "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, tokenTypeId == " + exhaustiveCheck);
     }
   }
 });
@@ -405,9 +339,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
   const resolveTokenTypeId = (tokenTypeId: number) => {
     if (completionRulesByParentMap.has(tokenTypeId)) {
       // recurse
-      const childHierarchicalSearch = completionRulesByParentMap.get(
-        tokenTypeId,
-      )!;
+      const childHierarchicalSearch = completionRulesByParentMap.get(tokenTypeId)!;
       const childPotentialTokenTypeIds = childHierarchicalSearch.get([-1]);
 
       if (childPotentialTokenTypeIds) {

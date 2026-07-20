@@ -11,18 +11,13 @@ export class IfStatement extends AbstractStatement {
   constructor(
     public readonly ifKeyword: RequiredNode<Token>,
     public readonly openParenthesisPunctuator: RequiredNode<Token>,
-    public readonly condition: RequiredNode<
-      AbstractExpression | Identifier | NumberLiteral
-    >,
+    public readonly condition: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly closeParenthesisPunctuator: RequiredNode<Token>,
     public readonly ifStatement: RequiredNode<AbstractStatement>,
     public readonly elseKeyword: OptionalNode<Token>,
     public readonly elseStatement: OptionalNode<AbstractStatement>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.IF,
-      children,
-    );
+    super(StatementKind.IF, children);
   }
 }

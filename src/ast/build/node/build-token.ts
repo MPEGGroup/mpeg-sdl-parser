@@ -5,9 +5,7 @@ import { syntacticTokenNodeProp } from "../../../lezer/props/syntactic-token-nod
 import { getLocationFromTextPosition } from "../../../util/location-utils.ts";
 import { tokenKindByTokenTypeId } from "../util/token-kind-by-token-type-id-map.ts";
 
-export function buildToken(
-  buildContext: BuildContext,
-): Token {
+export function buildToken(buildContext: BuildContext): Token {
   const { cursor, text } = buildContext;
   const tokenKind = tokenKindByTokenTypeId.get(cursor.type.id);
 
@@ -18,8 +16,8 @@ export function buildToken(
   }
 
   // Assuming the syntacticTokenNodeProp is easier to get than slicing the text each time
-  const tokenText = cursor.type.prop(syntacticTokenNodeProp) ||
-    text.sliceString(cursor.from, cursor.to);
+  const tokenText =
+    cursor.type.prop(syntacticTokenNodeProp) || text.sliceString(cursor.from, cursor.to);
   const location = getLocationFromTextPosition(text, cursor.from);
 
   return new Token(tokenKind, tokenText, location);

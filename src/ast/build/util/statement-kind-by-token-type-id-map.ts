@@ -13,16 +13,10 @@ export const statementKindByTokenTypeId: Map<number, StatementKind> = new Map();
 Object.values(TokenTypeId).forEach((tokenTypeId) => {
   switch (tokenTypeId) {
     case TokenTypeId.ArrayDefinition:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.ARRAY_DEFINITION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.ARRAY_DEFINITION);
       break;
     case TokenTypeId.ComputedArrayDefinition:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.COMPUTED_ARRAY_DEFINITION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.COMPUTED_ARRAY_DEFINITION);
       break;
     case TokenTypeId.ComputedElementaryTypeDefinition:
       statementKindByTokenTypeId.set(
@@ -31,16 +25,10 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       );
       break;
     case TokenTypeId.ClassDeclaration:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.CLASS_DECLARATION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.CLASS_DECLARATION);
       break;
     case TokenTypeId.ClassDefinition:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.CLASS_DEFINITION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.CLASS_DEFINITION);
       break;
     case TokenTypeId.CompoundStatement:
       statementKindByTokenTypeId.set(tokenTypeId, StatementKind.COMPOUND);
@@ -49,10 +37,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       statementKindByTokenTypeId.set(tokenTypeId, StatementKind.DO);
       break;
     case TokenTypeId.ElementaryTypeDefinition:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.ELEMENTARY_TYPE_DEFINITION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.ELEMENTARY_TYPE_DEFINITION);
       break;
     case TokenTypeId.ExpressionStatement:
       statementKindByTokenTypeId.set(tokenTypeId, StatementKind.EXPRESSION);
@@ -64,22 +49,13 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       statementKindByTokenTypeId.set(tokenTypeId, StatementKind.IF);
       break;
     case TokenTypeId.MapDeclaration:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.MAP_DECLARATION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.MAP_DECLARATION);
       break;
     case TokenTypeId.MapDefinition:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.MAP_DEFINITION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.MAP_DEFINITION);
       break;
     case TokenTypeId.StringDefinition:
-      statementKindByTokenTypeId.set(
-        tokenTypeId,
-        StatementKind.STRING_DEFINITION,
-      );
+      statementKindByTokenTypeId.set(tokenTypeId, StatementKind.STRING_DEFINITION);
       break;
     case TokenTypeId.SwitchStatement:
       statementKindByTokenTypeId.set(tokenTypeId, StatementKind.SWITCH);
@@ -202,9 +178,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;
-      throw new InternalScannerError(
-        "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, tokenTypeId == " + exhaustiveCheck);
     }
   }
 });

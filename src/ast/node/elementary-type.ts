@@ -10,9 +10,6 @@ export class ElementaryType extends AbstractCompositeNode {
     public readonly typeKeyword: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.ELEMENTARY_TYPE,
-      children,
-    );
+    super(NodeKind.ELEMENTARY_TYPE, children);
   }
 }

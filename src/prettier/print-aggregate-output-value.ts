@@ -1,10 +1,7 @@
 import type { AstPath, Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { AggregateOutputValue } from "../ast/node/aggregate-output-value.ts";
-import {
-  addNonBreakingWhitespace,
-  interleaveCommaSeparatorDocs,
-} from "./util/print-utils.ts";
+import { addNonBreakingWhitespace, interleaveCommaSeparatorDocs } from "./util/print-utils.ts";
 
 export function printAggregateOutputValue(
   path: AstPath<AggregateOutputValue>,
@@ -12,20 +9,13 @@ export function printAggregateOutputValue(
 ): doc.builders.Doc {
   const doc: Doc = [];
 
-  doc.push(
-    path.call(print, "openBracePunctuator"),
-  );
+  doc.push(path.call(print, "openBracePunctuator"));
 
   addNonBreakingWhitespace(doc);
 
   const outputValuesDoc = path.map(print, "outputValues");
 
-  doc.push(
-    interleaveCommaSeparatorDocs(
-      outputValuesDoc,
-      path.map(print, "commaPunctuators"),
-    ),
-  );
+  doc.push(interleaveCommaSeparatorDocs(outputValuesDoc, path.map(print, "commaPunctuators")));
 
   addNonBreakingWhitespace(doc);
 

@@ -1,9 +1,4 @@
-import type {
-  OneToManyList,
-  OptionalNode,
-  RequiredNode,
-  ZeroToManyList,
-} from "../util/types.ts";
+import type { OneToManyList, OptionalNode, RequiredNode, ZeroToManyList } from "../util/types.ts";
 import type { AbstractNode } from "./abstract-node.ts";
 import { AbstractStatement } from "./abstract-statement.ts";
 import type { ElementaryType } from "./elementary-type.ts";
@@ -26,9 +21,6 @@ export class MapDeclaration extends AbstractStatement {
     public readonly closeBracePunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.MAP_DECLARATION,
-      children,
-    );
+    super(StatementKind.MAP_DECLARATION, children);
   }
 }

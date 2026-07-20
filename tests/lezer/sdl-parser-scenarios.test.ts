@@ -8,11 +8,11 @@ const sdlParser = createLenientSdlParser();
 const testCaseDir = path.join(__dirname, "./test-cases");
 
 for (const filename of fs.readdirSync(testCaseDir)) {
-  if (!/\.txt$/.test(filename)) {
+  if (!filename.endsWith(".txt")) {
     continue;
   }
 
-  const scenarioName = /^[^\.]*/.exec(filename)?.[0] || "??";
+  const scenarioName = /^[^.]*/.exec(filename)?.[0] || "??";
 
   describe(`SDL Parser ${scenarioName} Tests`, () => {
     const testCases = fs.readFileSync(path.join(testCaseDir, filename), "utf8");

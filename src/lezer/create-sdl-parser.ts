@@ -75,9 +75,7 @@ export function createStrictSdlParser(): LezerParser {
           inputText = input.read(0, input.length);
         }
 
-        const text = Text.of(
-          inputText.split("\n"),
-        );
+        const text = Text.of(inputText.split("\n"));
 
         throw createSyntaxErrorFromTextAndPosition(text, position);
       }

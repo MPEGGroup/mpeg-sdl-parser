@@ -4,9 +4,7 @@ import * as TokenTypeId from "../../lezer/parser.terms.ts";
 export const alignedModifierRules = [
   {
     previous: -1,
-    expected: [
-      TokenTypeId.aligned,
-    ],
+    expected: [TokenTypeId.aligned],
   },
   {
     previous: TokenTypeId.OpenParenthesis,

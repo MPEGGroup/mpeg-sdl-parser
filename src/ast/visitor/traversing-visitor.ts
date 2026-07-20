@@ -31,25 +31,18 @@ export class TraversingVisitor implements NodeVisitor {
       }
 
       if (node.leadingTrivia) {
-        tokenText += ` => leadingTrivia: ${
-          node.leadingTrivia.map((t) => `"${t.text.replace(/\n/g, "\\n")}"`)
-            .join(", ")
-        }`;
+        tokenText += ` => leadingTrivia: ${node.leadingTrivia
+          .map((t) => `"${t.text.replace(/\n/g, "\\n")}"`)
+          .join(", ")}`;
       }
 
       if (node.trailingTrivia) {
-        tokenText += ` => trailingTrivia: ${
-          node.trailingTrivia.map((t) => `"${t.text.replace(/\n/g, "\\n")}"`)
-            .join(", ")
-        }`;
+        tokenText += ` => trailingTrivia: ${node.trailingTrivia
+          .map((t) => `"${t.text.replace(/\n/g, "\\n")}"`)
+          .join(", ")}`;
       }
 
-      logger.debug(
-        "visit: %s %s%s",
-        indent,
-        NodeKind[node.nodeKind],
-        tokenText,
-      );
+      logger.debug("visit: %s %s%s", indent, NodeKind[node.nodeKind], tokenText);
     }
 
     if (isCompositeNode(node)) {

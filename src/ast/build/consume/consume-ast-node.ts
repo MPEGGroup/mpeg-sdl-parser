@@ -69,9 +69,7 @@ function consumeArrayDimension(
   parentTypeId: number,
   parentTypeName: string,
 ): AbstractNode {
-  const arrayDimensionKind = arrayDimensionKindByTokenTypeId.get(
-    parentTypeId,
-  );
+  const arrayDimensionKind = arrayDimensionKindByTokenTypeId.get(parentTypeId);
 
   if (arrayDimensionKind === undefined) {
     throw new InternalScannerError(
@@ -89,8 +87,7 @@ function consumeArrayDimension(
     default: {
       const exhaustiveCheck: never = arrayDimensionKind;
       throw new InternalScannerError(
-        "Unreachable code reached, arrayDimensionKind == " +
-          exhaustiveCheck,
+        "Unreachable code reached, arrayDimensionKind == " + exhaustiveCheck,
       );
     }
   }
@@ -101,9 +98,7 @@ function consumeClassId(
   parentTypeId: number,
   parentTypeName: string,
 ): AbstractNode {
-  const classIdKind = classIdKindByTokenTypeId.get(
-    parentTypeId,
-  );
+  const classIdKind = classIdKindByTokenTypeId.get(parentTypeId);
 
   if (classIdKind === undefined) {
     throw new InternalScannerError(
@@ -119,10 +114,7 @@ function consumeClassId(
       return buildExtendedClassIdRange(buildContext);
     default: {
       const exhaustiveCheck: never = classIdKind;
-      throw new InternalScannerError(
-        "Unreachable code reached, classIdKind == " +
-          exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, classIdKind == " + exhaustiveCheck);
     }
   }
 }
@@ -132,9 +124,7 @@ function consumeExpression(
   parentTypeId: number,
   parentTypeName: string,
 ): AbstractNode {
-  const expressionKind = expressionKindByTokenTypeId.get(
-    parentTypeId,
-  );
+  const expressionKind = expressionKindByTokenTypeId.get(parentTypeId);
 
   if (expressionKind === undefined) {
     throw new InternalScannerError(
@@ -151,8 +141,7 @@ function consumeExpression(
     default: {
       const exhaustiveCheck: never = expressionKind;
       throw new InternalScannerError(
-        "Unreachable code reached, expressionKind == " +
-          exhaustiveCheck,
+        "Unreachable code reached, expressionKind == " + exhaustiveCheck,
       );
     }
   }
@@ -163,9 +152,7 @@ function consumeStatement(
   parentTypeId: number,
   parentTypeName: string,
 ): AbstractNode {
-  const statementKind = statementKindByTokenTypeId.get(
-    parentTypeId,
-  );
+  const statementKind = statementKindByTokenTypeId.get(parentTypeId);
 
   if (statementKind === undefined) {
     throw new InternalScannerError(
@@ -208,8 +195,7 @@ function consumeStatement(
     default: {
       const exhaustiveCheck: never = statementKind;
       throw new InternalScannerError(
-        "Unreachable code reached, statementKind == " +
-          exhaustiveCheck,
+        "Unreachable code reached, statementKind == " + exhaustiveCheck,
       );
     }
   }
@@ -220,9 +206,7 @@ function consumeStringLiteral(
   parentTypeId: number,
   parentTypeName: string,
 ): AbstractNode {
-  const stringLiteralKind = stringLiteralKindByTokenTypeId.get(
-    parentTypeId,
-  );
+  const stringLiteralKind = stringLiteralKindByTokenTypeId.get(parentTypeId);
 
   if (stringLiteralKind === undefined) {
     throw new InternalScannerError(
@@ -237,8 +221,7 @@ function consumeStringLiteral(
     default: {
       const exhaustiveCheck: never = stringLiteralKind;
       throw new InternalScannerError(
-        "Unreachable code reached, stringLiteralKind == " +
-          exhaustiveCheck,
+        "Unreachable code reached, stringLiteralKind == " + exhaustiveCheck,
       );
     }
   }
@@ -246,8 +229,7 @@ function consumeStringLiteral(
 
 export function consumeAstNode(buildContext: BuildContext): AbstractNode {
   const { cursor } = buildContext;
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   const parentTypeId = cursor.type.id;
   const parentTypeName = cursor.type.name;
 
@@ -265,9 +247,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
     );
   }
 
-  logger.debug(
-    currentState.indent + "consuming AST node: " + NodeKind[nodeKind] + "...",
-  );
+  logger.debug(currentState.indent + "consuming AST node: " + NodeKind[nodeKind] + "...");
 
   const childStack = {
     isEndOfSiblings: false,
@@ -277,9 +257,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
   buildContext.stateStack.push(childStack);
 
   if (!cursor.firstChild()) {
-    throw new InternalScannerError(
-      `Expected AST node to have children: ${NodeKind[nodeKind]}`,
-    );
+    throw new InternalScannerError(`Expected AST node to have children: ${NodeKind[nodeKind]}`);
   }
 
   let node: AbstractNode;
@@ -365,9 +343,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
       );
     default: {
       const exhaustiveCheck: never = nodeKind;
-      throw new InternalScannerError(
-        "Unreachable code reached, nodeKind == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, nodeKind == " + exhaustiveCheck);
     }
   }
 
@@ -377,9 +353,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
 
     if (!childStack.isEndOfSiblings) {
       throw new InternalScannerError(
-        `Expected to have consumed all child nodes of ${
-          NodeKind[nodeKind]
-        }, but some remain.`,
+        `Expected to have consumed all child nodes of ${NodeKind[nodeKind]}, but some remain.`,
       );
     }
   }
@@ -388,9 +362,7 @@ export function consumeAstNode(buildContext: BuildContext): AbstractNode {
 
   if (!cursor.parent()) {
     throw new InternalScannerError(
-      `Expected to move cursor back to parent of ${
-        NodeKind[nodeKind]
-      }, but failed.`,
+      `Expected to move cursor back to parent of ${NodeKind[nodeKind]}, but failed.`,
     );
   }
 

@@ -28,111 +28,83 @@ export type ZeroToManyList<T> = Array<T | UnexpectedError>;
 
 export type OneToManyList<T> = Array<T | MissingError | UnexpectedError>;
 
-export function isCompositeNode(
-  node: AbstractNode | undefined,
-): node is AbstractCompositeNode {
+export function isCompositeNode(node: AbstractNode | undefined): node is AbstractCompositeNode {
   return node?.isComposite === true;
 }
 
-export function isToken(
-  node: AbstractNode | undefined,
-): node is Token {
+export function isToken(node: AbstractNode | undefined): node is Token {
   return node?.nodeKind === NodeKind.TOKEN;
 }
 
-export function isUnexpectedError(
-  node: AbstractNode | undefined,
-): node is UnexpectedError {
+export function isUnexpectedError(node: AbstractNode | undefined): node is UnexpectedError {
   return node?.nodeKind === NodeKind.UNEXPECTED_ERROR;
 }
 
-export function isMissingError(
-  node: AbstractNode | undefined,
-): node is MissingError {
-  return node?.nodeKind === NodeKind.TOKEN &&
-    ((node as Token).tokenKind === TokenKind.ERROR_MISSING_TOKEN);
+export function isMissingError(node: AbstractNode | undefined): node is MissingError {
+  return (
+    node?.nodeKind === NodeKind.TOKEN && (node as Token).tokenKind === TokenKind.ERROR_MISSING_TOKEN
+  );
 }
 
-export function isStatement(
-  node: AbstractNode | undefined,
-): node is AbstractStatement {
-  return node?.nodeKind === NodeKind.STATEMENT &&
-    (Object.values(StatementKind) as number[]).includes(
-      (node as AbstractStatement).statementKind,
-    );
+export function isStatement(node: AbstractNode | undefined): node is AbstractStatement {
+  return (
+    node?.nodeKind === NodeKind.STATEMENT &&
+    (Object.values(StatementKind) as number[]).includes((node as AbstractStatement).statementKind)
+  );
 }
 
-export function isIdentifier(
-  node: AbstractNode | undefined,
-): node is Identifier {
+export function isIdentifier(node: AbstractNode | undefined): node is Identifier {
   return node?.nodeKind === NodeKind.IDENTIFIER;
 }
 
-export function isElementaryType(
-  node: AbstractNode | undefined,
-): node is ElementaryType {
+export function isElementaryType(node: AbstractNode | undefined): node is ElementaryType {
   return node?.nodeKind === NodeKind.ELEMENTARY_TYPE;
 }
 
-export function isAbstractExpression(
-  node: AbstractNode | undefined,
-): node is AbstractExpression {
+export function isAbstractExpression(node: AbstractNode | undefined): node is AbstractExpression {
   return node?.nodeKind === NodeKind.EXPRESSION;
 }
 
-export function isUnaryExpression(
-  node: AbstractNode | undefined,
-): node is AbstractExpression {
-  return (node?.nodeKind === NodeKind.EXPRESSION) &&
-    (node as AbstractExpression).expressionKind === ExpressionKind.UNARY;
+export function isUnaryExpression(node: AbstractNode | undefined): node is AbstractExpression {
+  return (
+    node?.nodeKind === NodeKind.EXPRESSION &&
+    (node as AbstractExpression).expressionKind === ExpressionKind.UNARY
+  );
 }
 
-export function isNumberLiteral(
-  node: AbstractNode | undefined,
-): node is NumberLiteral {
+export function isNumberLiteral(node: AbstractNode | undefined): node is NumberLiteral {
   return node?.nodeKind === NodeKind.NUMBER_LITERAL;
 }
 
 export function isComputedElementaryTypeDefinition(
   node: AbstractNode | undefined,
 ): node is ComputedElementaryTypeDefinition {
-  return node?.nodeKind === NodeKind.STATEMENT &&
-    (node as AbstractStatement).statementKind ===
-      StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION;
+  return (
+    node?.nodeKind === NodeKind.STATEMENT &&
+    (node as AbstractStatement).statementKind === StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION
+  );
 }
 
-export function isExpandableModifier(
-  node: AbstractNode | undefined,
-): node is ExpandableModifier {
+export function isExpandableModifier(node: AbstractNode | undefined): node is ExpandableModifier {
   return node?.nodeKind === NodeKind.EXPANDABLE_MODIFIER;
 }
 
-export function isAlignedModifier(
-  node: AbstractNode | undefined,
-): node is AlignedModifier {
+export function isAlignedModifier(node: AbstractNode | undefined): node is AlignedModifier {
   return node?.nodeKind === NodeKind.ALIGNED_MODIFIER;
 }
 
-export function isExtendsModifier(
-  node: AbstractNode | undefined,
-): node is ExtendsModifier {
+export function isExtendsModifier(node: AbstractNode | undefined): node is ExtendsModifier {
   return node?.nodeKind === NodeKind.EXTENDS_MODIFIER;
 }
 
-export function isCaseClause(
-  node: AbstractNode | undefined,
-): node is CaseClause {
+export function isCaseClause(node: AbstractNode | undefined): node is CaseClause {
   return node?.nodeKind === NodeKind.CASE_CLAUSE;
 }
 
-export function isDefaultClause(
-  node: AbstractNode | undefined,
-): node is DefaultClause {
+export function isDefaultClause(node: AbstractNode | undefined): node is DefaultClause {
   return node?.nodeKind === NodeKind.DEFAULT_CLAUSE;
 }
 
-export function isBitModifier(
-  node: AbstractNode | undefined,
-): node is BitModifier {
+export function isBitModifier(node: AbstractNode | undefined): node is BitModifier {
   return node?.nodeKind === NodeKind.BIT_MODIFIER;
 }

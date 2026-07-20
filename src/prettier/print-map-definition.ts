@@ -1,10 +1,7 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { MapDefinition } from "../ast/node/map-definition.ts";
-import {
-  addBreakingWhitespace,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addBreakingWhitespace, addNonBreakingWhitespace } from "./util/print-utils.ts";
 
 export function printMapDefinition(
   path: AstPath<MapDefinition>,
@@ -14,36 +11,19 @@ export function printMapDefinition(
   let doc: Doc = [];
 
   if (mapDefinition.reservedKeyword) {
-    doc.push(
-      path.call(
-        print,
-        "reservedKeyword" as keyof MapDefinition["reservedKeyword"],
-      ),
-    );
+    doc.push(path.call(print, "reservedKeyword" as keyof MapDefinition["reservedKeyword"]));
     addNonBreakingWhitespace(doc);
   }
 
   if (mapDefinition.legacyKeyword) {
-    doc.push(
-      path.call(print, "legacyKeyword" as keyof MapDefinition["legacyKeyword"]),
-    );
+    doc.push(path.call(print, "legacyKeyword" as keyof MapDefinition["legacyKeyword"]));
     addNonBreakingWhitespace(doc);
   }
 
   if (mapDefinition.elementaryType !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "elementaryType" as keyof MapDefinition["elementaryType"],
-      ),
-    );
+    doc.push(path.call(print, "elementaryType" as keyof MapDefinition["elementaryType"]));
   } else if (mapDefinition.classIdentifier !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "classIdentifier" as keyof MapDefinition["classIdentifier"],
-      ),
-    );
+    doc.push(path.call(print, "classIdentifier" as keyof MapDefinition["classIdentifier"]));
   }
 
   doc = addBreakingWhitespace(doc);
@@ -58,10 +38,7 @@ export function printMapDefinition(
 
   doc = addBreakingWhitespace(doc);
 
-  doc.push([
-    path.call(print, "identifier"),
-    path.call(print, "semicolonPunctuator"),
-  ]);
+  doc.push([path.call(print, "identifier"), path.call(print, "semicolonPunctuator")]);
 
   return doc;
 }

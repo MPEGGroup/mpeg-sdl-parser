@@ -14,19 +14,11 @@ export const arrayDefinitionRules = [
   },
   {
     previous: TokenTypeId.reserved,
-    expected: [
-      TokenTypeId.AlignedModifier,
-      TokenTypeId.ElementaryType,
-      TokenTypeId.Identifier,
-    ],
+    expected: [TokenTypeId.AlignedModifier, TokenTypeId.ElementaryType, TokenTypeId.Identifier],
   },
   {
     previous: TokenTypeId.legacy,
-    expected: [
-      TokenTypeId.AlignedModifier,
-      TokenTypeId.ElementaryType,
-      TokenTypeId.Identifier,
-    ],
+    expected: [TokenTypeId.AlignedModifier, TokenTypeId.ElementaryType, TokenTypeId.Identifier],
   },
   {
     previous: TokenTypeId.AlignedModifier,

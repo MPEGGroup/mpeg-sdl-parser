@@ -11,18 +11,11 @@ export class PartialArrayDimension extends AbstractArrayDimension {
   constructor(
     openBracketPunctuator: RequiredNode<Token>,
     public readonly innerOpenBracketPunctuator: RequiredNode<Token>,
-    public readonly index: RequiredNode<
-      AbstractExpression | Identifier | NumberLiteral
-    >,
+    public readonly index: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly innerCloseBracketPunctuator: RequiredNode<Token>,
     closeBracketPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      ArrayDimensionKind.PARTIAL,
-      openBracketPunctuator,
-      closeBracketPunctuator,
-      children,
-    );
+    super(ArrayDimensionKind.PARTIAL, openBracketPunctuator, closeBracketPunctuator, children);
   }
 }

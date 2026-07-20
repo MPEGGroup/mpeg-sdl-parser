@@ -6,8 +6,5 @@ export function printClassMemberAccess(
   path: AstPath<ClassMemberAccess>,
   print: (path: AstPath<AbstractNode>) => Doc,
 ): Doc {
-  return [
-    path.call(print, "classMemberAccessOperator"),
-    path.call(print, "memberIdentifier"),
-  ];
+  return [path.call(print, "classMemberAccessOperator"), path.call(print, "memberIdentifier")];
 }
