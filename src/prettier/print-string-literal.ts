@@ -1,4 +1,4 @@
-import { AstPath, type Doc } from "prettier";
+import { type AstPath, type Doc } from "prettier";
 import type { StringLiteral } from "../ast/node/string-literal.ts";
 import { isMissingError, isUnexpectedError } from "../ast/util/types.ts";
 import type { AbstractNode, Token } from "../../index.ts";

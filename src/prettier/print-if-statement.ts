@@ -1,4 +1,4 @@
-import { AstPath, type Doc } from "prettier";
+import { type AstPath, type Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { IfStatement } from "../ast/node/if-statement.ts";
 import {

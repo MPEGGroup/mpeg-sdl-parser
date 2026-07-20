@@ -1,4 +1,4 @@
-import { AstPath, type Doc, doc } from "prettier";
+import { type AstPath, type Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { AbstractStatement } from "../ast/node/abstract-statement.ts";
 import { NodeKind } from "../ast/node/enum/node-kind.ts";
