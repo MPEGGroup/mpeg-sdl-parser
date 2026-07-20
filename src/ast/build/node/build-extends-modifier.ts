@@ -8,21 +8,12 @@ import type { Token } from "../../node/token.ts";
 import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildExtendsModifier(
-  buildContext: BuildContext,
-): ExtendsModifier {
+export function buildExtendsModifier(buildContext: BuildContext): ExtendsModifier {
   const children: Array<AbstractNode> = [];
 
-  const extendsKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.EXTENDS,
-  );
+  const extendsKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.EXTENDS);
   children.push(extendsKeyword);
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   children.push(identifier);
   const parameterValueList = fetchOptionalNode<ParameterValueList>(
     buildContext,
@@ -32,10 +23,5 @@ export function buildExtendsModifier(
     children.push(parameterValueList);
   }
 
-  return new ExtendsModifier(
-    extendsKeyword,
-    identifier,
-    parameterValueList,
-    children,
-  );
+  return new ExtendsModifier(extendsKeyword, identifier, parameterValueList, children);
 }

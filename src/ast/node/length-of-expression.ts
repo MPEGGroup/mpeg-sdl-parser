@@ -13,9 +13,6 @@ export class LengthofExpression extends AbstractExpression {
     public readonly closeParenthesisPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      ExpressionKind.LENGTHOF,
-      children,
-    );
+    super(ExpressionKind.LENGTHOF, children);
   }
 }

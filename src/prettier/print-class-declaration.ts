@@ -17,38 +17,23 @@ export function printClassDeclaration(
   let doc: Doc = [];
 
   if (classDeclaration.alignedModifier !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "alignedModifier" as keyof ClassDeclaration["alignedModifier"],
-      ),
-    );
+    doc.push(path.call(print, "alignedModifier" as keyof ClassDeclaration["alignedModifier"]));
     addNonBreakingWhitespace(doc);
   }
 
   if (classDeclaration.expandableModifier !== undefined) {
     doc.push(
-      path.call(
-        print,
-        "expandableModifier" as keyof ClassDeclaration["expandableModifier"],
-      ),
+      path.call(print, "expandableModifier" as keyof ClassDeclaration["expandableModifier"]),
     );
     addNonBreakingWhitespace(doc);
   }
 
   if (classDeclaration.abstractKeyword) {
-    doc.push(
-      path.call(
-        print,
-        "abstractKeyword" as keyof ClassDeclaration["abstractKeyword"],
-      ),
-    );
+    doc.push(path.call(print, "abstractKeyword" as keyof ClassDeclaration["abstractKeyword"]));
     addNonBreakingWhitespace(doc);
   }
 
-  doc.push(
-    path.call(print, "classKeyword"),
-  );
+  doc.push(path.call(print, "classKeyword"));
 
   addNonBreakingWhitespace(doc);
 
@@ -57,32 +42,25 @@ export function printClassDeclaration(
 
   if (classDeclaration.parameterList !== undefined) {
     identifierDoc.push(
-      path.call(
-        print,
-        "parameterList" as keyof ClassDeclaration["parameterList"],
-      ),
+      path.call(print, "parameterList" as keyof ClassDeclaration["parameterList"]),
     );
   }
   doc.push(identifierDoc);
   doc = addBreakingWhitespace(doc);
 
   if (classDeclaration.extendsModifier !== undefined) {
-    doc.push(fill(
-      path.call(
-        print,
-        "extendsModifier" as keyof ClassDeclaration["extendsModifier"],
-      ) as Doc[],
-    ));
+    doc.push(
+      fill(
+        path.call(print, "extendsModifier" as keyof ClassDeclaration["extendsModifier"]) as Doc[],
+      ),
+    );
     doc = addBreakingWhitespace(doc);
   }
 
   if (classDeclaration.bitModifier !== undefined) {
-    doc.push(fill(
-      path.call(
-        print,
-        "bitModifier" as keyof ClassDeclaration["bitModifier"],
-      ) as Doc[],
-    ));
+    doc.push(
+      fill(path.call(print, "bitModifier" as keyof ClassDeclaration["bitModifier"]) as Doc[]),
+    );
     doc = addBreakingWhitespace(doc);
   }
 

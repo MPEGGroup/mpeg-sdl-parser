@@ -125,27 +125,27 @@ export class SymbolTable {
 
     counters.set(baseName, count + 1);
 
-    return (count === 0) ? baseName : `${baseName}#${count}`;
+    return count === 0 ? baseName : `${baseName}#${count}`;
   }
 
   private getCurrentBranchId(): string | undefined {
     const classScope = this.getEnclosingClassScope();
 
-    if (!classScope || (this.currentScope === classScope)) {
+    if (!classScope || this.currentScope === classScope) {
       return undefined;
     }
 
     const parts: string[] = [];
     let scope: Scope | undefined = this.currentScope;
 
-    while (scope && (scope !== classScope)) {
+    while (scope && scope !== classScope) {
       if (scope.name) {
         parts.unshift(scope.name);
       }
       scope = scope.parent;
     }
 
-    return (parts.length > 0) ? parts.join("/") : undefined;
+    return parts.length > 0 ? parts.join("/") : undefined;
   }
 
   private defineClassMember(symbol: Symbol): AddSymbolResult {
@@ -180,9 +180,7 @@ export class SymbolTable {
           } conflicts with existing member type: ${symbol.attributes.numericType} != ${symbol.attributes.numericType}`,
         );
         return AddSymbolResult.MEMBER_CONFLICT;
-      } else if (
-        member.attributes.stringType !== symbol.attributes.stringType
-      ) {
+      } else if (member.attributes.stringType !== symbol.attributes.stringType) {
         logger.debug(
           `Defined class member: ${symbol.name} in class scope: ${
             classScope.name ?? "anonymous"
@@ -210,13 +208,13 @@ export class SymbolTable {
 
     let child = this.currentScope.children.find((c) => c.name === name);
 
-    if (child && (this.mode === Mode.WRITE)) {
+    if (child && this.mode === Mode.WRITE) {
       throw new InternalScannerError(
         `Scope with name '${name}' already exists in current scope '${this.currentScope.name}'`,
       );
     }
 
-    if (!child && (this.mode === Mode.READ)) {
+    if (!child && this.mode === Mode.READ) {
       throw new InternalScannerError(
         `Scope with name '${name}' does not exist in current scope '${this.currentScope.name}'`,
       );
@@ -266,11 +264,7 @@ export class SymbolTable {
 
   exitScope(): void {
     if (this.currentScope.parent) {
-      logger.debug(
-        `Exiting ${
-          ScopeKind[this.currentScope.kind]
-        } scope: ${this.currentScope.name}`,
-      );
+      logger.debug(`Exiting ${ScopeKind[this.currentScope.kind]} scope: ${this.currentScope.name}`);
 
       this.currentScope = this.currentScope.parent;
 
@@ -296,9 +290,7 @@ export class SymbolTable {
 
   addSymbol(symbol: Symbol): AddSymbolResult {
     if (this.mode === Mode.READ) {
-      throw new InternalScannerError(
-        `Attempt to add symbol '${symbol.name}' in read-only mode`,
-      );
+      throw new InternalScannerError(`Attempt to add symbol '${symbol.name}' in read-only mode`);
     }
 
     if (this.currentScope.symbols.has(symbol.name)) {
@@ -321,17 +313,14 @@ export class SymbolTable {
     this.currentScope.symbols.set(symbol.name, symbol);
 
     logger.debug(
-      `Defined symbol: ${symbol.name} in scope: ${
-        this.currentScope.name ?? "anonymous"
-      }`,
+      `Defined symbol: ${symbol.name} in scope: ${this.currentScope.name ?? "anonymous"}`,
     );
 
     // if in a class scope and if variable is parsed (regardless of nested level) or if
     // variable is computed (and in in top level of class scope) then define variable as a class member
     if (
       this.getEnclosingClassScope() &&
-      ((symbol.attributes.isComputed !== true) ||
-        (this.currentScope.kind === ScopeKind.CLASS))
+      (symbol.attributes.isComputed !== true || this.currentScope.kind === ScopeKind.CLASS)
     ) {
       if (this.defineClassMember(symbol) !== AddSymbolResult.SUCCESS) {
         return AddSymbolResult.MEMBER_CONFLICT;
@@ -357,7 +346,7 @@ export class SymbolTable {
     while (scope) {
       const symbol = scope.symbols.get(name);
 
-      if (symbol && (symbol.kind === SymbolKind.VARIABLE)) {
+      if (symbol && symbol.kind === SymbolKind.VARIABLE) {
         return symbol;
       }
 
@@ -369,7 +358,7 @@ export class SymbolTable {
   lookupClass(name: string): Symbol | undefined {
     const symbol = this.globalScope.symbols.get(name);
 
-    if (symbol && (symbol.kind === SymbolKind.CLASS)) {
+    if (symbol && symbol.kind === SymbolKind.CLASS) {
       return symbol;
     }
 
@@ -379,7 +368,7 @@ export class SymbolTable {
   lookupMap(name: string): Symbol | undefined {
     const symbol = this.globalScope.symbols.get(name);
 
-    if (symbol && (symbol.kind === SymbolKind.MAP)) {
+    if (symbol && symbol.kind === SymbolKind.MAP) {
       return symbol;
     }
 

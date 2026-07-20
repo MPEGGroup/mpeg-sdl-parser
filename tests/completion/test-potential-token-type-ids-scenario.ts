@@ -5,10 +5,7 @@ import { getPotentialTokenTypeIds } from "../../src/completion/get-potential-tok
 
 const lenientSdlParser = createLenientSdlParser();
 
-export function testPotentialTokenTypeIdsScenario(
-  source: string,
-  expectedTokenTypeIds: number[],
-) {
+export function testPotentialTokenTypeIdsScenario(source: string, expectedTokenTypeIds: number[]) {
   const sdlStringInput = new SdlStringInput(source);
   const parseTree = lenientSdlParser.parse(sdlStringInput);
   const cursor = parseTree.cursor();

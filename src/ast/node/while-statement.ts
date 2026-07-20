@@ -11,16 +11,11 @@ export class WhileStatement extends AbstractStatement {
   constructor(
     public readonly whileKeyword: RequiredNode<Token>,
     public readonly openParenthesisPunctuator: RequiredNode<Token>,
-    public readonly condition: RequiredNode<
-      AbstractExpression | Identifier | NumberLiteral
-    >,
+    public readonly condition: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly closeParenthesisPunctuator: RequiredNode<Token>,
     public readonly statement: RequiredNode<AbstractStatement>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.WHILE,
-      children,
-    );
+    super(StatementKind.WHILE, children);
   }
 }

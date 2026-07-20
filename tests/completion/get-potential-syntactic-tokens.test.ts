@@ -3,11 +3,7 @@ import { testPotentialSyntacticTokensScenario } from "./test-potential-syntactic
 
 describe("getPotentialSyntacticTokens Tests", () => {
   test("Test missing length attribute potential syntactic token scenario", () => {
-    testPotentialSyntacticTokensScenario(
-      "class A { bit b; }",
-      14,
-      ["("],
-    );
+    testPotentialSyntacticTokensScenario("class A { bit b; }", 14, ["("]);
   });
 
   test("Test duplicate identifier potential syntactic token scenario", () => {
@@ -72,11 +68,7 @@ describe("getPotentialSyntacticTokens Tests", () => {
   });
 
   test("Test global scope with previous comment potential syntactic token scenario 1", () => {
-    testPotentialSyntacticTokensScenario(
-      "// foo",
-      6,
-      undefined,
-    );
+    testPotentialSyntacticTokensScenario("// foo", 6, undefined);
   });
 
   test("Test global scope with previous comment potential syntactic token scenario 2", () => {

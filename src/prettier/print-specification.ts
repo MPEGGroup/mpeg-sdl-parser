@@ -26,10 +26,10 @@ export function printSpecification(
     if (globalNode.nodeKind === NodeKind.STATEMENT) {
       const statementKind = (globalNode as AbstractStatement).statementKind;
       if (
-        (i > 0) &&
-        (previousStatementKind !== undefined) &&
-        ((statementKind !== previousStatementKind) ||
-          (statementKind !== StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION))
+        i > 0 &&
+        previousStatementKind !== undefined &&
+        (statementKind !== previousStatementKind ||
+          statementKind !== StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION)
       ) {
         doc.push(hardline);
       }

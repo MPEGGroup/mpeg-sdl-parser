@@ -6,15 +6,8 @@ import HistoryRecordingNodeHandler, {
   expectedHistory,
 } from "./fixtures/history-recording-node-handler.ts";
 import { buildAst } from "../src/ast/build-ast.ts";
-import {
-  createLenientSdlParser,
-  createStrictSdlParser,
-} from "../src/lezer/create-sdl-parser.ts";
-import {
-  collateSyntaxErrors,
-  dispatchNodeHandler,
-  prettyPrint,
-} from "../src/parse-helper.ts";
+import { createLenientSdlParser, createStrictSdlParser } from "../src/lezer/create-sdl-parser.ts";
+import { collateSyntaxErrors, dispatchNodeHandler, prettyPrint } from "../src/parse-helper.ts";
 import { SdlStringInput } from "../src/lezer/sdl-string-input.ts";
 import type { Specification } from "../src/ast/node/specification.ts";
 
@@ -23,18 +16,16 @@ const lenientSdlParser = createLenientSdlParser();
 
 describe("Parse Helper Tests", () => {
   test("Test collateSyntaxErrors - invalid sample specification", async () => {
-    const sdlString = await fs.readFile(
-      path.join(__dirname, "./sample-specifications/invalid.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sdlString = await fs
+      .readFile(path.join(__dirname, "./sample-specifications/invalid.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
 
     const sdlStringInput = new SdlStringInput(sdlString);
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
     expect(syntaxErrors).toHaveLength(5);
-    expect(syntaxErrors[0].errorLine).toEqual(
-      "  bit           transport_priority;",
-    );
+    expect(syntaxErrors[0].errorLine).toEqual("  bit           transport_priority;");
     expect(syntaxErrors[1].errorLine).toEqual("  unsigned int N = 184;");
     expect(syntaxErrors[2].errorLine).toEqual(
       "  if (adaptation_ field_control == 0b01 || adaptation_field_control == 0b11) {",
@@ -45,9 +36,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - invalid elementary type definition", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A{bit transport_priority;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A{bit transport_priority;}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -107,9 +96,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - unterminated string literal types fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {utf8string d = u";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {utf8string d = u";}');
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -119,9 +106,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - missing utf string literal types fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A {utf8string d = ;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A {utf8string d = ;}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -131,9 +116,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - missing string literal types fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A {base64string d = ;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A {base64string d = ;}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -143,9 +126,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - mix of concatenated string literal types fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {utf8string d = u"hello" "world";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {utf8string d = u"hello" "world";}');
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -155,9 +136,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - both legacy and reserved together fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A {reserved legacy utfstring foo;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A {reserved legacy utfstring foo;}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -167,9 +146,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - unexpected prefix for string literal", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {base64string foo = u"aGVsbG8K";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {base64string foo = u"aGVsbG8K";}');
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -179,9 +156,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - invalid basic string literal type fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {utf8string foo = "hello";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {utf8string foo = "hello";}');
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -191,9 +166,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - invalid prefix for string literal", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {utf8string foo = u8"hello";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {utf8string foo = u8"hello";}');
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -203,9 +176,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - illegal alignment bit count value fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A {aligned(17) utf8string foo;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A {aligned(17) utf8string foo;}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -215,9 +186,7 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test collateSyntaxErrors - unterminated alignment modifier fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A {aligned(16 utf8string foo;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A {aligned(16 utf8string foo;}");
     const parseTree = lenientSdlParser.parse(sdlStringInput);
     const syntaxErrors = collateSyntaxErrors(parseTree, sdlStringInput);
 
@@ -255,42 +224,31 @@ describe("Parse Helper Tests", () => {
   });
 
   test("Test prettyPrint", async () => {
-    const sdlString = await fs.readFile(
-      path.join(__dirname, "./sample-specifications/various-elements.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
-    let expectedSdlString = await fs.readFile(
-      path.join(
-        __dirname,
-        "./sample-specifications/prettified-various-elements.sdl",
-      ),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sdlString = await fs
+      .readFile(path.join(__dirname, "./sample-specifications/various-elements.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
+    let expectedSdlString = await fs
+      .readFile(path.join(__dirname, "./sample-specifications/prettified-various-elements.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
     expectedSdlString = expectedSdlString.replace(/\r/g, "");
 
     const sdlStringInput = new SdlStringInput(sdlString);
     const parseTree = strictSdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
 
-    const prettifiedSdlString = await prettyPrint(
-      specification as Specification,
-      sdlStringInput,
-    );
-    expect(
-      prettifiedSdlString,
-    ).toEqual(
-      expectedSdlString,
-    );
+    const prettifiedSdlString = await prettyPrint(specification as Specification, sdlStringInput);
+    expect(prettifiedSdlString).toEqual(expectedSdlString);
   });
 
   test("Test prettyPrint - narrower", async () => {
-    const sdlString = await fs.readFile(
-      path.join(__dirname, "./sample-specifications/various-elements.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
-    let expectedSdlString = await fs.readFile(
-      path.join(
-        __dirname,
-        "./sample-specifications/prettified-various-elements-narrow.sdl",
-      ),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sdlString = await fs
+      .readFile(path.join(__dirname, "./sample-specifications/various-elements.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
+    let expectedSdlString = await fs
+      .readFile(
+        path.join(__dirname, "./sample-specifications/prettified-various-elements-narrow.sdl"),
+      )
+      .then((buffer: Buffer) => buffer.toString());
     expectedSdlString = expectedSdlString.replace(/\r/g, "");
 
     const sdlStringInput = new SdlStringInput(sdlString);
@@ -302,23 +260,16 @@ describe("Parse Helper Tests", () => {
       sdlStringInput,
       40,
     );
-    expect(
-      narrowPrettifiedSdlString,
-    ).toEqual(
-      expectedSdlString,
-    );
+    expect(narrowPrettifiedSdlString).toEqual(expectedSdlString);
   });
 
   test("Test prettyPrint - with syntax errors", async () => {
-    const sdlString = await fs.readFile(
-      path.join(__dirname, "./sample-specifications/invalid.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
-    let expectedSdlString = await fs.readFile(
-      path.join(
-        __dirname,
-        "./sample-specifications/prettified-invalid.sdl",
-      ),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sdlString = await fs
+      .readFile(path.join(__dirname, "./sample-specifications/invalid.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
+    let expectedSdlString = await fs
+      .readFile(path.join(__dirname, "./sample-specifications/prettified-invalid.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
     expectedSdlString = expectedSdlString.replace(/\r/g, "");
 
     const sdlStringInput = new SdlStringInput(sdlString);
@@ -329,17 +280,13 @@ describe("Parse Helper Tests", () => {
       specification as Specification,
       sdlStringInput,
     );
-    expect(
-      invalidPrettifiedSdlString,
-    ).toEqual(
-      expectedSdlString,
-    );
+    expect(invalidPrettifiedSdlString).toEqual(expectedSdlString);
   });
 
   test("Test dispatchNodeHandler", async () => {
-    const sdlString = await fs.readFile(
-      path.join(__dirname, "./sample-specifications/sample.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sdlString = await fs
+      .readFile(path.join(__dirname, "./sample-specifications/sample.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
 
     const sdlStringInput = new SdlStringInput(sdlString);
     const parseTree = strictSdlParser.parse(sdlStringInput);
@@ -347,15 +294,8 @@ describe("Parse Helper Tests", () => {
 
     const historyRecordingNodeHandler = new HistoryRecordingNodeHandler();
 
-    dispatchNodeHandler(
-      specification as Specification,
-      historyRecordingNodeHandler,
-    );
+    dispatchNodeHandler(specification as Specification, historyRecordingNodeHandler);
 
-    expect(
-      historyRecordingNodeHandler.nodeHistory,
-    ).toEqual(
-      expectedHistory,
-    );
+    expect(historyRecordingNodeHandler.nodeHistory).toEqual(expectedHistory);
   });
 });

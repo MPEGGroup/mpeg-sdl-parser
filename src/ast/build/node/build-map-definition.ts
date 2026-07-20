@@ -10,9 +10,7 @@ import type { OptionalNode } from "../../util/types.ts";
 import { InternalScannerError } from "../../../scanner-error.ts";
 import type { ElementaryType } from "../../node/elementary-type.ts";
 
-export function buildMapDefinition(
-  buildContext: BuildContext,
-): MapDefinition {
+export function buildMapDefinition(buildContext: BuildContext): MapDefinition {
   const children: Array<AbstractNode> = [];
 
   const reservedKeyword = fetchOptionalNode<Token>(
@@ -24,28 +22,18 @@ export function buildMapDefinition(
     children.push(reservedKeyword);
   }
 
-  const legacyKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.LEGACY,
-  );
+  const legacyKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.LEGACY);
   if (legacyKeyword) {
     children.push(legacyKeyword);
   }
 
-  const elementaryType = fetchOptionalNode<ElementaryType>(
-    buildContext,
-    NodeKind.ELEMENTARY_TYPE,
-  );
+  const elementaryType = fetchOptionalNode<ElementaryType>(buildContext, NodeKind.ELEMENTARY_TYPE);
   let classIdentifier: OptionalNode<Identifier> | undefined;
 
   if (elementaryType) {
     children.push(elementaryType);
   } else {
-    classIdentifier = fetchOptionalNode<Identifier>(
-      buildContext,
-      NodeKind.IDENTIFIER,
-    );
+    classIdentifier = fetchOptionalNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
     if (classIdentifier) {
       children.push(classIdentifier);
     } else {
@@ -62,10 +50,7 @@ export function buildMapDefinition(
   );
   children.push(relationalLessThanPunctuator);
 
-  const mapIdentifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const mapIdentifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   children.push(mapIdentifier);
 
   const relationalGreaterThanPunctuator = fetchRequiredNode<Token>(
@@ -75,10 +60,7 @@ export function buildMapDefinition(
   );
   children.push(relationalGreaterThanPunctuator);
 
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   children.push(identifier);
 
   const semicolonPunctuator = fetchRequiredNode<Token>(

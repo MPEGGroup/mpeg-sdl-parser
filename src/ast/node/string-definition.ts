@@ -20,9 +20,6 @@ export class StringDefinition extends AbstractStatement {
     public readonly semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.STRING_DEFINITION,
-      children,
-    );
+    super(StatementKind.STRING_DEFINITION, children);
   }
 }

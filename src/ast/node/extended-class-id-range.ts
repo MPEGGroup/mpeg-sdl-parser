@@ -12,9 +12,6 @@ export class ExtendedClassIdRange extends AbstractClassId {
     public readonly commaPunctuators: ZeroToManyList<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      ClassIdKind.EXTENDED_RANGE,
-      children,
-    );
+    super(ClassIdKind.EXTENDED_RANGE, children);
   }
 }

@@ -38,67 +38,45 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   constructor(symbolTable: SymbolTable, strict: boolean) {
     super(symbolTable, strict);
 
-    this.registerBeforeNodeHandler(
-      NodeKind.PARAMETER,
-      undefined,
-      (node) => this.addParameterSymbol(node as Parameter),
+    this.registerBeforeNodeHandler(NodeKind.PARAMETER, undefined, (node) =>
+      this.addParameterSymbol(node as Parameter),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DECLARATION,
-      (node) => this.addClassDeclarationSymbol(node as ClassDeclaration),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.CLASS_DECLARATION, (node) =>
+      this.addClassDeclarationSymbol(node as ClassDeclaration),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.MAP_DECLARATION,
-      (node) => this.addMapDeclarationSymbol(node as MapDeclaration),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.MAP_DECLARATION, (node) =>
+      this.addMapDeclarationSymbol(node as MapDeclaration),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.ELEMENTARY_TYPE_DEFINITION,
-      (node) =>
-        this.addElementaryTypeDefinitionSymbol(
-          node as ElementaryTypeDefinition,
-        ),
+      (node) => this.addElementaryTypeDefinitionSymbol(node as ElementaryTypeDefinition),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION,
       (node) =>
-        this.addComputedElementaryTypeDefinitionSymbol(
-          node as ComputedElementaryTypeDefinition,
-        ),
+        this.addComputedElementaryTypeDefinitionSymbol(node as ComputedElementaryTypeDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.ARRAY_DEFINITION,
-      (node) => this.addArrayDefinitionSymbol(node as ArrayDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.ARRAY_DEFINITION, (node) =>
+      this.addArrayDefinitionSymbol(node as ArrayDefinition),
     );
     this.registerBeforeNodeHandler(
       NodeKind.STATEMENT,
       StatementKind.COMPUTED_ARRAY_DEFINITION,
-      (node) =>
-        this.addComputedArrayDefinitionSymbol(node as ComputedArrayDefinition),
+      (node) => this.addComputedArrayDefinitionSymbol(node as ComputedArrayDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.STRING_DEFINITION,
-      (node) => this.addStringDefinitionSymbol(node as StringDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.STRING_DEFINITION, (node) =>
+      this.addStringDefinitionSymbol(node as StringDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.CLASS_DEFINITION,
-      (node) => this.addClassDefinitionSymbol(node as ClassDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.CLASS_DEFINITION, (node) =>
+      this.addClassDefinitionSymbol(node as ClassDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.STATEMENT,
-      StatementKind.MAP_DEFINITION,
-      (node) => this.addMapDefinitionSymbol(node as MapDefinition),
+    this.registerBeforeNodeHandler(NodeKind.STATEMENT, StatementKind.MAP_DEFINITION, (node) =>
+      this.addMapDefinitionSymbol(node as MapDefinition),
     );
-    this.registerBeforeNodeHandler(
-      NodeKind.EXPANDABLE_MODIFIER,
-      undefined,
-      (node) => this.addExpandableModifierSymbol(node as ExpandableModifier),
+    this.registerBeforeNodeHandler(NodeKind.EXPANDABLE_MODIFIER, undefined, (node) =>
+      this.addExpandableModifierSymbol(node as ExpandableModifier),
     );
   }
 
@@ -157,10 +135,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       return;
     }
 
-    const elementaryTypeKind = getElementaryTypeKind(
-      elementaryType,
-      this.strict,
-    );
+    const elementaryTypeKind = getElementaryTypeKind(elementaryType, this.strict);
 
     if (elementaryTypeKind === undefined) {
       return;
@@ -205,10 +180,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       return;
     }
 
-    const elementaryTypeKind = getElementaryTypeKind(
-      elementaryType,
-      this.strict,
-    );
+    const elementaryTypeKind = getElementaryTypeKind(elementaryType, this.strict);
 
     if (elementaryTypeKind === undefined) {
       return;
@@ -249,25 +221,17 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     };
 
     if (isElementaryType(arrayDefinition.elementaryType)) {
-      const elementaryTypeKind = getElementaryTypeKind(
-        arrayDefinition.elementaryType,
-        this.strict,
-      );
+      const elementaryTypeKind = getElementaryTypeKind(arrayDefinition.elementaryType, this.strict);
 
       if (elementaryTypeKind !== undefined) {
-        attributes.numericType = getNumericTypeFromElementaryTypeKind(
-          elementaryTypeKind,
-        );
+        attributes.numericType = getNumericTypeFromElementaryTypeKind(elementaryTypeKind);
       }
     } else if (isIdentifier(arrayDefinition.classIdentifier)) {
       attributes.classType = arrayDefinition.classIdentifier.name;
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if (
-      (attributes.numericType === undefined) &&
-      !attributes.classType
-    ) {
+    if (attributes.numericType === undefined && !attributes.classType) {
       const error = new SemanticError(
         `Array definition must have either an elementary type or a class identifier`,
         identifier.startToken!.getLocation(),
@@ -290,9 +254,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     });
   }
 
-  private addComputedArrayDefinitionSymbol(
-    computedArrayDefinition: ComputedArrayDefinition,
-  ): void {
+  private addComputedArrayDefinitionSymbol(computedArrayDefinition: ComputedArrayDefinition): void {
     const identifier = getRequiredIdentifier(
       computedArrayDefinition.identifier,
       computedArrayDefinition,
@@ -313,10 +275,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       return;
     }
 
-    const elementaryTypeKind = getElementaryTypeKind(
-      elementaryType,
-      this.strict,
-    );
+    const elementaryTypeKind = getElementaryTypeKind(elementaryType, this.strict);
 
     if (elementaryTypeKind === undefined) {
       return;
@@ -360,10 +319,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       return;
     }
 
-    const stringVariableKind = getStringVariableKind(
-      stringVariableKindToken,
-      this.strict,
-    );
+    const stringVariableKind = getStringVariableKind(stringVariableKindToken, this.strict);
 
     if (stringVariableKind === undefined) {
       return;
@@ -410,11 +366,8 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     });
   }
 
-  private addExpandableModifierSymbol(
-    expandableModifier: ExpandableModifier,
-  ): void {
-    const sizeOfInstanceLocation = expandableModifier!.startToken!
-      .getLocation();
+  private addExpandableModifierSymbol(expandableModifier: ExpandableModifier): void {
+    const sizeOfInstanceLocation = expandableModifier!.startToken!.getLocation();
 
     const sizeOfInstanceAttributes: SymbolAttributes = {
       isComputed: true,
@@ -453,19 +406,14 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
       );
 
       if (elementaryTypeKind !== undefined) {
-        attributes.numericType = getNumericTypeFromElementaryTypeKind(
-          elementaryTypeKind,
-        );
+        attributes.numericType = getNumericTypeFromElementaryTypeKind(elementaryTypeKind);
       }
     } else if (isIdentifier(mapDeclaration.outputClassIdentifier)) {
       attributes.classType = mapDeclaration.outputClassIdentifier.name;
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if (
-      (attributes.numericType === undefined) &&
-      !attributes.classType
-    ) {
+    if (attributes.numericType === undefined && !attributes.classType) {
       const error = new SemanticError(
         `Map declaration must have either an elementary type or a class identifier`,
         identifier.startToken!.getLocation(),
@@ -525,11 +473,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   }
 
   private addMapDefinitionSymbol(mapDefinition: MapDefinition): void {
-    const identifier = getRequiredIdentifier(
-      mapDefinition.identifier,
-      mapDefinition,
-      this.strict,
-    );
+    const identifier = getRequiredIdentifier(mapDefinition.identifier, mapDefinition, this.strict);
 
     if (!identifier) {
       return;
@@ -552,22 +496,17 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     };
 
     if (isElementaryType(mapDefinition.elementaryType)) {
-      const elementaryTypeKind = getElementaryTypeKind(
-        mapDefinition.elementaryType,
-        this.strict,
-      );
+      const elementaryTypeKind = getElementaryTypeKind(mapDefinition.elementaryType, this.strict);
 
       if (elementaryTypeKind !== undefined) {
-        attributes.numericType = getNumericTypeFromElementaryTypeKind(
-          elementaryTypeKind,
-        );
+        attributes.numericType = getNumericTypeFromElementaryTypeKind(elementaryTypeKind);
       }
     } else if (isIdentifier(mapDefinition.classIdentifier)) {
       attributes.classType = mapDefinition.classIdentifier.name;
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if ((attributes.numericType === undefined) && !attributes.classType) {
+    if (attributes.numericType === undefined && !attributes.classType) {
       const error = new SemanticError(
         `Map definition must have either an elementary type or a class identifier`,
         identifier.startToken!.getLocation(),
@@ -591,11 +530,7 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
   }
 
   private addParameterSymbol(parameter: Parameter): void {
-    const identifier = getRequiredIdentifier(
-      parameter.identifier,
-      parameter,
-      this.strict,
-    );
+    const identifier = getRequiredIdentifier(parameter.identifier, parameter, this.strict);
 
     if (!identifier) {
       return;
@@ -606,25 +541,17 @@ export class BuildSymbolTableNodeHandler extends AbstractAnalysisNodeHandler {
     const attributes: SymbolAttributes = {};
 
     if (isElementaryType(parameter.elementaryType)) {
-      const elementaryTypeKind = getElementaryTypeKind(
-        parameter.elementaryType,
-        this.strict,
-      );
+      const elementaryTypeKind = getElementaryTypeKind(parameter.elementaryType, this.strict);
 
       if (elementaryTypeKind !== undefined) {
-        attributes.numericType = getNumericTypeFromElementaryTypeKind(
-          elementaryTypeKind,
-        );
+        attributes.numericType = getNumericTypeFromElementaryTypeKind(elementaryTypeKind);
       }
     } else if (isIdentifier(parameter.classIdentifier)) {
       attributes.classType = parameter.classIdentifier.name;
     }
 
     // check that at least one of elementaryType or classIdentifier is present
-    if (
-      (attributes.numericType === undefined) &&
-      !attributes.classType
-    ) {
+    if (attributes.numericType === undefined && !attributes.classType) {
       const error = new SemanticError(
         `Parameter must have either an elementary type or a class identifier`,
         identifier.startToken!.getLocation(),

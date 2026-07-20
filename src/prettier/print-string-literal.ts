@@ -32,7 +32,7 @@ export function printStringLiteral(
         currentLiteralDoc.push(path.call(print, "literals", index));
 
         // skip any empty literals after the first literal
-        if ((doc.length === 0) || containsContent) {
+        if (doc.length === 0 || containsContent) {
           doc.push(currentLiteralDoc.join(""));
         }
 

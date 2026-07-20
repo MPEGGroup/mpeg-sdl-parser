@@ -5,14 +5,8 @@ describe("Print Error tests", () => {
   test("prettified error output is as expected 1", async () => {
     await testPrettierScenario(
       "class A {bit b;}",
-      "class A {\n" +
-        "  bit\n" +
-        "  b;\n" +
-        "}\n",
-      "class A {\n" +
-        "  bit\n" +
-        "  b;\n" +
-        "}\n",
+      "class A {\n" + "  bit\n" + "  b;\n" + "}\n",
+      "class A {\n" + "  bit\n" + "  b;\n" + "}\n",
     );
   });
 

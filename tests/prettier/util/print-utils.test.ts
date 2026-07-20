@@ -13,8 +13,7 @@ import {
   startsWithBlankLine,
 } from "../../../src/prettier/util/print-utils.ts";
 
-const { breakParent, hardline, ifBreak, label, line, indent, fill } =
-  doc.builders;
+const { breakParent, hardline, ifBreak, label, line, indent, fill } = doc.builders;
 
 describe("Print Utils tests", () => {
   test("endsWithHardline works as expected", () => {
@@ -37,21 +36,22 @@ describe("Print Utils tests", () => {
     expect(endsWithHardline(fill([hardline]))).toBe(true);
     expect(endsWithHardline(fill([hardline, "x"]))).toBe(false);
     expect(endsWithHardline(fill(["x", hardline]))).toBe(true);
-    expect(endsWithHardline(fill(["x", indent([[hardline, ["x"]]])]))).toBe(
-      false,
-    );
+    expect(endsWithHardline(fill(["x", indent([[hardline, ["x"]]])]))).toBe(false);
     expect(endsWithHardline(fill([indent([["x", [hardline]]])]))).toBe(true);
 
     // skipped break-parents
     expect(endsWithHardline([hardline, breakParent])).toBe(true);
     expect(
       endsWithHardline(
-        fill([[["i"], ["++"]], [
-          ";",
-          line,
-          "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
-          [hardline, breakParent],
-        ]]),
+        fill([
+          [["i"], ["++"]],
+          [
+            ";",
+            line,
+            "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
+            [hardline, breakParent],
+          ],
+        ]),
       ),
     ).toBe(true);
 
@@ -221,32 +221,48 @@ describe("Print Utils tests", () => {
     doc = removeTrailingHardline(doc);
     expect(doc).toEqual(fill([indent("x")]));
 
-    doc = fill([[["i"], ["++"]], [
-      ";",
-      line,
-      "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
-      [hardline],
-    ]]);
+    doc = fill([
+      [["i"], ["++"]],
+      [
+        ";",
+        line,
+        "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
+        [hardline],
+      ],
+    ]);
     doc = removeTrailingHardline(doc);
-    expect(doc).toEqual(fill([[["i"], ["++"]], [
-      ";",
-      line,
-      "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
-    ]]));
+    expect(doc).toEqual(
+      fill([
+        [["i"], ["++"]],
+        [
+          ";",
+          line,
+          "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
+        ],
+      ]),
+    );
 
-    doc = fill([[["i"], ["++"]], [
-      ";",
-      line,
-      "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
-      [hardline, breakParent],
-    ]]);
+    doc = fill([
+      [["i"], ["++"]],
+      [
+        ";",
+        line,
+        "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
+        [hardline, breakParent],
+      ],
+    ]);
     doc = removeTrailingHardline(doc);
-    expect(doc).toEqual(fill([[["i"], ["++"]], [
-      ";",
-      line,
-      "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
-      [hardline, breakParent],
-    ]]));
+    expect(doc).toEqual(
+      fill([
+        [["i"], ["++"]],
+        [
+          ";",
+          line,
+          "// Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée",
+          [hardline, breakParent],
+        ],
+      ]),
+    );
   });
 
   test("addIndentedStatements works as expected", () => {
@@ -255,35 +271,15 @@ describe("Print Utils tests", () => {
     expect(doc).toEqual([]);
 
     doc = [];
-    doc = addIndentedStatements(
-      doc,
-      [],
-      "{",
-      "}",
-    );
-    expect(doc).toEqual([
-      indent("{"),
-      hardline,
-      "}",
-    ]);
+    doc = addIndentedStatements(doc, [], "{", "}");
+    expect(doc).toEqual([indent("{"), hardline, "}"]);
 
     doc = [];
-    doc = addIndentedStatements(
-      doc,
-      [
-        ["i", ";"],
-        ["j", ";"],
-      ],
-    );
-    expect(doc).toEqual([
-      indent([
-        hardline,
-        ["i", ";"],
-        hardline,
-        ["j", ";"],
-      ]),
-      hardline,
+    doc = addIndentedStatements(doc, [
+      ["i", ";"],
+      ["j", ";"],
     ]);
+    expect(doc).toEqual([indent([hardline, ["i", ";"], hardline, ["j", ";"]]), hardline]);
 
     doc = [];
     doc = addIndentedStatements(
@@ -295,104 +291,35 @@ describe("Print Utils tests", () => {
       "{",
       "}",
     );
-    expect(doc).toEqual([
-      indent([
-        "{",
-        hardline,
-        ["i", ";"],
-        hardline,
-        ["j", ";"],
-      ]),
-      hardline,
-      "}",
-    ]);
+    expect(doc).toEqual([indent(["{", hardline, ["i", ";"], hardline, ["j", ";"]]), hardline, "}"]);
 
     doc = [];
-    doc = addIndentedStatements(
-      doc,
-      [
-        ["foo"],
-        ["bar"],
-      ],
-    );
-    expect(doc).toEqual([
-      indent([
-        hardline,
-        ["foo"],
-        hardline,
-        "bar",
-      ]),
-      hardline,
-    ]);
+    doc = addIndentedStatements(doc, [["foo"], ["bar"]]);
+    expect(doc).toEqual([indent([hardline, ["foo"], hardline, "bar"]), hardline]);
   });
 
   test("addIndentedStatements with blank lines works as expected", () => {
     let doc: Doc[] = [];
-    doc = addIndentedStatements(
-      doc,
-      [],
-      ["", hardline, "{"],
-      "}",
-    );
-    expect(doc).toEqual([
-      indent("{"),
-      hardline,
-      "}",
-    ]);
+    doc = addIndentedStatements(doc, [], ["", hardline, "{"], "}");
+    expect(doc).toEqual([indent("{"), hardline, "}"]);
 
     doc = [];
-    doc = addIndentedStatements(
-      doc,
-      [],
-      "{",
-      [
-        label("leadingTrivia", ["", hardline]),
-        "}",
-      ],
-    );
-    expect(doc).toEqual([
-      indent(
-        "{",
-      ),
-      hardline,
-      "}",
-    ]);
+    doc = addIndentedStatements(doc, [], "{", [label("leadingTrivia", ["", hardline]), "}"]);
+    expect(doc).toEqual([indent("{"), hardline, "}"]);
 
     doc = [];
-    doc = addIndentedStatements(
-      doc,
-      [
-        ["", hardline, "i", ";"],
-        ["j", ";"],
-      ],
-    );
-    expect(doc).toEqual([
-      indent([
-        hardline,
-        ["i", ";"],
-        hardline,
-        ["j", ";"],
-      ]),
-      hardline,
+    doc = addIndentedStatements(doc, [
+      ["", hardline, "i", ";"],
+      ["j", ";"],
     ]);
+    expect(doc).toEqual([indent([hardline, ["i", ";"], hardline, ["j", ";"]]), hardline]);
 
     doc = [];
-    doc = addIndentedStatements(
-      doc,
-      [
-        ["i", ";"],
-        ["j", ";", "", hardline],
-      ],
-    );
-    expect(doc).toEqual([
-      indent([
-        hardline,
-        ["i", ";"],
-        hardline,
-        ["j", ";"],
-      ]),
-      hardline,
+    doc = addIndentedStatements(doc, [
+      ["i", ";"],
+      ["j", ";", "", hardline],
     ]);
+    expect(doc).toEqual([indent([hardline, ["i", ";"], hardline, ["j", ";"]]), hardline]);
   });
 
   test("addIndentedStatements with trivia works as expected", () => {
@@ -418,22 +345,13 @@ describe("Print Utils tests", () => {
     ]);
 
     doc = [];
-    doc = addIndentedStatements(
-      doc,
-      [],
-      "{",
-      [
-        label("leadingTrivia", ["", hardline, "// foo", "", hardline]),
-        "}",
-        label("trailingTrivia", ["", hardline, "// bar"]),
-      ],
-    );
+    doc = addIndentedStatements(doc, [], "{", [
+      label("leadingTrivia", ["", hardline, "// foo", "", hardline]),
+      "}",
+      label("trailingTrivia", ["", hardline, "// bar"]),
+    ]);
     expect(doc).toEqual([
-      indent([
-        "{",
-        hardline,
-        label("leadingTrivia", ["", hardline, "// foo"]),
-      ]),
+      indent(["{", hardline, label("leadingTrivia", ["", hardline, "// foo"])]),
       hardline,
       ["}", label("trailingTrivia", ["", hardline, "// bar"])],
     ]);
@@ -463,73 +381,54 @@ describe("Print Utils tests", () => {
     const trailingTriviaDoc: Doc = ["// hello", hardline];
 
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual(["class", "A", [
-      "{",
-      ifBreak([line, "  "], " "),
-      ["// hello", hardline],
-    ]]);
+    expect(docs).toEqual(["class", "A", ["{", ifBreak([line, "  "], " "), ["// hello", hardline]]]);
 
     docs = ["class", "A", "}"];
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual(["class", "A", [
-      "}",
-      ifBreak([line, ""], " "),
-      ["// hello", hardline],
-    ]]);
+    expect(docs).toEqual(["class", "A", ["}", ifBreak([line, ""], " "), ["// hello", hardline]]]);
 
     docs = ["class", "A", ["{"]];
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual(["class", "A", [
-      ["{", ifBreak([line, "  "], " "), ["// hello", hardline]],
-    ]]);
+    expect(docs).toEqual([
+      "class",
+      "A",
+      [["{", ifBreak([line, "  "], " "), ["// hello", hardline]]],
+    ]);
 
     docs = [["class", "A", ["{"]]];
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual([["class", "A", [[
-      "{",
-      ifBreak([line, "  "], " "),
-      ["// hello", hardline],
-    ]]]]);
+    expect(docs).toEqual([
+      ["class", "A", [["{", ifBreak([line, "  "], " "), ["// hello", hardline]]]],
+    ]);
 
     docs = [["class", "A", ["{"], hardline], hardline];
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual([["class", "A", [[
-      "{",
-      ifBreak([line, "  "], " "),
-      ["// hello", hardline],
-    ]], hardline], hardline]);
+    expect(docs).toEqual([
+      ["class", "A", [["{", ifBreak([line, "  "], " "), ["// hello", hardline]]], hardline],
+      hardline,
+    ]);
 
     docs = [["class", "A", ["}"], hardline], hardline];
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual([["class", "A", [[
-      "}",
-      ifBreak([line, ""], " "),
-      ["// hello", hardline],
-    ]], hardline], hardline]);
+    expect(docs).toEqual([
+      ["class", "A", [["}", ifBreak([line, ""], " "), ["// hello", hardline]]], hardline],
+      hardline,
+    ]);
 
     docs = [["class", "A", ["}"], hardline], hardline];
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual([["class", "A", [[
-      "}",
-      ifBreak([line, ""], " "),
-      ["// hello", hardline],
-    ]], hardline], hardline]);
+    expect(docs).toEqual([
+      ["class", "A", [["}", ifBreak([line, ""], " "), ["// hello", hardline]]], hardline],
+      hardline,
+    ]);
 
     docs = [[]];
     docs = addTrailingTriviaDoc(docs, trailingTriviaDoc);
-    expect(docs).toEqual([[
-      ["// hello", hardline],
-    ]]);
+    expect(docs).toEqual([[["// hello", hardline]]]);
   });
 
   test("no trivia comment", async () => {
-    await testPrettierScenario(
-      "class A{}",
-      "class A {\n" +
-        "}\n",
-      "class A {\n" +
-        "}\n",
-    );
+    await testPrettierScenario("class A{}", "class A {\n" + "}\n", "class A {\n" + "}\n");
   });
 
   test("trivia comment on own line", async () => {
@@ -571,14 +470,8 @@ describe("Print Utils tests", () => {
   test("trivia comment in between syntactic elements", async () => {
     await testPrettierScenario(
       "class A{\n  i++ // odd but valid comment position\n; \n}",
-      "class A {\n" +
-        "  i++ // odd but valid comment position\n" +
-        "  ;\n" +
-        "}\n",
-      "class A {\n" +
-        "  i++ // odd but valid comment position\n" +
-        "  ;\n" +
-        "}\n",
+      "class A {\n" + "  i++ // odd but valid comment position\n" + "  ;\n" + "}\n",
+      "class A {\n" + "  i++ // odd but valid comment position\n" + "  ;\n" + "}\n",
     );
   });
 

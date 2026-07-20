@@ -13,9 +13,6 @@ export class StringLiteral extends AbstractCompositeNode {
     public readonly literals: OneToManyList<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.STRING_LITERAL,
-      children,
-    );
+    super(NodeKind.STRING_LITERAL, children);
   }
 }

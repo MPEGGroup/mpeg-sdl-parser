@@ -7,21 +7,12 @@ import type { BuildContext } from "../util/build-context.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import { fetchOneToManyCommaSeparatedList } from "../util/fetch-node.ts";
 
-export function buildExtendedClassIdRange(
-  buildContext: BuildContext,
-): ExtendedClassIdRange {
+export function buildExtendedClassIdRange(buildContext: BuildContext): ExtendedClassIdRange {
   const children: Array<AbstractNode> = [];
 
-  const { nodes: classIds, commaPunctuators } =
-    fetchOneToManyCommaSeparatedList<ClassId | ClassIdRange>(
-      buildContext,
-      NodeKind.CLASS_ID,
-      [ClassIdKind.SINGLE, ClassIdKind.RANGE],
-    );
+  const { nodes: classIds, commaPunctuators } = fetchOneToManyCommaSeparatedList<
+    ClassId | ClassIdRange
+  >(buildContext, NodeKind.CLASS_ID, [ClassIdKind.SINGLE, ClassIdKind.RANGE]);
 
-  return new ExtendedClassIdRange(
-    classIds,
-    commaPunctuators,
-    children,
-  );
+  return new ExtendedClassIdRange(classIds, commaPunctuators, children);
 }

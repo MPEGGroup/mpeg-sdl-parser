@@ -31,8 +31,7 @@ export abstract class AbstractCompositeNode extends AbstractNode {
       this.startToken = firstChild;
     } else {
       throw new InternalScannerError(
-        "Unsupported node type for start token assignment: " +
-          NodeKind[firstChild.nodeKind],
+        "Unsupported node type for start token assignment: " + NodeKind[firstChild.nodeKind],
       );
     }
     const lastChild = children[children.length - 1];
@@ -42,8 +41,7 @@ export abstract class AbstractCompositeNode extends AbstractNode {
       this.endToken = lastChild;
     } else {
       throw new InternalScannerError(
-        "Unsupported node type for end token assignment: " +
-          NodeKind[lastChild.nodeKind],
+        "Unsupported node type for end token assignment: " + NodeKind[lastChild.nodeKind],
       );
     }
   }

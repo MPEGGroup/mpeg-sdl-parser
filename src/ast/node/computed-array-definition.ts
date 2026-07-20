@@ -16,11 +16,6 @@ export class ComputedArrayDefinition extends AbstractArrayDefinition {
     semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.COMPUTED_ARRAY_DEFINITION,
-      identifier,
-      semicolonPunctuator,
-      children,
-    );
+    super(StatementKind.COMPUTED_ARRAY_DEFINITION, identifier, semicolonPunctuator, children);
   }
 }

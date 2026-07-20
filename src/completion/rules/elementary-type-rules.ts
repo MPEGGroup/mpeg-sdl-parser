@@ -4,12 +4,7 @@ import * as TokenTypeId from "../../lezer/parser.terms.ts";
 export const elementaryTypeRules = [
   {
     previous: -1,
-    expected: [
-      TokenTypeId.int,
-      TokenTypeId.unsigned,
-      TokenTypeId.float,
-      TokenTypeId.bit,
-    ],
+    expected: [TokenTypeId.int, TokenTypeId.unsigned, TokenTypeId.float, TokenTypeId.bit],
   },
   {
     previous: TokenTypeId.unsigned,

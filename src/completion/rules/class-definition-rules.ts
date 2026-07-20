@@ -4,10 +4,7 @@ import * as TokenTypeId from "../../lezer/parser.terms.ts";
 export const classDefinitionRules = [
   {
     previous: -1,
-    expected: [
-      TokenTypeId.legacy,
-      TokenTypeId.Identifier,
-    ],
+    expected: [TokenTypeId.legacy, TokenTypeId.Identifier],
   },
   {
     previous: TokenTypeId.legacy,

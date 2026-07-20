@@ -10,39 +10,22 @@ export const aggregateOutputValueRules = [
   },
   {
     previous: TokenTypeId.OpenBrace,
-    expected: [
-      TokenTypeId.ElementaryTypeOutputValue,
-      TokenTypeId.OpenBrace,
-      ...numberLiteralTypes,
-    ],
+    expected: [TokenTypeId.ElementaryTypeOutputValue, TokenTypeId.OpenBrace, ...numberLiteralTypes],
   },
   {
     previous: TokenTypeId.Comma,
-    expected: [
-      TokenTypeId.ElementaryTypeOutputValue,
-      TokenTypeId.OpenBrace,
-      ...numberLiteralTypes,
-    ],
+    expected: [TokenTypeId.ElementaryTypeOutputValue, TokenTypeId.OpenBrace, ...numberLiteralTypes],
   },
   {
     previous: TokenTypeId.ElementaryTypeOutputValue,
-    expected: [
-      TokenTypeId.Comma,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [TokenTypeId.Comma, TokenTypeId.CloseBrace],
   },
   {
     previous: TokenTypeId.CloseBrace,
-    expected: [
-      TokenTypeId.Comma,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [TokenTypeId.Comma, TokenTypeId.CloseBrace],
   },
   ...numberLiteralTypes.map((type) => ({
     previous: type,
-    expected: [
-      TokenTypeId.Comma,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [TokenTypeId.Comma, TokenTypeId.CloseBrace],
   })),
 ];

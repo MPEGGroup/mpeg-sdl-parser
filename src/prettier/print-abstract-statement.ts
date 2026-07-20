@@ -57,10 +57,7 @@ function printExpressionStatement(
   path: AstPath<ExpressionStatement>,
   print: (_path: AstPath<AbstractNode>) => Doc,
 ): Doc {
-  return fill([
-    path.call(print, "expression"),
-    path.call(print, "semicolonPunctuator"),
-  ]);
+  return fill([path.call(print, "expression"), path.call(print, "semicolonPunctuator")]);
 }
 
 export function printAbstractStatement(
@@ -73,10 +70,7 @@ export function printAbstractStatement(
     case StatementKind.ARRAY_DEFINITION:
       return printArrayDefinition(path as AstPath<ArrayDefinition>, print);
     case StatementKind.COMPUTED_ARRAY_DEFINITION:
-      return printComputedArrayDefinition(
-        path as AstPath<ComputedArrayDefinition>,
-        print,
-      );
+      return printComputedArrayDefinition(path as AstPath<ComputedArrayDefinition>, print);
     case StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION:
       return printComputedElementaryTypeDefinition(
         path as AstPath<ComputedElementaryTypeDefinition>,
@@ -91,15 +85,9 @@ export function printAbstractStatement(
     case StatementKind.DO:
       return printDoStatement(path as AstPath<DoStatement>, print);
     case StatementKind.ELEMENTARY_TYPE_DEFINITION:
-      return printElementaryTypeDefinition(
-        path as AstPath<ElementaryTypeDefinition>,
-        print,
-      );
+      return printElementaryTypeDefinition(path as AstPath<ElementaryTypeDefinition>, print);
     case StatementKind.EXPRESSION:
-      return printExpressionStatement(
-        path as AstPath<ExpressionStatement>,
-        print,
-      );
+      return printExpressionStatement(path as AstPath<ExpressionStatement>, print);
     case StatementKind.FOR:
       return printForStatement(path as AstPath<ForStatement>, print);
     case StatementKind.IF:

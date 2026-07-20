@@ -4,16 +4,10 @@ import type { IfStatement } from "../../ast/node/if-statement.ts";
 import type { AbstractStatement } from "../../ast/node/abstract-statement.ts";
 import type { SymbolTable } from "../symbol-table.ts";
 import type { Check, CheckResult } from "./check.ts";
-import {
-  isCaseClause,
-  isDefaultClause,
-  isStatement,
-} from "../../ast/util/types.ts";
+import { isCaseClause, isDefaultClause, isStatement } from "../../ast/util/types.ts";
 import type { SwitchStatement } from "../../ast/node/switch-statement.ts";
 
-export function collectMemberVariableNames(
-  statement: AbstractStatement,
-): Set<string> {
+export function collectMemberVariableNames(statement: AbstractStatement): Set<string> {
   const names = new Set<string>();
 
   function traverse(stmt: AbstractStatement) {
@@ -72,10 +66,7 @@ export function collectMemberVariableNames(
               }
             }
           }
-          if (
-            isDefaultClause(switchStmt.defaultClause) &&
-            switchStmt.defaultClause.statements
-          ) {
+          if (isDefaultClause(switchStmt.defaultClause) && switchStmt.defaultClause.statements) {
             for (const nestedStmt of switchStmt.defaultClause.statements) {
               traverse(nestedStmt as AbstractStatement);
             }
@@ -91,9 +82,7 @@ export function collectMemberVariableNames(
   return names;
 }
 
-function collectAllBranchMemberNames(
-  statement: AbstractStatement,
-): Set<string> {
+function collectAllBranchMemberNames(statement: AbstractStatement): Set<string> {
   const allNames = new Set<string>();
 
   function addBranchNames(stmt: AbstractStatement) {

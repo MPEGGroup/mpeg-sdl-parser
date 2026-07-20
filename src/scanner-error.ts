@@ -44,10 +44,7 @@ export class SyntaxError extends ScannerError {
  * Indicates a semantic error in the provided AST.
  */
 export class SemanticError extends ScannerError {
-  constructor(
-    errorMessage: string,
-    location?: Location,
-  ) {
+  constructor(errorMessage: string, location?: Location) {
     super(`SEMANTIC ERROR: ${errorMessage}`.trim(), location);
   }
 }
@@ -56,10 +53,7 @@ export class SemanticError extends ScannerError {
  * Indicates a semantic warning in the provided AST.
  */
 export class SemanticWarning extends ScannerError {
-  constructor(
-    warningMessage: string,
-    location?: Location,
-  ) {
+  constructor(warningMessage: string, location?: Location) {
     super(`SEMANTIC WARNING: ${warningMessage}`.trim(), location);
   }
 }

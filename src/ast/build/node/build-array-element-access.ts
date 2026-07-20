@@ -9,9 +9,7 @@ import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import { Identifier } from "../../node/identifier.ts";
 
-export function buildArrayElementAccess(
-  buildContext: BuildContext,
-): ArrayElementAccess {
+export function buildArrayElementAccess(buildContext: BuildContext): ArrayElementAccess {
   const children: Array<AbstractNode> = [];
 
   const openBracketPunctuator = fetchRequiredNode<Token>(
@@ -21,12 +19,11 @@ export function buildArrayElementAccess(
   );
   children.push(openBracketPunctuator);
 
-  const index = fetchRequiredNode<
-    AbstractExpression | Identifier | NumberLiteral
-  >(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-  );
+  const index = fetchRequiredNode<AbstractExpression | Identifier | NumberLiteral>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+    NodeKind.NUMBER_LITERAL,
+  ]);
   children.push(index);
 
   const closeBracketPunctuator = fetchRequiredNode<Token>(
@@ -36,10 +33,5 @@ export function buildArrayElementAccess(
   );
   children.push(closeBracketPunctuator);
 
-  return new ArrayElementAccess(
-    openBracketPunctuator,
-    index,
-    closeBracketPunctuator,
-    children,
-  );
+  return new ArrayElementAccess(openBracketPunctuator, index, closeBracketPunctuator, children);
 }

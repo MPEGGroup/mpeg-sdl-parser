@@ -47,14 +47,10 @@ export function getRequiredIdentifier(
     if (strict) {
       throw new SemanticError(
         "Required identifier property is missing",
-        parentNode.leadingTrivia
-          ? parentNode.leadingTrivia[0].location
-          : undefined,
+        parentNode.leadingTrivia ? parentNode.leadingTrivia[0].location : undefined,
       );
     } else {
-      logger.debug(
-        "Ignoring missing required identifier property in lenient mode.",
-      );
+      logger.debug("Ignoring missing required identifier property in lenient mode.");
     }
     return undefined;
   }
@@ -66,21 +62,16 @@ export function getRequiredIdentifier(
   if (strict) {
     if (isToken(node)) {
       throw new SemanticError(
-        `Required identifier property is a Token node: ${
-          TokenKind[node.tokenKind]
-        }`,
+        `Required identifier property is a Token node: ${TokenKind[node.tokenKind]}`,
         node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
       );
     }
     throw new SemanticError(
-      "Required identifier property is not an Identifier node: " +
-        NodeKind[node.nodeKind],
+      "Required identifier property is not an Identifier node: " + NodeKind[node.nodeKind],
       node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
     );
   } else {
-    logger.debug(
-      "Ignoring invalid required identifier property in lenient mode.",
-    );
+    logger.debug("Ignoring invalid required identifier property in lenient mode.");
     return undefined;
   }
 }
@@ -104,14 +95,10 @@ export function getRequiredToken(
     if (strict) {
       throw new SemanticError(
         "Required token property is missing",
-        parentNode.leadingTrivia
-          ? parentNode.leadingTrivia[0].location
-          : undefined,
+        parentNode.leadingTrivia ? parentNode.leadingTrivia[0].location : undefined,
       );
     } else {
-      logger.debug(
-        "Ignoring missing required token property in lenient mode.",
-      );
+      logger.debug("Ignoring missing required token property in lenient mode.");
     }
     return undefined;
   }
@@ -126,9 +113,7 @@ export function getRequiredToken(
       node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
     );
   } else {
-    logger.debug(
-      "Ignoring invalid required token property in lenient mode.",
-    );
+    logger.debug("Ignoring invalid required token property in lenient mode.");
     return undefined;
   }
 }
@@ -152,14 +137,10 @@ export function getRequiredElementaryType(
     if (strict) {
       throw new SemanticError(
         "Required elementary type property is missing",
-        parentNode.leadingTrivia
-          ? parentNode.leadingTrivia[0].location
-          : undefined,
+        parentNode.leadingTrivia ? parentNode.leadingTrivia[0].location : undefined,
       );
     } else {
-      logger.debug(
-        "Ignoring missing required elementary type property in lenient mode.",
-      );
+      logger.debug("Ignoring missing required elementary type property in lenient mode.");
     }
     return undefined;
   }
@@ -170,21 +151,16 @@ export function getRequiredElementaryType(
   if (strict) {
     if (isToken(node)) {
       throw new SemanticError(
-        `Required identifier property is a Token node: ${
-          TokenKind[node.tokenKind]
-        }`,
+        `Required identifier property is a Token node: ${TokenKind[node.tokenKind]}`,
         node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
       );
     }
     throw new SemanticError(
-      "Required elementary type property is not an ElementaryType node: " +
-        NodeKind[node.nodeKind],
+      "Required elementary type property is not an ElementaryType node: " + NodeKind[node.nodeKind],
       node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
     );
   } else {
-    logger.debug(
-      "Ignoring invalid required elementary type property in lenient mode.",
-    );
+    logger.debug("Ignoring invalid required elementary type property in lenient mode.");
     return undefined;
   }
 }
@@ -204,21 +180,15 @@ export function getElementaryTypeKind(
         throw new SemanticError(
           "Elementary type unsigned qualifier is not a Token node: " +
             NodeKind[elementaryType.unsignedQualifierKeyword.nodeKind],
-          elementaryType.leadingTrivia
-            ? elementaryType.leadingTrivia[0].location
-            : undefined,
+          elementaryType.leadingTrivia ? elementaryType.leadingTrivia[0].location : undefined,
         );
       } else {
-        logger.debug(
-          "Ignoring invalid elementary type unsigned qualifier in lenient mode.",
-        );
+        logger.debug("Ignoring invalid elementary type unsigned qualifier in lenient mode.");
         return undefined;
       }
     }
 
-    if (
-      elementaryType.unsignedQualifierKeyword.tokenKind !== TokenKind.UNSIGNED
-    ) {
+    if (elementaryType.unsignedQualifierKeyword.tokenKind !== TokenKind.UNSIGNED) {
       if (strict) {
         throw new SemanticError(
           `Elementary type unsigned qualifier has invalid token kind: ${
@@ -242,14 +212,10 @@ export function getElementaryTypeKind(
       throw new SemanticError(
         "Elementary type type keyword is not a Token node: " +
           NodeKind[elementaryType.typeKeyword.nodeKind],
-        elementaryType.leadingTrivia
-          ? elementaryType.leadingTrivia[0].location
-          : undefined,
+        elementaryType.leadingTrivia ? elementaryType.leadingTrivia[0].location : undefined,
       );
     } else {
-      logger.debug(
-        "Ignoring invalid elementary type type keyword in lenient mode.",
-      );
+      logger.debug("Ignoring invalid elementary type type keyword in lenient mode.");
       return undefined;
     }
   }
@@ -259,9 +225,7 @@ export function getElementaryTypeKind(
 
   switch (typeToken.tokenKind) {
     case TokenKind.INT:
-      return isUnsigned
-        ? ElementaryTypeKind.UNSIGNED_INTEGER
-        : ElementaryTypeKind.INTEGER;
+      return isUnsigned ? ElementaryTypeKind.UNSIGNED_INTEGER : ElementaryTypeKind.INTEGER;
     case TokenKind.FLOAT:
       return ElementaryTypeKind.FLOATING_POINT;
     case TokenKind.BIT:
@@ -269,9 +233,7 @@ export function getElementaryTypeKind(
     default:
       if (strict) {
         throw new SemanticError(
-          `Unsupported elementary type token kind: ${
-            TokenKind[typeToken.tokenKind]
-          }`,
+          `Unsupported elementary type token kind: ${TokenKind[typeToken.tokenKind]}`,
           typeToken.getLocation(),
         );
       } else {
@@ -308,9 +270,7 @@ export function getStringVariableKind(
     default:
       if (strict) {
         throw new SemanticError(
-          `Unsupported string variable kind token: ${
-            TokenKind[stringVariableKindToken.tokenKind]
-          }`,
+          `Unsupported string variable kind token: ${TokenKind[stringVariableKindToken.tokenKind]}`,
           stringVariableKindToken.getLocation(),
         );
       } else {
@@ -344,21 +304,15 @@ export function getRequiredOperand(
     if (strict) {
       throw new SemanticError(
         "Required operand property is missing",
-        parentNode.leadingTrivia
-          ? parentNode.leadingTrivia[0].location
-          : undefined,
+        parentNode.leadingTrivia ? parentNode.leadingTrivia[0].location : undefined,
       );
     } else {
-      logger.debug(
-        "Ignoring missing required operand property in lenient mode.",
-      );
+      logger.debug("Ignoring missing required operand property in lenient mode.");
     }
     return undefined;
   }
 
-  if (
-    isAbstractExpression(node) || isIdentifier(node) || isNumberLiteral(node)
-  ) {
+  if (isAbstractExpression(node) || isIdentifier(node) || isNumberLiteral(node)) {
     return node;
   }
 
@@ -369,9 +323,7 @@ export function getRequiredOperand(
       node.leadingTrivia ? node.leadingTrivia[0].location : undefined,
     );
   } else {
-    logger.debug(
-      "Ignoring invalid required operand property in lenient mode.",
-    );
+    logger.debug("Ignoring invalid required operand property in lenient mode.");
     return undefined;
   }
 }
@@ -428,17 +380,13 @@ export function getSymbolTableString(symbolTable: SymbolTable): string {
       }:`,
     );
 
-    if (scope.classMemberSymbols && (scope.classMemberSymbols.size > 0)) {
+    if (scope.classMemberSymbols && scope.classMemberSymbols.size > 0) {
       lines.push(`${prefix}  members:`);
 
       for (const memberEntries of scope.classMemberSymbols.values()) {
         for (const entry of memberEntries) {
-          const branchStr = entry.branchId
-            ? ` (branch: ${entry.branchId})`
-            : "";
-          lines.push(
-            `${prefix}    ${getSymbolString(entry.symbol)}${branchStr}`,
-          );
+          const branchStr = entry.branchId ? ` (branch: ${entry.branchId})` : "";
+          lines.push(`${prefix}    ${getSymbolString(entry.symbol)}${branchStr}`);
         }
       }
     }

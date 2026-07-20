@@ -1,8 +1,5 @@
 import { AstPath, type Doc, doc } from "prettier";
-import {
-  addBreakingWhitespace,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addBreakingWhitespace, addNonBreakingWhitespace } from "./util/print-utils.ts";
 import type { ArrayDefinition } from "../ast/node/array-definition.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 
@@ -16,70 +13,37 @@ export function printArrayDefinition(
   let doc: Doc = [];
 
   if (arrayDefinition.reservedKeyword) {
-    doc.push(
-      path.call(
-        print,
-        "reservedKeyword" as keyof ArrayDefinition["reservedKeyword"],
-      ),
-    );
+    doc.push(path.call(print, "reservedKeyword" as keyof ArrayDefinition["reservedKeyword"]));
     addNonBreakingWhitespace(doc);
   }
 
   if (arrayDefinition.legacyKeyword) {
-    doc.push(
-      path.call(
-        print,
-        "legacyKeyword" as keyof ArrayDefinition["legacyKeyword"],
-      ),
-    );
+    doc.push(path.call(print, "legacyKeyword" as keyof ArrayDefinition["legacyKeyword"]));
     addNonBreakingWhitespace(doc);
   }
 
   if (arrayDefinition.alignedModifier !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "alignedModifier" as keyof ArrayDefinition["alignedModifier"],
-      ),
-    );
+    doc.push(path.call(print, "alignedModifier" as keyof ArrayDefinition["alignedModifier"]));
     addNonBreakingWhitespace(doc);
   }
 
   if (arrayDefinition.elementaryType !== undefined) {
     const subDoc: Doc = [
-      path.call(
-        print,
-        "elementaryType" as keyof ArrayDefinition["elementaryType"],
-      ),
-      path.call(
-        print,
-        "lengthAttribute" as keyof ArrayDefinition["lengthAttribute"],
-      ),
+      path.call(print, "elementaryType" as keyof ArrayDefinition["elementaryType"]),
+      path.call(print, "lengthAttribute" as keyof ArrayDefinition["lengthAttribute"]),
     ];
     doc.push(subDoc);
   } else {
-    doc.push(
-      path.call(
-        print,
-        "classIdentifier" as keyof ArrayDefinition["classIdentifier"],
-      ),
-    );
+    doc.push(path.call(print, "classIdentifier" as keyof ArrayDefinition["classIdentifier"]));
   }
 
   doc = addBreakingWhitespace(doc);
 
-  const identifierClause = [
-    path.call(print, "identifier"),
-  ];
+  const identifierClause = [path.call(print, "identifier")];
 
   if (arrayDefinition.implicitArrayDimension) {
     identifierClause.push(
-      path.call(
-        print,
-        "implicitArrayDimension" as keyof ArrayDefinition[
-          "implicitArrayDimension"
-        ],
-      ),
+      path.call(print, "implicitArrayDimension" as keyof ArrayDefinition["implicitArrayDimension"]),
     );
   }
 

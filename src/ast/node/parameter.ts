@@ -12,9 +12,6 @@ export class Parameter extends AbstractCompositeNode {
     public readonly identifier: RequiredNode<Identifier>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.PARAMETER,
-      children,
-    );
+    super(NodeKind.PARAMETER, children);
   }
 }

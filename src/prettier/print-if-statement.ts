@@ -29,10 +29,7 @@ export function printIfStatement(
   addNonBreakingWhitespace(doc);
 
   const ifSubStatement = ifStatement.ifStatement;
-  if (
-    isStatement(ifSubStatement) &&
-    (ifSubStatement.statementKind === StatementKind.COMPOUND)
-  ) {
+  if (isStatement(ifSubStatement) && ifSubStatement.statementKind === StatementKind.COMPOUND) {
     doc.push(path.call(print, "ifStatement"));
   } else {
     doc = addIndentedStatements(doc, [path.call(print, "ifStatement")]);
@@ -48,28 +45,20 @@ export function printIfStatement(
     doc = [doc];
   }
 
-  doc.push(
-    path.call(print, "elseKeyword" as keyof IfStatement["elseKeyword"]),
-  );
+  doc.push(path.call(print, "elseKeyword" as keyof IfStatement["elseKeyword"]));
   addNonBreakingWhitespace(doc);
 
   const elseSubStatement = ifStatement.elseStatement!;
   if (
     isStatement(elseSubStatement) &&
-    (elseSubStatement.statementKind !== StatementKind.COMPOUND) &&
-    (elseSubStatement.statementKind !== StatementKind.IF)
+    elseSubStatement.statementKind !== StatementKind.COMPOUND &&
+    elseSubStatement.statementKind !== StatementKind.IF
   ) {
-    doc = addIndentedStatements(
-      doc,
-      [path.call(
-        print,
-        "elseStatement" as keyof IfStatement["elseStatement"],
-      )],
-    );
-  } else {
-    doc.push(
+    doc = addIndentedStatements(doc, [
       path.call(print, "elseStatement" as keyof IfStatement["elseStatement"]),
-    );
+    ]);
+  } else {
+    doc.push(path.call(print, "elseStatement" as keyof IfStatement["elseStatement"]));
   }
 
   return doc;

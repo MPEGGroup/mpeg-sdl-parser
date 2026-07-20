@@ -14,8 +14,7 @@ export default class HistoryRecordingNodeHandler implements NodeHandler {
     this.nodeHistory.push(NodeKind[node.nodeKind]);
   }
 
-  afterVisit(_node: AbstractCompositeNode): void {
-  }
+  afterVisit(_node: AbstractCompositeNode): void {}
 }
 
 const expectedHistory = [

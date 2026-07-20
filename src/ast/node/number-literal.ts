@@ -12,7 +12,5 @@ export class NumberLiteral extends AbstractCompositeNode {
     public readonly literals: OneToManyList<Token>,
   ) {
     super(NodeKind.NUMBER_LITERAL, literals);
-    this.numberLiteralKind = numberLiteralKind;
-    this.value = value;
   }
 }

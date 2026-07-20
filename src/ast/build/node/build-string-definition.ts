@@ -11,9 +11,7 @@ import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildStringDefinition(
-  buildContext: BuildContext,
-): StringDefinition {
+export function buildStringDefinition(buildContext: BuildContext): StringDefinition {
   const children: Array<AbstractNode> = [];
 
   const reservedKeyword = fetchOptionalNode<Token>(
@@ -24,19 +22,11 @@ export function buildStringDefinition(
   if (reservedKeyword) {
     children.push(reservedKeyword);
   }
-  const legacyKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.LEGACY,
-  );
+  const legacyKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.LEGACY);
   if (legacyKeyword) {
     children.push(legacyKeyword);
   }
-  const constKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.CONST,
-  );
+  const constKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.CONST);
   if (constKeyword) {
     children.push(constKeyword);
   }
@@ -47,21 +37,14 @@ export function buildStringDefinition(
   if (alignedModifier) {
     children.push(alignedModifier);
   }
-  const stringVariableKindToken = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    [
-      TokenKind.UTF16_STRING,
-      TokenKind.UTF8_STRING,
-      TokenKind.UTF8_LIST,
-      TokenKind.BASE64_STRING,
-    ],
-  );
+  const stringVariableKindToken = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, [
+    TokenKind.UTF16_STRING,
+    TokenKind.UTF8_STRING,
+    TokenKind.UTF8_LIST,
+    TokenKind.BASE64_STRING,
+  ]);
   children.push(stringVariableKindToken);
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   children.push(identifier);
   const assignmentPunctuator = fetchOptionalNode<Token>(
     buildContext,
@@ -71,10 +54,7 @@ export function buildStringDefinition(
   let stringLiteral: OptionalNode<StringLiteral> = undefined;
   if (assignmentPunctuator) {
     children.push(assignmentPunctuator);
-    stringLiteral = fetchOptionalNode<StringLiteral>(
-      buildContext,
-      NodeKind.STRING_LITERAL,
-    );
+    stringLiteral = fetchOptionalNode<StringLiteral>(buildContext, NodeKind.STRING_LITERAL);
     if (stringLiteral) {
       children.push(stringLiteral);
     } else {

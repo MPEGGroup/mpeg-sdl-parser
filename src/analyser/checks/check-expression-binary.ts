@@ -27,18 +27,18 @@ function checkConstMutationViaAssignment(
   const symbol = symbolTable.lookupVariable(identifier.name);
 
   if (symbol && symbol.attributes.isConst && symbol.attributes.isComputed) {
-    return [{
-      message: "a const computed variable cannot be mutated.",
-      location: node.startToken!.getLocation(),
-    }];
+    return [
+      {
+        message: "a const computed variable cannot be mutated.",
+        location: node.startToken!.getLocation(),
+      },
+    ];
   }
 
   return [];
 }
 
-function checkModulusWithNegativeRhs(
-  node: BinaryExpression,
-): CheckResult[] {
+function checkModulusWithNegativeRhs(node: BinaryExpression): CheckResult[] {
   if (node.binaryOperatorKind !== BinaryOperatorKind.MODULUS) {
     return [];
   }
@@ -49,12 +49,14 @@ function checkModulusWithNegativeRhs(
 
   const rightLiteral = node.rightOperand as NumberLiteral;
   if (rightLiteral.value < 0) {
-    return [{
-      message:
-        "Using the modulus operator with a negative right-hand operand will lead to undefined behavior.",
-      location: node.startToken!.getLocation(),
-      isWarning: true,
-    }];
+    return [
+      {
+        message:
+          "Using the modulus operator with a negative right-hand operand will lead to undefined behavior.",
+        location: node.startToken!.getLocation(),
+        isWarning: true,
+      },
+    ];
   }
 
   return [];
@@ -71,22 +73,19 @@ function checkModulusWithFloatOperands(
   const leftType = resolveNumericType(node.leftOperand, symbolTable);
   const rightType = resolveNumericType(node.rightOperand, symbolTable);
 
-  if (
-    leftType === NumericType.FLOATING_POINT ||
-    rightType === NumericType.FLOATING_POINT
-  ) {
-    return [{
-      message: "Using the modulus operator cannot be used with float operands.",
-      location: node.startToken!.getLocation(),
-    }];
+  if (leftType === NumericType.FLOATING_POINT || rightType === NumericType.FLOATING_POINT) {
+    return [
+      {
+        message: "Using the modulus operator cannot be used with float operands.",
+        location: node.startToken!.getLocation(),
+      },
+    ];
   }
 
   return [];
 }
 
-function checkModulusWithZeroRhs(
-  node: BinaryExpression,
-): CheckResult[] {
+function checkModulusWithZeroRhs(node: BinaryExpression): CheckResult[] {
   if (node.binaryOperatorKind !== BinaryOperatorKind.MODULUS) {
     return [];
   }
@@ -97,20 +96,20 @@ function checkModulusWithZeroRhs(
 
   const rightLiteral = node.rightOperand as NumberLiteral;
   if (rightLiteral.value === 0) {
-    return [{
-      message:
-        "Using the modulus operator with a right-hand operand of zero will lead to undefined behavior.",
-      location: node.startToken!.getLocation(),
-      isWarning: true,
-    }];
+    return [
+      {
+        message:
+          "Using the modulus operator with a right-hand operand of zero will lead to undefined behavior.",
+        location: node.startToken!.getLocation(),
+        isWarning: true,
+      },
+    ];
   }
 
   return [];
 }
 
-function checkDivisionByZero(
-  node: BinaryExpression,
-): CheckResult[] {
+function checkDivisionByZero(node: BinaryExpression): CheckResult[] {
   if (node.binaryOperatorKind !== BinaryOperatorKind.DIVIDE) {
     return [];
   }
@@ -121,12 +120,14 @@ function checkDivisionByZero(
 
   const rightLiteral = node.rightOperand as NumberLiteral;
   if (rightLiteral.value === 0) {
-    return [{
-      message:
-        "The value of division where the value of the second operand is zero will lead to undefined behavior.",
-      location: node.startToken!.getLocation(),
-      isWarning: true,
-    }];
+    return [
+      {
+        message:
+          "The value of division where the value of the second operand is zero will lead to undefined behavior.",
+        location: node.startToken!.getLocation(),
+        isWarning: true,
+      },
+    ];
   }
 
   return [];
@@ -147,18 +148,20 @@ function checkIntegerDivisionWithNegatives(
     return [];
   }
 
-  const leftIsNegative = isNumberLiteral(node.leftOperand) &&
-    (node.leftOperand as NumberLiteral).value < 0;
-  const rightIsNegative = isNumberLiteral(node.rightOperand) &&
-    (node.rightOperand as NumberLiteral).value < 0;
+  const leftIsNegative =
+    isNumberLiteral(node.leftOperand) && (node.leftOperand as NumberLiteral).value < 0;
+  const rightIsNegative =
+    isNumberLiteral(node.rightOperand) && (node.rightOperand as NumberLiteral).value < 0;
 
   if (leftIsNegative || rightIsNegative) {
-    return [{
-      message:
-        "The direction of truncation for integer division with negative operands is not defined by the SDL which will lead to undefined behavior.",
-      location: node.startToken!.getLocation(),
-      isWarning: true,
-    }];
+    return [
+      {
+        message:
+          "The direction of truncation for integer division with negative operands is not defined by the SDL which will lead to undefined behavior.",
+        location: node.startToken!.getLocation(),
+        isWarning: true,
+      },
+    ];
   }
 
   return [];
@@ -174,12 +177,14 @@ function checkRightShiftOnSignedInt(
 
   const leftType = resolveNumericType(node.leftOperand, symbolTable);
   if (leftType === NumericType.INTEGER) {
-    return [{
-      message:
-        "The behaviour of the right shift operator applied to a signed int value is not defined by the SDL which will lead to undefined behavior.",
-      location: node.startToken!.getLocation(),
-      isWarning: true,
-    }];
+    return [
+      {
+        message:
+          "The behaviour of the right shift operator applied to a signed int value is not defined by the SDL which will lead to undefined behavior.",
+        location: node.startToken!.getLocation(),
+        isWarning: true,
+      },
+    ];
   }
 
   return [];
@@ -201,11 +206,12 @@ function checkLeftHandAssignmentConst(
   const symbol = symbolTable.lookupVariable(identifier.name);
 
   if (symbol && symbol.attributes.isConst) {
-    return [{
-      message:
-        "The left-hand operand of an assignment operator cannot be a const variable.",
-      location: node.startToken!.getLocation(),
-    }];
+    return [
+      {
+        message: "The left-hand operand of an assignment operator cannot be a const variable.",
+        location: node.startToken!.getLocation(),
+      },
+    ];
   }
 
   return [];

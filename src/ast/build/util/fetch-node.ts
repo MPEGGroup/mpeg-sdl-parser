@@ -36,52 +36,38 @@ function getRequestLogMessage(
   const nodeKindStr = Array.isArray(requestedNodeKind)
     ? requestedNodeKind.map((kind) => NodeKind[kind]).join(", ")
     : requestedNodeKind !== undefined
-    ? NodeKind[requestedNodeKind]
-    : "any";
+      ? NodeKind[requestedNodeKind]
+      : "any";
   let message = ` for ${nodeKindStr}`;
 
   if (requestedSubKind !== undefined) {
     switch (requestedNodeKind) {
       case NodeKind.TOKEN:
         if (Array.isArray(requestedSubKind)) {
-          message += `, [${
-            requestedSubKind
-              .map((subKind) => TokenKind[subKind])
-              .join(", ")
-          }]`;
+          message += `, [${requestedSubKind.map((subKind) => TokenKind[subKind]).join(", ")}]`;
           break;
         }
         message += `, ${TokenKind[requestedSubKind]}`;
         break;
       case NodeKind.STATEMENT:
         if (Array.isArray(requestedSubKind)) {
-          message += `, [${
-            requestedSubKind
-              .map((subKind) => StatementKind[subKind])
-              .join(", ")
-          }]`;
+          message += `, [${requestedSubKind.map((subKind) => StatementKind[subKind]).join(", ")}]`;
           break;
         }
         message += `, ${StatementKind[requestedSubKind]}`;
         break;
       case NodeKind.ARRAY_DIMENSION:
         if (Array.isArray(requestedSubKind)) {
-          message += `, [${
-            requestedSubKind
-              .map((subKind) => ArrayDimensionKind[subKind])
-              .join(", ")
-          }]`;
+          message += `, [${requestedSubKind
+            .map((subKind) => ArrayDimensionKind[subKind])
+            .join(", ")}]`;
           break;
         }
         message += `, ${ArrayDimensionKind[requestedSubKind]}`;
         break;
       case NodeKind.CLASS_ID:
         if (Array.isArray(requestedSubKind)) {
-          message += `, [${
-            requestedSubKind
-              .map((subKind) => ClassIdKind[subKind])
-              .join(", ")
-          }]`;
+          message += `, [${requestedSubKind.map((subKind) => ClassIdKind[subKind]).join(", ")}]`;
           break;
         }
         message += `, ${ClassIdKind[requestedSubKind]}`;
@@ -101,9 +87,7 @@ function getNodeDetailsLogMessage(node: AbstractNode): string {
   if (isToken(node)) {
     message += ` ${node.text.replaceAll("\n", "\\n")}`;
   } else if (node.nodeKind === NodeKind.IDENTIFIER) {
-    message += ` ${
-      (node as unknown as Identifier).name.replaceAll("\n", "\\n")
-    }`;
+    message += ` ${(node as unknown as Identifier).name.replaceAll("\n", "\\n")}`;
   } else if (node.nodeKind === NodeKind.NUMBER_LITERAL) {
     message += ` ${(node as unknown as NumberLiteral).value}`;
   } else if (node.nodeKind === NodeKind.STRING_LITERAL) {
@@ -118,15 +102,14 @@ function fetchAstNode<T extends AbstractNode>(
   requestedNodeKind?: number[] | number,
   requestedSubKind?: number[] | number,
 ): T | undefined {
-  if (Array.isArray(requestedNodeKind) && (requestedSubKind !== undefined)) {
+  if (Array.isArray(requestedNodeKind) && requestedSubKind !== undefined) {
     throw new InternalScannerError(
       `Cannot specify multiple requestedNodeKind when specifying requestedSubKind.`,
     );
   }
 
   // use a node if we already have one from a previous call
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   let node = currentState.nextNode as T | undefined;
   delete currentState.nextNode;
 
@@ -150,10 +133,7 @@ function fetchAstNode<T extends AbstractNode>(
           "fabricating MissingError node at end of siblings" +
           getRequestLogMessage(requestedNodeKind, requestedSubKind),
       );
-      const location = getLocationFromTextPosition(
-        buildContext.text,
-        buildContext.cursor.from,
-      );
+      const location = getLocationFromTextPosition(buildContext.text, buildContext.cursor.from);
 
       return new MissingError(location) as unknown as T;
     }
@@ -161,12 +141,10 @@ function fetchAstNode<T extends AbstractNode>(
     throw new InternalScannerError(
       `Required node of kind ${
         Array.isArray(requestedNodeKind)
-          ? requestedNodeKind
-            .map((kind) => NodeKind[kind])
-            .join(", ")
+          ? requestedNodeKind.map((kind) => NodeKind[kind]).join(", ")
           : requestedNodeKind !== undefined
-          ? NodeKind[requestedNodeKind]
-          : "any"
+            ? NodeKind[requestedNodeKind]
+            : "any"
       }, but no node was available.`,
     );
   }
@@ -185,8 +163,8 @@ function fetchAstNode<T extends AbstractNode>(
     Array.isArray(requestedNodeKind)
       ? requestedNodeKind.includes(node.nodeKind)
       : requestedNodeKind !== undefined
-      ? node.nodeKind === requestedNodeKind
-      : true
+        ? node.nodeKind === requestedNodeKind
+        : true
   ) {
     // return the node if it matches the requested kind and there is no subKind requested
     if (requestedSubKind === undefined) {
@@ -203,17 +181,14 @@ function fetchAstNode<T extends AbstractNode>(
         subKind = (node as unknown as AbstractStatement).statementKind;
         break;
       case NodeKind.ARRAY_DIMENSION:
-        subKind =
-          (node as unknown as AbstractArrayDimension).arrayDimensionKind;
+        subKind = (node as unknown as AbstractArrayDimension).arrayDimensionKind;
         break;
       case NodeKind.CLASS_ID:
         subKind = (node as unknown as ClassId).classIdKind;
         break;
       default:
         throw new InternalScannerError(
-          `SubKind matching not implemented for node kind: ${
-            NodeKind[node.nodeKind]
-          }`,
+          `SubKind matching not implemented for node kind: ${NodeKind[node.nodeKind]}`,
         );
     }
     if (Array.isArray(requestedSubKind)) {
@@ -240,9 +215,7 @@ function fetchAstNode<T extends AbstractNode>(
     return undefined;
   }
 
-  throw new InternalScannerError(
-    "Logic error: should have returned a node by now.",
-  );
+  throw new InternalScannerError("Logic error: should have returned a node by now.");
 }
 
 export function fetchRequiredNode<T extends AbstractNode>(
@@ -250,24 +223,23 @@ export function fetchRequiredNode<T extends AbstractNode>(
   requestedNodeKind?: number[] | number,
   requestedSubKind?: number[] | number,
 ): RequiredNode<T> {
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   if (debugEnabled) {
     logger.debug(
-      currentState.indent + "required node request" +
-        getRequestLogMessage(requestedNodeKind, requestedSubKind) + " ...",
+      currentState.indent +
+        "required node request" +
+        getRequestLogMessage(requestedNodeKind, requestedSubKind) +
+        " ...",
     );
   }
-  const node = fetchAstNode<T>(
-    buildContext,
-    false,
-    requestedNodeKind,
-    requestedSubKind,
-  );
+  const node = fetchAstNode<T>(buildContext, false, requestedNodeKind, requestedSubKind);
 
   if (debugEnabled) {
-    let message = currentState.indent + "=> required node result" +
-      getRequestLogMessage(requestedNodeKind, requestedSubKind) + " => ";
+    let message =
+      currentState.indent +
+      "=> required node result" +
+      getRequestLogMessage(requestedNodeKind, requestedSubKind) +
+      " => ";
     message += `${NodeKind[node!.nodeKind]}`;
     message += getNodeDetailsLogMessage(node!);
     logger.debug(message);
@@ -280,12 +252,13 @@ export function fetchOptionalNode<T extends AbstractNode>(
   requestedNodeKind?: number[] | number,
   requestedSubKind?: number[] | number,
 ): OptionalNode<T> | undefined {
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   if (debugEnabled) {
     logger.debug(
-      currentState.indent + "optional node request" +
-        getRequestLogMessage(requestedNodeKind, requestedSubKind) + "",
+      currentState.indent +
+        "optional node request" +
+        getRequestLogMessage(requestedNodeKind, requestedSubKind) +
+        "",
     );
   }
   const node = fetchAstNode<T>(
@@ -296,8 +269,11 @@ export function fetchOptionalNode<T extends AbstractNode>(
   ) as OptionalNode<T>;
   if (debugEnabled) {
     if (node) {
-      let message = currentState.indent + "=> optional node result" +
-        getRequestLogMessage(requestedNodeKind, requestedSubKind) + " => ";
+      let message =
+        currentState.indent +
+        "=> optional node result" +
+        getRequestLogMessage(requestedNodeKind, requestedSubKind) +
+        " => ";
       message += `${NodeKind[node.nodeKind]}`;
       message += getNodeDetailsLogMessage(node);
       logger.debug(message);
@@ -311,34 +287,29 @@ export function fetchZeroToManyList<T extends AbstractNode>(
   requestedNodeKind: number[] | number,
   requestedSubKind?: number[] | number,
 ): ZeroToManyList<T> {
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   const nodes: ZeroToManyList<T> = [];
   if (debugEnabled) {
     logger.debug(
-      currentState.indent + "zero to many list node request" +
-        getRequestLogMessage(requestedNodeKind, requestedSubKind) + " ...",
+      currentState.indent +
+        "zero to many list node request" +
+        getRequestLogMessage(requestedNodeKind, requestedSubKind) +
+        " ...",
     );
   }
-  let node = fetchOptionalNode<T>(
-    buildContext,
-    requestedNodeKind,
-    requestedSubKind,
-  );
+  let node = fetchOptionalNode<T>(buildContext, requestedNodeKind, requestedSubKind);
   while (node !== undefined) {
     nodes.push(node);
-    node = fetchOptionalNode<T>(
-      buildContext,
-      requestedNodeKind,
-      requestedSubKind,
-    );
+    node = fetchOptionalNode<T>(buildContext, requestedNodeKind, requestedSubKind);
   }
   if (debugEnabled) {
     if (nodes.length > 0) {
       logger.debug(
-        currentState.indent + "=> zero to many list node result" +
+        currentState.indent +
+          "=> zero to many list node result" +
           getRequestLogMessage(requestedNodeKind, requestedSubKind) +
-          " => count: " + nodes.length,
+          " => count: " +
+          nodes.length,
       );
     }
   }
@@ -350,13 +321,14 @@ export function fetchOneToManyList<T extends AbstractNode>(
   requestedNodeKind: number[] | number,
   requestedSubKind?: number[] | number,
 ): OneToManyList<T> {
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   const nodes: OneToManyList<T> = [];
   if (debugEnabled) {
     logger.debug(
-      currentState.indent + "one to many list node request" +
-        getRequestLogMessage(requestedNodeKind, requestedSubKind) + " ...",
+      currentState.indent +
+        "one to many list node request" +
+        getRequestLogMessage(requestedNodeKind, requestedSubKind) +
+        " ...",
     );
   }
   let node = fetchRequiredNode<T>(
@@ -366,17 +338,15 @@ export function fetchOneToManyList<T extends AbstractNode>(
   ) as OptionalNode<T>;
   while (node !== undefined) {
     nodes.push(node);
-    node = fetchOptionalNode<T>(
-      buildContext,
-      requestedNodeKind,
-      requestedSubKind,
-    );
+    node = fetchOptionalNode<T>(buildContext, requestedNodeKind, requestedSubKind);
   }
   if (debugEnabled) {
     logger.debug(
-      currentState.indent + "=> one to many list node result" +
+      currentState.indent +
+        "=> one to many list node result" +
         getRequestLogMessage(requestedNodeKind, requestedSubKind) +
-        " => count: " + nodes.length,
+        " => count: " +
+        nodes.length,
     );
   }
   return nodes;
@@ -387,14 +357,15 @@ export function fetchOneToManyCommaSeparatedList<T extends AbstractNode>(
   requestedNodeKind: number[] | number,
   requestedSubKind?: number[] | number,
 ): { nodes: OneToManyList<T>; commaPunctuators: ZeroToManyList<Token> } {
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   const nodes: OneToManyList<T> = [];
   const commaPunctuators: ZeroToManyList<Token> = [];
   if (debugEnabled) {
     logger.debug(
-      currentState.indent + "one to many comma separated list node request" +
-        getRequestLogMessage(requestedNodeKind, requestedSubKind) + " ...",
+      currentState.indent +
+        "one to many comma separated list node request" +
+        getRequestLogMessage(requestedNodeKind, requestedSubKind) +
+        " ...",
     );
   }
   let node = fetchRequiredNode<T>(
@@ -407,26 +378,20 @@ export function fetchOneToManyCommaSeparatedList<T extends AbstractNode>(
 
     // now try to fetch a comma and if not found break
     // otherwise continue to fetch the next node
-    const commaPunctuator = fetchOptionalNode<Token>(
-      buildContext,
-      NodeKind.TOKEN,
-      TokenKind.COMMA,
-    );
+    const commaPunctuator = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.COMMA);
     if (commaPunctuator === undefined) {
       break;
     }
     commaPunctuators.push(commaPunctuator);
-    node = fetchOptionalNode<T>(
-      buildContext,
-      requestedNodeKind,
-      requestedSubKind,
-    );
+    node = fetchOptionalNode<T>(buildContext, requestedNodeKind, requestedSubKind);
   }
   if (debugEnabled) {
     logger.debug(
-      currentState.indent + "=> one to many comma separated list node result" +
+      currentState.indent +
+        "=> one to many comma separated list node result" +
         getRequestLogMessage(requestedNodeKind, requestedSubKind) +
-        " => count: " + nodes.length,
+        " => count: " +
+        nodes.length,
     );
   }
   return { nodes, commaPunctuators };

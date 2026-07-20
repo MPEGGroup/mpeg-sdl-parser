@@ -6,9 +6,7 @@ import { Token } from "../../node/token.ts";
 import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import type { BuildContext } from "../util/build-context.ts";
 
-export function buildElementaryType(
-  buildContext: BuildContext,
-): ElementaryType {
+export function buildElementaryType(buildContext: BuildContext): ElementaryType {
   const children: Array<AbstractNode> = [];
   const unsignedQualifierKeyword = fetchOptionalNode<Token>(
     buildContext,
@@ -20,17 +18,13 @@ export function buildElementaryType(
     children.push(unsignedQualifierKeyword);
   }
 
-  const typeKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    [TokenKind.INT, TokenKind.BIT, TokenKind.FLOAT],
-  );
+  const typeKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, [
+    TokenKind.INT,
+    TokenKind.BIT,
+    TokenKind.FLOAT,
+  ]);
 
   children.push(typeKeyword);
 
-  return new ElementaryType(
-    unsignedQualifierKeyword,
-    typeKeyword,
-    children,
-  );
+  return new ElementaryType(unsignedQualifierKeyword, typeKeyword, children);
 }

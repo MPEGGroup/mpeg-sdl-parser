@@ -9,9 +9,7 @@ import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildExpandableModifier(
-  buildContext: BuildContext,
-): ExpandableModifier {
+export function buildExpandableModifier(buildContext: BuildContext): ExpandableModifier {
   const children: Array<AbstractNode> = [];
 
   const expandableKeyword = fetchRequiredNode<Token>(
@@ -31,10 +29,7 @@ export function buildExpandableModifier(
 
   if (openParenthesisPunctuator) {
     children.push(openParenthesisPunctuator);
-    maxClassSize = fetchOptionalNode<NumberLiteral>(
-      buildContext,
-      NodeKind.NUMBER_LITERAL,
-    );
+    maxClassSize = fetchOptionalNode<NumberLiteral>(buildContext, NodeKind.NUMBER_LITERAL);
     if (maxClassSize) {
       children.push(maxClassSize);
     } else {

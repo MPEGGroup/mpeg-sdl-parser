@@ -37,18 +37,8 @@ describe("Print If tests", () => {
   test("prettified if output without compound if and without compound else statement is as expected", async () => {
     await testPrettierScenario(
       "class A{if (i) i++; else i--;}",
-      "class A {\n" +
-        "  if (i)\n" +
-        "    i++;\n" +
-        "  else\n" +
-        "    i--;\n" +
-        "}\n",
-      "class A {\n" +
-        "  if (i)\n" +
-        "    i++;\n" +
-        "  else\n" +
-        "    i--;\n" +
-        "}\n",
+      "class A {\n" + "  if (i)\n" + "    i++;\n" + "  else\n" + "    i--;\n" + "}\n",
+      "class A {\n" + "  if (i)\n" + "    i++;\n" + "  else\n" + "    i--;\n" + "}\n",
     );
   });
 

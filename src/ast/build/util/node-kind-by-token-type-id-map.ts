@@ -70,10 +70,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       nodeKindByTokenTypeId.set(tokenTypeId, NodeKind.ELEMENTARY_TYPE);
       break;
     case TokenTypeId.ElementaryTypeOutputValue:
-      nodeKindByTokenTypeId.set(
-        tokenTypeId,
-        NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE,
-      );
+      nodeKindByTokenTypeId.set(tokenTypeId, NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE);
       break;
     case TokenTypeId.ExpandableModifier:
       nodeKindByTokenTypeId.set(tokenTypeId, NodeKind.EXPANDABLE_MODIFIER);
@@ -194,9 +191,7 @@ Object.values(TokenTypeId).forEach((tokenTypeId) => {
       break;
     default: {
       const exhaustiveCheck: never = tokenTypeId;
-      throw new InternalScannerError(
-        "Unreachable code reached, tokenTypeId == " + exhaustiveCheck,
-      );
+      throw new InternalScannerError("Unreachable code reached, tokenTypeId == " + exhaustiveCheck);
     }
   }
 });

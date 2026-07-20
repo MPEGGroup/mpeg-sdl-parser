@@ -11,9 +11,6 @@ export class ElementaryTypeOutputValue extends AbstractCompositeNode {
     public readonly lengthAttribute: RequiredNode<LengthAttribute>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE,
-      children,
-    );
+    super(NodeKind.ELEMENTARY_TYPE_OUTPUT_VALUE, children);
   }
 }

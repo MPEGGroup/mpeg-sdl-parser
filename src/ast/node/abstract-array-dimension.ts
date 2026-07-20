@@ -12,9 +12,6 @@ export abstract class AbstractArrayDimension extends AbstractCompositeNode {
     public readonly closeBracketPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.ARRAY_DIMENSION,
-      children,
-    );
+    super(NodeKind.ARRAY_DIMENSION, children);
   }
 }

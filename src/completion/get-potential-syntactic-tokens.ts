@@ -12,24 +12,18 @@ const logger = getLogger("getPotentialSyntacticTokens");
  *
  * @returns An array of potential syntactic tokens, or undefined if none found.
  */
-export function getPotentialSyntacticTokens(
-  cursor: TreeCursor,
-): string[] | undefined {
+export function getPotentialSyntacticTokens(cursor: TreeCursor): string[] | undefined {
   const potentialTokenTypeIds = getPotentialTokenTypeIds(cursor);
 
-  if (!potentialTokenTypeIds || (potentialTokenTypeIds.length === 0)) {
-    logger.debug(
-      "No potentialTokenTypeIds so no potential syntactic tokens",
-    );
+  if (!potentialTokenTypeIds || potentialTokenTypeIds.length === 0) {
+    logger.debug("No potentialTokenTypeIds so no potential syntactic tokens");
     return undefined;
   }
 
   const potentialSyntacticTokens: string[] = [];
 
   potentialTokenTypeIds.forEach((potentialTokenTypeId) => {
-    const syntacticTokens = potentialSyntacticTokensByTokenTypeId.get(
-      potentialTokenTypeId,
-    );
+    const syntacticTokens = potentialSyntacticTokensByTokenTypeId.get(potentialTokenTypeId);
 
     if (syntacticTokens) {
       potentialSyntacticTokens.push(...syntacticTokens);
@@ -37,18 +31,13 @@ export function getPotentialSyntacticTokens(
   });
 
   if (potentialSyntacticTokens.length === 0) {
-    logger.debug(
-      "No potential syntactic tokens",
-    );
+    logger.debug("No potential syntactic tokens");
     return undefined;
   }
 
   // sort and remove duplicates
-  const uniqueSortedTokens = Array.from(new Set(potentialSyntacticTokens))
-    .sort();
+  const uniqueSortedTokens = Array.from(new Set(potentialSyntacticTokens)).sort();
 
-  logger.debug(
-    `Potential syntactic tokens: ${uniqueSortedTokens.join(" ")}`,
-  );
+  logger.debug(`Potential syntactic tokens: ${uniqueSortedTokens.join(" ")}`);
   return uniqueSortedTokens;
 }

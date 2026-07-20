@@ -19,9 +19,6 @@ export class MapDefinition extends AbstractStatement {
     public readonly semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.MAP_DEFINITION,
-      children,
-    );
+    super(StatementKind.MAP_DEFINITION, children);
   }
 }

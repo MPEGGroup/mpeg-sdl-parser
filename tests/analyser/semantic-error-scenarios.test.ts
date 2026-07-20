@@ -17,9 +17,7 @@ describe("Semantic Error Scenario Tests", () => {
   });
 
   test("Duplicate global symbol", () => {
-    const sdlStringInput = new SdlStringInput(
-      "computed int a = 1; computed int a = 2;",
-    );
+    const sdlStringInput = new SdlStringInput("computed int a = 1; computed int a = 2;");
     const parseTree = sdlParser.parse(sdlStringInput);
     const specification = buildAst(parseTree, sdlStringInput);
 

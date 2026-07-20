@@ -12,16 +12,10 @@ import type { OptionalNode } from "../../util/types.ts";
 import type { Token } from "../../node/token.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildIfStatement(
-  buildContext: BuildContext,
-): IfStatement {
+export function buildIfStatement(buildContext: BuildContext): IfStatement {
   const children: Array<AbstractNode> = [];
 
-  const ifKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.IF,
-  );
+  const ifKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.IF);
   children.push(ifKeyword);
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
     buildContext,
@@ -29,9 +23,7 @@ export function buildIfStatement(
     TokenKind.OPEN_PARENTHESIS,
   );
   children.push(openParenthesisPunctuator);
-  const condition = fetchRequiredNode<
-    AbstractExpression | NumberLiteral | Identifier
-  >(
+  const condition = fetchRequiredNode<AbstractExpression | NumberLiteral | Identifier>(
     buildContext,
     [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
   );
@@ -42,23 +34,13 @@ export function buildIfStatement(
     TokenKind.CLOSE_PARENTHESIS,
   );
   children.push(closeParenthesisPunctuator);
-  const ifStatement = fetchRequiredNode<AbstractStatement>(
-    buildContext,
-    NodeKind.STATEMENT,
-  );
+  const ifStatement = fetchRequiredNode<AbstractStatement>(buildContext, NodeKind.STATEMENT);
   children.push(ifStatement);
-  const elseKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.ELSE,
-  );
+  const elseKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.ELSE);
   let elseStatement: OptionalNode<AbstractStatement> = undefined;
   if (elseKeyword) {
     children.push(elseKeyword);
-    elseStatement = fetchOptionalNode<AbstractStatement>(
-      buildContext,
-      NodeKind.STATEMENT,
-    );
+    elseStatement = fetchOptionalNode<AbstractStatement>(buildContext, NodeKind.STATEMENT);
     if (elseStatement) {
       children.push(elseStatement);
     } else {

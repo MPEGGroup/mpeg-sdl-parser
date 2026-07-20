@@ -64,10 +64,7 @@ describe("createSyntaxErrorFromTextAndPosition Tests", () => {
   test("creates a SyntaxError with correct location and errorLine", () => {
     const text = new MockText("foo\nbar\nbaz");
     // Position 5 is in line 2 ("bar"), column 1
-    const err = createSyntaxErrorFromTextAndPosition(
-      text as unknown as Text,
-      4,
-    );
+    const err = createSyntaxErrorFromTextAndPosition(text as unknown as Text, 4);
 
     expect(err).toBeInstanceOf(SyntaxError);
     expect(err.location).toEqual({ row: 2, column: 1, position: 4 });
@@ -78,10 +75,7 @@ describe("createSyntaxErrorFromTextAndPosition Tests", () => {
 
   test("creates a SyntaxError handling position at start of text", () => {
     const text = new MockText("abc\ndef");
-    const err = createSyntaxErrorFromTextAndPosition(
-      text as unknown as Text,
-      0,
-    );
+    const err = createSyntaxErrorFromTextAndPosition(text as unknown as Text, 0);
 
     expect(err.location).toEqual({ row: 1, column: 1, position: 0 });
     expect(err.errorLine).toBe("abc");
@@ -91,10 +85,7 @@ describe("createSyntaxErrorFromTextAndPosition Tests", () => {
   test("creates a SyntaxError handling position at start of a later line", () => {
     const text = new MockText("abc\ndef\nghi");
     // Position 4 is start of line 2 ("def")
-    const err = createSyntaxErrorFromTextAndPosition(
-      text as unknown as Text,
-      4,
-    );
+    const err = createSyntaxErrorFromTextAndPosition(text as unknown as Text, 4);
 
     expect(err.location).toEqual({ row: 2, column: 1, position: 4 });
     expect(err.errorLine).toBe("def");
@@ -104,10 +95,7 @@ describe("createSyntaxErrorFromTextAndPosition Tests", () => {
   test("creates a SyntaxError including up to two preceding lines", () => {
     const text = new MockText("a\nb\nc\nd");
     // Position 6 is in line 4 ("d")
-    const err = createSyntaxErrorFromTextAndPosition(
-      text as unknown as Text,
-      6,
-    );
+    const err = createSyntaxErrorFromTextAndPosition(text as unknown as Text, 6);
 
     expect(err.location?.row).toBe(4);
     expect(err.errorLine).toBe("d");
@@ -117,10 +105,7 @@ describe("createSyntaxErrorFromTextAndPosition Tests", () => {
   test("creates a SyntaxError handling position at last line", () => {
     const text = new MockText("x\ny\nz");
     // Position 4 is in line 3 ("z")
-    const err = createSyntaxErrorFromTextAndPosition(
-      text as unknown as Text,
-      4,
-    );
+    const err = createSyntaxErrorFromTextAndPosition(text as unknown as Text, 4);
 
     expect(err.location?.row).toBe(3);
     expect(err.errorLine).toBe("z");

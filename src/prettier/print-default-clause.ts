@@ -10,10 +10,7 @@ export function printDefaultClause(
   const defaultClause = path.node;
   let doc: Doc = [];
 
-  doc.push([
-    path.call(print, "defaultKeyword"),
-    path.call(print, "colonPunctuator"),
-  ]);
+  doc.push([path.call(print, "defaultKeyword"), path.call(print, "colonPunctuator")]);
 
   const statementsDoc = path.map(print, "statements");
 
@@ -22,14 +19,8 @@ export function printDefaultClause(
     doc = addIndentedStatements(
       doc,
       statementsDoc,
-      path.call(
-        print,
-        "openBracePunctuator" as keyof DefaultClause["openBracePunctuator"],
-      ),
-      path.call(
-        print,
-        "closeBracePunctuator" as keyof DefaultClause["closeBracePunctuator"],
-      ),
+      path.call(print, "openBracePunctuator" as keyof DefaultClause["openBracePunctuator"]),
+      path.call(print, "closeBracePunctuator" as keyof DefaultClause["closeBracePunctuator"]),
     );
   } else {
     doc = addIndentedStatements(doc, statementsDoc);

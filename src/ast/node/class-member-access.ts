@@ -11,9 +11,6 @@ export class ClassMemberAccess extends AbstractCompositeNode {
     public readonly memberIdentifier: RequiredNode<Identifier>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.CLASS_MEMBER_ACCESS,
-      children,
-    );
+    super(NodeKind.CLASS_MEMBER_ACCESS, children);
   }
 }

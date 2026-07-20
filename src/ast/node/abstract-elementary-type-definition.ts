@@ -8,19 +8,14 @@ import type { Identifier } from "./identifier.ts";
 import type { NumberLiteral } from "./number-literal.ts";
 import type { Token } from "./token.ts";
 
-export abstract class AbstractElementaryTypeDefinition
-  extends AbstractStatement {
+export abstract class AbstractElementaryTypeDefinition extends AbstractStatement {
   constructor(
     kind: StatementKind,
     public readonly constKeyword: OptionalNode<Token>,
     public readonly elementaryType: RequiredNode<ElementaryType>,
     public readonly identifier: RequiredNode<Identifier>,
     public readonly assignmentOperator: OptionalNode<Token>,
-    public readonly value: OptionalNode<
-      | AbstractExpression
-      | NumberLiteral
-      | Identifier
-    >,
+    public readonly value: OptionalNode<AbstractExpression | NumberLiteral | Identifier>,
     public readonly semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {

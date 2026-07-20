@@ -8,8 +8,7 @@ import type { Identifier } from "./identifier.ts";
 import type { NumberLiteral } from "./number-literal.ts";
 import type { Token } from "./token.ts";
 
-export class ComputedElementaryTypeDefinition
-  extends AbstractElementaryTypeDefinition {
+export class ComputedElementaryTypeDefinition extends AbstractElementaryTypeDefinition {
   constructor(
     public readonly computedKeyword: RequiredNode<Token>,
     constKeyword: OptionalNode<Token>,

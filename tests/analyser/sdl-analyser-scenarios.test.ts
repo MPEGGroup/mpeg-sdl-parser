@@ -12,26 +12,21 @@ import type { Specification } from "../../src/ast/node/specification.ts";
 
 const sdlParser = createStrictSdlParser();
 const sdlAnalyser = createLenientSdlAnalyser(undefined);
-const testCaseDir = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "test-cases",
-);
+const testCaseDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "test-cases");
 
 const normalize = (s: string) => s.replace(/\r\n/g, "\n");
 
 for (const filename of fs.readdirSync(testCaseDir)) {
-  if (!/\.txt$/.test(filename)) {
+  if (!filename.endsWith(".txt")) {
     continue;
   }
 
-  const scenarioName = /^[^\.]*/.exec(filename)?.[0] || "??";
+  const scenarioName = /^[^.]*/.exec(filename)?.[0] || "??";
 
   describe(`SDL Analyser ${scenarioName} Tests`, () => {
     const testCases = fs.readFileSync(path.join(testCaseDir, filename), "utf8");
 
-    for (
-      const testScenario of getSdlAnalyserTestScenarios(testCases, filename)
-    ) {
+    for (const testScenario of getSdlAnalyserTestScenarios(testCases, filename)) {
       test(`Test SDL Analyser ${scenarioName} - ${testScenario.name}`, () => {
         const sdlString = testScenario.text.trim();
         const expectedOutput = normalize(testScenario.expected.trim());
@@ -39,12 +34,8 @@ for (const filename of fs.readdirSync(testCaseDir)) {
         const sdlStringInput = new SdlStringInput(sdlString);
         const parseTree = sdlParser.parse(sdlStringInput);
         const specification = buildAst(parseTree, sdlStringInput);
-        const actualAnalysisResult = sdlAnalyser.analyse(
-          specification as Specification,
-        );
-        const actualOutput = normalize(getSymbolTableString(
-          actualAnalysisResult.symbolTable,
-        ));
+        const actualAnalysisResult = sdlAnalyser.analyse(specification as Specification);
+        const actualOutput = normalize(getSymbolTableString(actualAnalysisResult.symbolTable));
 
         expect(actualOutput).toBe(expectedOutput);
 

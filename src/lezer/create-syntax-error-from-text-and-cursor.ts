@@ -17,14 +17,9 @@ const nodeSet = lenientSdlParser.nodeSet;
  * @param text The text to parse.
  * @param cursor The cursor position in the text which should be at an error node.
  */
-export function createSyntaxErrorFromTextAndCursor(
-  text: Text,
-  cursor: TreeCursor,
-): SyntaxError {
+export function createSyntaxErrorFromTextAndCursor(text: Text, cursor: TreeCursor): SyntaxError {
   if (!cursor.type.isError) {
-    throw new InternalScannerError(
-      "Expected cursor to be an error token, but it is not",
-    );
+    throw new InternalScannerError("Expected cursor to be an error token, but it is not");
   }
 
   // if the error token has a child, the child is an unexpected token
@@ -33,37 +28,24 @@ export function createSyntaxErrorFromTextAndCursor(
   let message: string = "";
 
   if (unexpectedNode) {
-    message = "Unexpected: " +
-      text.sliceString(cursor.from, cursor.to);
+    message = "Unexpected: " + text.sliceString(cursor.from, cursor.to);
 
-    return createSyntaxErrorFromTextAndPosition(
-      text,
-      cursor.from,
-      message,
-    );
+    return createSyntaxErrorFromTextAndPosition(text, cursor.from, message);
   }
 
   // check if the error is for an uknown token
   if (cursor.to > cursor.from) {
-    message = "Unknown token: " +
-      text.sliceString(cursor.from, cursor.to);
+    message = "Unknown token: " + text.sliceString(cursor.from, cursor.to);
 
-    return createSyntaxErrorFromTextAndPosition(
-      text,
-      cursor.from,
-      message,
-    );
+    return createSyntaxErrorFromTextAndPosition(text, cursor.from, message);
   }
 
   // otherwise it is a missing expected token and we should indicate what token(s) or node(s) could be expected here
-  const potentialTokenTypeIds = getPotentialTokenTypeIds(
-    cursor,
-  );
+  const potentialTokenTypeIds = getPotentialTokenTypeIds(cursor);
 
   if (!potentialTokenTypeIds || potentialTokenTypeIds.length === 0) {
     throw new InternalScannerError(
-      "Expected token type IDs not found for parse error at position " +
-        cursor.from,
+      "Expected token type IDs not found for parse error at position " + cursor.from,
     );
   }
 
@@ -94,17 +76,11 @@ export function createSyntaxErrorFromTextAndCursor(
 
   possibleNodes.sort();
 
-  const possibleSyntacticTokensAndNodes = [
-    ...possibleSyntacticTokens,
-    ...possibleNodes,
-  ];
+  const possibleSyntacticTokensAndNodes = [...possibleSyntacticTokens, ...possibleNodes];
 
-  message = possibleSyntacticTokensAndNodes.length > 1
-    ? "Expected one of: " + possibleSyntacticTokensAndNodes.join(" ")
-    : "Expected: " + possibleSyntacticTokensAndNodes[0];
-  return createSyntaxErrorFromTextAndPosition(
-    text,
-    cursor.from,
-    message,
-  );
+  message =
+    possibleSyntacticTokensAndNodes.length > 1
+      ? "Expected one of: " + possibleSyntacticTokensAndNodes.join(" ")
+      : "Expected: " + possibleSyntacticTokensAndNodes[0];
+  return createSyntaxErrorFromTextAndPosition(text, cursor.from, message);
 }

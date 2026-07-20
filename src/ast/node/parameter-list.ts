@@ -1,8 +1,4 @@
-import type {
-  OneToManyList,
-  RequiredNode,
-  ZeroToManyList,
-} from "../util/types.ts";
+import type { OneToManyList, RequiredNode, ZeroToManyList } from "../util/types.ts";
 import { AbstractCompositeNode } from "./abstract-composite-node.ts";
 import type { AbstractNode } from "./abstract-node.ts";
 import { NodeKind } from "./enum/node-kind.ts";
@@ -17,9 +13,6 @@ export class ParameterList extends AbstractCompositeNode {
     public readonly closeParenthesisPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.PARAMETER_LIST,
-      children,
-    );
+    super(NodeKind.PARAMETER_LIST, children);
   }
 }

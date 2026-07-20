@@ -7,11 +7,7 @@ import type { Check, CheckResult } from "./check.ts";
 export const checkExpressionLengthof: Check = {
   nodeKind: NodeKind.EXPRESSION,
   subKind: ExpressionKind.LENGTHOF,
-  checkFunc: function (
-    node: LengthofExpression,
-    symbolTable,
-    _strict,
-  ): CheckResult[] {
+  checkFunc: function (node: LengthofExpression, symbolTable, _strict): CheckResult[] {
     const results: CheckResult[] = [];
 
     // Check if operand is an identifier
@@ -22,8 +18,7 @@ export const checkExpressionLengthof: Check = {
       // If variable exists and is computed, report error
       if (variable && variable.attributes.isComputed) {
         results.push({
-          message:
-            "The lengthof operator cannot be used with a computed variable.",
+          message: "The lengthof operator cannot be used with a computed variable.",
           location: node.operand.startToken!.getLocation(),
         });
       }

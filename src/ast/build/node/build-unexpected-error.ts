@@ -3,12 +3,8 @@ import { UnexpectedError } from "../../node/unexpected-error.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 
-export function buildUnexpectedError(
-  buildContext: BuildContext,
-): UnexpectedError {
-  const unexpectedNode = fetchRequiredNode<AbstractNode>(
-    buildContext,
-  );
+export function buildUnexpectedError(buildContext: BuildContext): UnexpectedError {
+  const unexpectedNode = fetchRequiredNode<AbstractNode>(buildContext);
 
   return new UnexpectedError(unexpectedNode);
 }

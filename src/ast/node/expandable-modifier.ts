@@ -13,9 +13,6 @@ export class ExpandableModifier extends AbstractCompositeNode {
     public readonly closeParenthesisPunctuator: OptionalNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.EXPANDABLE_MODIFIER,
-      children,
-    );
+    super(NodeKind.EXPANDABLE_MODIFIER, children);
   }
 }

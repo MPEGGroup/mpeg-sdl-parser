@@ -6,35 +6,18 @@ import type { AbstractStatement } from "../../node/abstract-statement.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import type { Token } from "../../node/token.ts";
-import {
-  fetchOptionalNode,
-  fetchRequiredNode,
-  fetchZeroToManyList,
-} from "../util/fetch-node.ts";
+import { fetchOptionalNode, fetchRequiredNode, fetchZeroToManyList } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildCaseClause(
-  buildContext: BuildContext,
-): CaseClause {
+export function buildCaseClause(buildContext: BuildContext): CaseClause {
   const children: Array<AbstractNode> = [];
 
-  const caseKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.CASE,
-  );
+  const caseKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.CASE);
   children.push(caseKeyword);
-  const value = fetchRequiredNode<NumberLiteral>(
-    buildContext,
-    NodeKind.NUMBER_LITERAL,
-  );
+  const value = fetchRequiredNode<NumberLiteral>(buildContext, NodeKind.NUMBER_LITERAL);
   children.push(value);
-  const colonPunctuator = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.COLON,
-  );
+  const colonPunctuator = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.COLON);
   children.push(colonPunctuator);
   const openBracePunctuator = fetchOptionalNode<Token>(
     buildContext,
@@ -44,16 +27,9 @@ export function buildCaseClause(
   if (openBracePunctuator) {
     children.push(openBracePunctuator);
   }
-  const statements = fetchZeroToManyList<AbstractStatement>(
-    buildContext,
-    NodeKind.STATEMENT,
-  );
+  const statements = fetchZeroToManyList<AbstractStatement>(buildContext, NodeKind.STATEMENT);
   children.push(...statements);
-  const breakKeyword = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.BREAK,
-  );
+  const breakKeyword = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.BREAK);
   let semicolonPunctuator: OptionalNode<Token> = undefined;
   if (breakKeyword) {
     children.push(breakKeyword);
@@ -65,9 +41,7 @@ export function buildCaseClause(
     if (semicolonPunctuator) {
       children.push(semicolonPunctuator);
     } else {
-      throw new InternalScannerError(
-        "Expected semicolon punctuator ';' after break keyword.",
-      );
+      throw new InternalScannerError("Expected semicolon punctuator ';' after break keyword.");
     }
   }
 

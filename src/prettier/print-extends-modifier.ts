@@ -17,12 +17,7 @@ export function printExtendsModifier(
   doc.push(path.call(print, "identifier"));
 
   if (mapEntryList.parameterValueList !== undefined) {
-    doc.push(
-      path.call(
-        print,
-        "parameterValueList" as keyof ExtendsModifier["parameterValueList"],
-      ),
-    );
+    doc.push(path.call(print, "parameterValueList" as keyof ExtendsModifier["parameterValueList"]));
   }
 
   return doc;

@@ -10,16 +10,10 @@ export const compoundStatementRules = [
   },
   {
     previous: TokenTypeId.OpenBrace,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [...statementTypes, TokenTypeId.CloseBrace],
   },
   ...statementTypes.map((type) => ({
     previous: type,
-    expected: [
-      ...statementTypes,
-      TokenTypeId.CloseBrace,
-    ],
+    expected: [...statementTypes, TokenTypeId.CloseBrace],
   })),
 ];

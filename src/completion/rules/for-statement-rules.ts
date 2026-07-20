@@ -26,24 +26,12 @@ export const forStatementRules = [
   },
   {
     previous: TokenTypeId.Semicolon,
-    expected: [
-      TokenTypeId.AssignmentExpression,
-      ...expressionTypes,
-      TokenTypeId.CloseParenthesis,
-    ],
+    expected: [TokenTypeId.AssignmentExpression, ...expressionTypes, TokenTypeId.CloseParenthesis],
   },
-  ...expressionTypes.map((expressionType) => (
-    {
-      previous: [
-        TokenTypeId.AssignmentExpression,
-        expressionType,
-      ],
-      expected: [
-        TokenTypeId.Semicolon,
-        ...binaryOperatorTypes,
-      ],
-    }
-  )),
+  ...expressionTypes.map((expressionType) => ({
+    previous: [TokenTypeId.AssignmentExpression, expressionType],
+    expected: [TokenTypeId.Semicolon, ...binaryOperatorTypes],
+  })),
   {
     previous: TokenTypeId.CloseParenthesis,
     expected: TokenTypeId.CompoundStatement,

@@ -15,9 +15,6 @@ export class ClassDefinition extends AbstractStatement {
     public readonly semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.CLASS_DEFINITION,
-      children,
-    );
+    super(StatementKind.CLASS_DEFINITION, children);
   }
 }

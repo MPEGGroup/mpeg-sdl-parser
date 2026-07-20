@@ -11,9 +11,9 @@ const strictSdlParser = createStrictSdlParser();
 
 describe("Prettier Plugin SDL tests", () => {
   test("prettified output is as expected", async () => {
-    const sampleSdlSpecification = await fs.readFile(
-      path.join(__dirname, "../sample-specifications/various-elements.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sampleSdlSpecification = await fs
+      .readFile(path.join(__dirname, "../sample-specifications/various-elements.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
 
     const options: prettier.Options = {
       parser: "sdl",
@@ -26,9 +26,9 @@ describe("Prettier Plugin SDL tests", () => {
   });
 
   test("prettified output is valid", async () => {
-    const sampleSdlSpecification = await fs.readFile(
-      path.join(__dirname, "../sample-specifications/various-elements.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sampleSdlSpecification = await fs
+      .readFile(path.join(__dirname, "../sample-specifications/various-elements.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
 
     const options: prettier.Options = {
       parser: "sdl",
@@ -42,9 +42,9 @@ describe("Prettier Plugin SDL tests", () => {
   });
 
   test("can prettify with syntax errors", async () => {
-    const sampleSdlSpecification = await fs.readFile(
-      path.join(__dirname, "../sample-specifications/invalid.sdl"),
-    ).then((buffer: Buffer) => buffer.toString());
+    const sampleSdlSpecification = await fs
+      .readFile(path.join(__dirname, "../sample-specifications/invalid.sdl"))
+      .then((buffer: Buffer) => buffer.toString());
 
     const options: prettier.Options = {
       parser: "sdl",

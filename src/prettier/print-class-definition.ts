@@ -12,28 +12,18 @@ export function printClassDefinition(
   const doc: Doc = [];
 
   if (classDefinition.legacyKeyword) {
-    doc.push(
-      path.call(
-        print,
-        "legacyKeyword" as keyof ClassDefinition["legacyKeyword"],
-      ),
-    );
+    doc.push(path.call(print, "legacyKeyword" as keyof ClassDefinition["legacyKeyword"]));
     addNonBreakingWhitespace(doc);
   }
 
   doc.push(path.call(print, "classIdentifier"));
   addNonBreakingWhitespace(doc);
 
-  const identifierDoc = [
-    path.call(print, "identifier"),
-  ];
+  const identifierDoc = [path.call(print, "identifier")];
 
   if (classDefinition.parameterValueList !== undefined) {
     identifierDoc.push([
-      path.call(
-        print,
-        "parameterValueList" as keyof ClassDefinition["parameterValueList"],
-      ),
+      path.call(print, "parameterValueList" as keyof ClassDefinition["parameterValueList"]),
     ]);
   }
 

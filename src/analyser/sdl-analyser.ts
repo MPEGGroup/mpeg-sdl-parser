@@ -34,28 +34,19 @@ export class SdlAnalyser {
   analyse(specification: Specification): SdlAnalysisResult {
     const symbolTable = new SymbolTable();
 
-    const buildSymbolTableNodeHandler = new BuildSymbolTableNodeHandler(
-      symbolTable,
-      this.strict,
-    );
+    const buildSymbolTableNodeHandler = new BuildSymbolTableNodeHandler(symbolTable, this.strict);
 
     dispatchNodeHandler(specification, buildSymbolTableNodeHandler);
 
     symbolTable.resetScope();
 
-    const validateScopeNodeHandler = new ValidateScopeNodeHandler(
-      symbolTable,
-      this.strict,
-    );
+    const validateScopeNodeHandler = new ValidateScopeNodeHandler(symbolTable, this.strict);
 
     dispatchNodeHandler(specification, validateScopeNodeHandler);
 
     symbolTable.resetScope();
 
-    const validateTypeNodeHandler = new ValidateTypeNodeHandler(
-      symbolTable,
-      this.strict,
-    );
+    const validateTypeNodeHandler = new ValidateTypeNodeHandler(symbolTable, this.strict);
 
     dispatchNodeHandler(specification, validateTypeNodeHandler);
 
@@ -78,8 +69,7 @@ export class SdlAnalyser {
 
     const seenErrors = new Set<string>();
     const semanticErrors = allErrors.filter((error) => {
-      const key =
-        `${error.errorMessage}:${error.location?.row}:${error.location?.column}`;
+      const key = `${error.errorMessage}:${error.location?.row}:${error.location?.column}`;
 
       if (seenErrors.has(key)) {
         return false;
@@ -98,8 +88,7 @@ export class SdlAnalyser {
 
     const seenWarnings = new Set<string>();
     const semanticWarnings = allWarnings.filter((warning) => {
-      const key =
-        `${warning.errorMessage}:${warning.location?.row}:${warning.location?.column}`;
+      const key = `${warning.errorMessage}:${warning.location?.row}:${warning.location?.column}`;
 
       if (seenWarnings.has(key)) {
         return false;

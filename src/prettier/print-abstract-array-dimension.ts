@@ -24,15 +24,9 @@ export function printAbstractArrayDimension(
     case ArrayDimensionKind.PARTIAL: {
       return [
         path.call(print, "openBracketPunctuator"),
-        (path as AstPath<PartialArrayDimension>).call(
-          print,
-          "innerOpenBracketPunctuator",
-        ),
+        (path as AstPath<PartialArrayDimension>).call(print, "innerOpenBracketPunctuator"),
         (path as AstPath<PartialArrayDimension>).call(print, "index"),
-        (path as AstPath<PartialArrayDimension>).call(
-          print,
-          "innerCloseBracketPunctuator",
-        ),
+        (path as AstPath<PartialArrayDimension>).call(print, "innerCloseBracketPunctuator"),
         path.call(print, "closeBracketPunctuator"),
       ];
     }
@@ -40,37 +34,20 @@ export function printAbstractArrayDimension(
       const node = path.node as ImplicitArrayDimension;
       const doc: Doc = [];
 
-      doc.push(
-        path.call(print, "openBracketPunctuator"),
-      );
+      doc.push(path.call(print, "openBracketPunctuator"));
 
       if (node.rangeStart !== undefined) {
-        doc.push(
-          path.call(
-            print,
-            "rangeStart" as keyof ImplicitArrayDimension["rangeStart"],
-          ),
-        );
+        doc.push(path.call(print, "rangeStart" as keyof ImplicitArrayDimension["rangeStart"]));
       }
 
       if (node.rangeOperator !== undefined) {
         doc.push(
-          path.call(
-            print,
-            "rangeOperator" as keyof ImplicitArrayDimension["rangeOperator"],
-          ),
+          path.call(print, "rangeOperator" as keyof ImplicitArrayDimension["rangeOperator"]),
         );
-        doc.push(
-          path.call(
-            print,
-            "rangeEnd" as keyof ImplicitArrayDimension["rangeEnd"],
-          ),
-        );
+        doc.push(path.call(print, "rangeEnd" as keyof ImplicitArrayDimension["rangeEnd"]));
       }
 
-      doc.push(
-        path.call(print, "closeBracketPunctuator"),
-      );
+      doc.push(path.call(print, "closeBracketPunctuator"));
       return doc;
     }
 

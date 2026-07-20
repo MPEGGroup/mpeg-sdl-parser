@@ -17,11 +17,7 @@ export const checkComputedElementaryTypeDefinition: Check = {
       return [];
     }
 
-    const identifier = getRequiredIdentifier(
-      definition.identifier,
-      definition,
-      strict,
-    );
+    const identifier = getRequiredIdentifier(definition.identifier, definition, strict);
 
     if (!identifier) {
       return [];
@@ -36,8 +32,7 @@ export const checkComputedElementaryTypeDefinition: Check = {
 
     return [
       {
-        message:
-          `${identifier.name}: const computed elementary type definition must have a value specified`,
+        message: `${identifier.name}: const computed elementary type definition must have a value specified`,
         location: identifier.startToken!.getLocation(),
       },
     ];

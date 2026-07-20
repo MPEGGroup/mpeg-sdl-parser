@@ -9,17 +9,9 @@ import type { Token } from "./token.ts";
 
 export class BinaryExpression extends AbstractExpression {
   constructor(
-    public readonly leftOperand: RequiredNode<
-      | AbstractExpression
-      | Identifier
-      | NumberLiteral
-    >,
+    public readonly leftOperand: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly binaryOperator: RequiredNode<Token>,
-    public readonly rightOperand: RequiredNode<
-      | AbstractExpression
-      | Identifier
-      | NumberLiteral
-    >,
+    public readonly rightOperand: RequiredNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly binaryOperatorKind: BinaryOperatorKind | undefined,
     children: Array<AbstractNode>,
   ) {

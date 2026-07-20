@@ -10,15 +10,10 @@ import type { Token } from "./token.ts";
 export class LengthAttribute extends AbstractCompositeNode {
   constructor(
     public readonly openParenthesisPunctuator: RequiredNode<Token>,
-    public readonly length: RequiredNode<
-      NumberLiteral | Identifier | AbstractExpression
-    >,
+    public readonly length: RequiredNode<NumberLiteral | Identifier | AbstractExpression>,
     public readonly closeParenthesisPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.LENGTH_ATTRIBUTE,
-      children,
-    );
+    super(NodeKind.LENGTH_ATTRIBUTE, children);
   }
 }

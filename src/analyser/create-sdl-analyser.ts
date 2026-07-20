@@ -47,9 +47,7 @@ export const defaultChecks: Check[] = [
  * @param checks Optional `Check` implementations to use in the analyser. If not supplied `defaultChecks` will be applied.
  *   NOTE: When passing a value for `checks`, `defaultChecks` must be included in this value if they are to be applied.
  */
-export function createLenientSdlAnalyser(
-  checks?: Check[] | undefined,
-): SdlAnalyser {
+export function createLenientSdlAnalyser(checks?: Check[] | undefined): SdlAnalyser {
   if (!lenientSdlAnalyser) {
     lenientSdlAnalyser = new SdlAnalyser();
 
@@ -68,9 +66,7 @@ export function createLenientSdlAnalyser(
  * @param checks Optional `Check` implementations to use in the analyser. If not supplied `defaultChecks` will be applied.
  *   NOTE: When passing a value for `checks`, `defaultChecks` must be included in this value if they are to be applied.
  */
-export function createStrictSdlAnalyser(
-  checks?: Check[] | undefined,
-): SdlAnalyser {
+export function createStrictSdlAnalyser(checks?: Check[] | undefined): SdlAnalyser {
   if (!strictSdlAnalyser) {
     strictSdlAnalyser = new SdlAnalyser();
 

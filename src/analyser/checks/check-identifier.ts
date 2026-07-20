@@ -48,11 +48,7 @@ const reservedIdentifiers = getReservedIdentifiers();
 
 export const checkIdentifier: Check = {
   nodeKind: NodeKind.IDENTIFIER,
-  checkFunc: function (
-    node: Identifier,
-    _symbolTable,
-    _strict,
-  ): CheckResult[] {
+  checkFunc: function (node: Identifier, _symbolTable, _strict): CheckResult[] {
     const results: CheckResult[] = [];
 
     const identifierName = node.name.toLowerCase();
@@ -61,8 +57,7 @@ export const checkIdentifier: Check = {
       results.push({
         message:
           "It is illegal to define an identifier which conflicts (ignoring case) with SDL syntax items such as keywords, binary, hexadecimal and string literal prefixes.",
-        location: node.startToken?.getLocation() ||
-          node.leadingTrivia?.[0]?.location!,
+        location: node.getLocation(),
       });
     }
 

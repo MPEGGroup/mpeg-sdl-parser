@@ -14,9 +14,7 @@ export function printElementaryType(
     doc.push(
       path.call(
         print,
-        "unsignedQualifierKeyword" as keyof ElementaryType[
-          "unsignedQualifierKeyword"
-        ],
+        "unsignedQualifierKeyword" as keyof ElementaryType["unsignedQualifierKeyword"],
       ),
     );
     addNonBreakingWhitespace(doc);

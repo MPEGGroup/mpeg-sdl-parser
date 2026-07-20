@@ -18,10 +18,6 @@ export const parameterValueListRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.Comma,
-      TokenTypeId.CloseParenthesis,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.Comma, TokenTypeId.CloseParenthesis, ...binaryOperatorTypes],
   })),
 ];

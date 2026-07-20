@@ -9,10 +9,7 @@ export function printMapEntry(
 ): doc.builders.Doc {
   const doc: Doc = [];
 
-  doc.push([
-    path.call(print, "inputValue"),
-    path.call(print, "commaPunctuator"),
-  ]);
+  doc.push([path.call(print, "inputValue"), path.call(print, "commaPunctuator")]);
 
   addNonBreakingWhitespace(doc);
 

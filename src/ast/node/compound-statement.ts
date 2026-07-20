@@ -11,9 +11,6 @@ export class CompoundStatement extends AbstractStatement {
     public readonly closeBracePunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.COMPOUND,
-      children,
-    );
+    super(StatementKind.COMPOUND, children);
   }
 }

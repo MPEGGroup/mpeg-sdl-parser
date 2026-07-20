@@ -5,9 +5,7 @@ import type { Token } from "../../node/token.ts";
 
 const DOT_SEPARATOR_REGEX = /\./g;
 
-export function buildHexadecimalLiteral(
-  token: Token,
-): NumberLiteral {
+export function buildHexadecimalLiteral(token: Token): NumberLiteral {
   const literalText = token.text;
 
   if (!literalText.startsWith("0x")) {
@@ -24,15 +22,8 @@ export function buildHexadecimalLiteral(
     );
   }
 
-  const stringValue = literalText.substring(2).trim().replaceAll(
-    DOT_SEPARATOR_REGEX,
-    "",
-  );
+  const stringValue = literalText.substring(2).trim().replaceAll(DOT_SEPARATOR_REGEX, "");
   const value = parseInt(stringValue, 16);
 
-  return new NumberLiteral(
-    NumberLiteralKind.HEXADECIMAL,
-    value,
-    [token],
-  );
+  return new NumberLiteral(NumberLiteralKind.HEXADECIMAL, value, [token]);
 }

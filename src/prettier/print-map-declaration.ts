@@ -1,10 +1,7 @@
 import type { AstPath, Doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { MapDeclaration } from "../ast/node/map-declaration.ts";
-import {
-  addIndentedStatements,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addIndentedStatements, addNonBreakingWhitespace } from "./util/print-utils.ts";
 
 export function printMapDeclaration(
   path: AstPath<MapDeclaration>,
@@ -21,25 +18,15 @@ export function printMapDeclaration(
 
   addNonBreakingWhitespace(doc);
 
-  const subDoc: Doc = [
-    path.call(print, "openParenthesisPunctuator"),
-  ];
+  const subDoc: Doc = [path.call(print, "openParenthesisPunctuator")];
 
   if (mapDeclaration.outputElementaryType !== undefined) {
     subDoc.push(
-      path.call(
-        print,
-        "outputElementaryType" as keyof MapDeclaration["outputElementaryType"],
-      ),
+      path.call(print, "outputElementaryType" as keyof MapDeclaration["outputElementaryType"]),
     );
   } else if (mapDeclaration.outputClassIdentifier !== undefined) {
     subDoc.push(
-      path.call(
-        print,
-        "outputClassIdentifier" as keyof MapDeclaration[
-          "outputClassIdentifier"
-        ],
-      ),
+      path.call(print, "outputClassIdentifier" as keyof MapDeclaration["outputClassIdentifier"]),
     );
   }
 
@@ -57,9 +44,7 @@ export function printMapDeclaration(
 
     if (mapDeclaration.commaPunctuators) {
       if (i < mapDeclaration.commaPunctuators.length) {
-        entrySubDoc.push(
-          path.call(print, "commaPunctuators", i),
-        );
+        entrySubDoc.push(path.call(print, "commaPunctuators", i));
       }
     }
 

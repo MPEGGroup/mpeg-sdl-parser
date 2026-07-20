@@ -45,17 +45,13 @@ describe("Syntax Error Scenario Tests", () => {
   });
 
   test("Mix of concatenated string literal types fails to parse", () => {
-    let sdlStringInput = new SdlStringInput(
-      'class A {utf8string d = "hello" u"world";}',
-    );
+    let sdlStringInput = new SdlStringInput('class A {utf8string d = "hello" u"world";}');
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTAX ERROR: => { row: 1, column: 25, position: 24 }",
     );
 
-    sdlStringInput = new SdlStringInput(
-      'class A {utf8string d = u"hello" "world";}',
-    );
+    sdlStringInput = new SdlStringInput('class A {utf8string d = u"hello" "world";}');
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTAX ERROR: => { row: 1, column: 34, position: 33 }",
@@ -63,9 +59,7 @@ describe("Syntax Error Scenario Tests", () => {
   });
 
   test("Both legacy and reserved together fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A {reserved legacy utfstring foo;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A {reserved legacy utfstring foo;}");
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTAX ERROR: => { row: 1, column: 19, position: 18 }",
@@ -73,9 +67,7 @@ describe("Syntax Error Scenario Tests", () => {
   });
 
   test("Invalid UTF string literal type fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {base64string foo = u"aGVsbG8K";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {base64string foo = u"aGVsbG8K";}');
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTAX ERROR: => { row: 1, column: 29, position: 28 }",
@@ -83,9 +75,7 @@ describe("Syntax Error Scenario Tests", () => {
   });
 
   test("Invalid basic string literal type fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {utf8string foo = "hello";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {utf8string foo = "hello";}');
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTAX ERROR: => { row: 1, column: 27, position: 26 }",
@@ -93,9 +83,7 @@ describe("Syntax Error Scenario Tests", () => {
   });
 
   test("Invalid prefix for string literal", () => {
-    const sdlStringInput = new SdlStringInput(
-      'class A {utf8string foo = u8"hello";}',
-    );
+    const sdlStringInput = new SdlStringInput('class A {utf8string foo = u8"hello";}');
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTAX ERROR: => { row: 1, column: 28, position: 27 }",
@@ -103,9 +91,7 @@ describe("Syntax Error Scenario Tests", () => {
   });
 
   test("Illegal alignment bit count value fails to parse", () => {
-    const sdlStringInput = new SdlStringInput(
-      "class A {aligned(17) utf8string foo;}",
-    );
+    const sdlStringInput = new SdlStringInput("class A {aligned(17) utf8string foo;}");
 
     expect(() => sdlParser.parse(sdlStringInput)).toThrow(
       "SYNTAX ERROR: => { row: 1, column: 18, position: 17 }",

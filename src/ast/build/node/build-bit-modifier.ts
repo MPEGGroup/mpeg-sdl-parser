@@ -11,22 +11,12 @@ import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildBitModifier(
-  buildContext: BuildContext,
-): BitModifier {
+export function buildBitModifier(buildContext: BuildContext): BitModifier {
   const children: Array<AbstractNode> = [];
 
-  const colonPunctuator = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.COLON,
-  );
+  const colonPunctuator = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.COLON);
   children.push(colonPunctuator);
-  const bitKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.BIT,
-  );
+  const bitKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.BIT);
   children.push(bitKeyword);
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
     buildContext,
@@ -34,10 +24,7 @@ export function buildBitModifier(
     TokenKind.OPEN_PARENTHESIS,
   );
   children.push(openParenthesisPunctuator);
-  const length = fetchRequiredNode<NumberLiteral>(
-    buildContext,
-    NodeKind.NUMBER_LITERAL,
-  );
+  const length = fetchRequiredNode<NumberLiteral>(buildContext, NodeKind.NUMBER_LITERAL);
   children.push(length);
   const closeParenthesisPunctuator = fetchRequiredNode<Token>(
     buildContext,
@@ -45,10 +32,7 @@ export function buildBitModifier(
     TokenKind.CLOSE_PARENTHESIS,
   );
   children.push(closeParenthesisPunctuator);
-  const identifier = fetchOptionalNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchOptionalNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
 
   let assignmentOperator: OptionalNode<Token> = undefined;
   if (identifier) {
@@ -66,10 +50,7 @@ export function buildBitModifier(
       );
     }
   }
-  const classId = fetchRequiredNode<AbstractClassId>(
-    buildContext,
-    NodeKind.CLASS_ID,
-  );
+  const classId = fetchRequiredNode<AbstractClassId>(buildContext, NodeKind.CLASS_ID);
   children.push(classId);
 
   return new BitModifier(

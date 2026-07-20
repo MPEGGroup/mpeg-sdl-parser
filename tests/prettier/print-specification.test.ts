@@ -29,19 +29,11 @@ describe("Print Specification tests", () => {
   });
 
   test("prettified specification output is as expected for empty specification", async () => {
-    await testPrettierScenario(
-      "\n",
-      "",
-      "",
-    );
+    await testPrettierScenario("\n", "", "");
   });
 
   test("prettified specification output is as expected for single invalid token", async () => {
-    await testPrettierScenario(
-      "§\n",
-      "§\n",
-      "§\n",
-    );
+    await testPrettierScenario("§\n", "§\n", "§\n");
   });
 
   test("prettified specification output is as expected for only a comment", async () => {

@@ -15,21 +15,12 @@ import {
 import type { OptionalNode } from "../../util/types.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildMapDeclaration(
-  buildContext: BuildContext,
-): MapDeclaration {
+export function buildMapDeclaration(buildContext: BuildContext): MapDeclaration {
   const children: Array<AbstractNode> = [];
 
-  const mapKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.MAP,
-  );
+  const mapKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.MAP);
   children.push(mapKeyword);
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
   children.push(identifier);
 
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
@@ -47,10 +38,7 @@ export function buildMapDeclaration(
   if (outputElementaryType) {
     children.push(outputElementaryType);
   } else {
-    outputClassIdentifier = fetchOptionalNode<Identifier>(
-      buildContext,
-      NodeKind.IDENTIFIER,
-    );
+    outputClassIdentifier = fetchOptionalNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
     if (outputClassIdentifier) {
       children.push(outputClassIdentifier);
     } else {
@@ -73,11 +61,10 @@ export function buildMapDeclaration(
     TokenKind.OPEN_BRACE,
   );
   children.push(openBracePunctuator);
-  const { nodes: mapEntries, commaPunctuators } =
-    fetchOneToManyCommaSeparatedList<MapEntry>(
-      buildContext,
-      NodeKind.MAP_ENTRY,
-    );
+  const { nodes: mapEntries, commaPunctuators } = fetchOneToManyCommaSeparatedList<MapEntry>(
+    buildContext,
+    NodeKind.MAP_ENTRY,
+  );
 
   // now push each output value and comma punctuator to children
   for (let i = 0; i < mapEntries.length; i++) {

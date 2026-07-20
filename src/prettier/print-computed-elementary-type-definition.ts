@@ -1,10 +1,7 @@
 import { type AstPath, type Doc, doc } from "prettier";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { ComputedElementaryTypeDefinition } from "../ast/node/computed-elementary-type-definition.ts";
-import {
-  addBreakingWhitespace,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addBreakingWhitespace, addNonBreakingWhitespace } from "./util/print-utils.ts";
 
 const { fill } = doc.builders;
 
@@ -20,12 +17,7 @@ export function printComputedElementaryTypeDefinition(
 
   if (computedElementaryTypeDefinition.constKeyword) {
     doc.push(
-      path.call(
-        print,
-        "constKeyword" as keyof ComputedElementaryTypeDefinition[
-          "constKeyword"
-        ],
-      ),
+      path.call(print, "constKeyword" as keyof ComputedElementaryTypeDefinition["constKeyword"]),
     );
     doc = addBreakingWhitespace(doc);
   }
@@ -40,18 +32,11 @@ export function printComputedElementaryTypeDefinition(
     doc.push(
       path.call(
         print,
-        "assignmentOperator" as keyof ComputedElementaryTypeDefinition[
-          "assignmentOperator"
-        ],
+        "assignmentOperator" as keyof ComputedElementaryTypeDefinition["assignmentOperator"],
       ),
     );
     doc = addBreakingWhitespace(doc);
-    doc.push(
-      path.call(
-        print,
-        "value" as keyof ComputedElementaryTypeDefinition["value"],
-      ),
-    );
+    doc.push(path.call(print, "value" as keyof ComputedElementaryTypeDefinition["value"]));
   }
 
   doc.push(path.call(print, "semicolonPunctuator"));

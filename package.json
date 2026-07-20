@@ -1,41 +1,54 @@
 {
   "name": "@mpeggroup/mpeg-sdl-parser",
+  "version": "4.1.2",
   "description": "ISO/IEC 14496-34 Syntactic Description Language (MPEG SDL) parser implemented in TypeScript",
+  "keywords": [
+    "bun",
+    "mpeg",
+    "parser",
+    "sdl"
+  ],
   "homepage": "https://github.com/MPEGGroup/mpeg-sdl-parser#readme",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MPEGGroup/mpeg-sdl-parser.git"
   },
-  "scripts": {
-    "build": "bun build --entrypoints ./index.ts --outdir ./dist --target node --format esm --external '@lezer/*' --external '@codemirror/*' --external 'prettier'",
-    "prepublishOnly": "bun run build",
-    "generate": "lezer-generator --typeScript --output src/lezer/parser ./grammar/sdl.lezer.grammar"
-  },
-  "license": "MIT",
-  "keywords": [
-    "bun",
-    "mpeg",
-    "sdl",
-    "parser"
-  ],
-  "module": "index.ts",
-  "main": "dist/index.js",
-  "type": "module",
-  "version": "4.1.2",
   "files": [
     "dist",
     "grammar",
     "src",
-    "tests",
-    "bun.lock",
     "index.ts",
     "LICENSE",
-    "package.json",
-    "README.md",
-    "tsconfig.json"
+    "README.md"
   ],
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "bun": "./index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build",
+    "generate": "lezer-generator --typeScript --output src/lezer/parser ./grammar/sdl.lezer.grammar"
+  },
+  "dependencies": {
+    "@codemirror/language": "6.12.3",
+    "@codemirror/state": "6.5.4",
+    "@lezer/common": "1.5.0",
+    "@lezer/generator": "1.8.0",
+    "@lezer/highlight": "1.2.3",
+    "@lezer/lr": "1.4.7",
+    "prettier": "3.8.3"
   },
   "devDependencies": {
     "@types/bun": "^1.3.14",
@@ -44,18 +57,9 @@
   "peerDependencies": {
     "typescript": "6.0.3"
   },
-  "dependencies": {
-    "@codemirror/state": "6.5.4",
-    "@codemirror/language": "6.12.3",
-    "@lezer/common": "1.5.0",
-    "@lezer/generator": "1.8.0",
-    "@lezer/highlight": "1.2.3",
-    "@lezer/lr": "1.4.7",
-    "prettier": "3.8.3"
-  },
   "overrides": {
+    "@codemirror/state": "6.5.4",
     "@lezer/common": "1.5.0",
-    "@lezer/lr": "1.4.7",
-    "@codemirror/state": "6.5.4"
+    "@lezer/lr": "1.4.7"
   }
 }

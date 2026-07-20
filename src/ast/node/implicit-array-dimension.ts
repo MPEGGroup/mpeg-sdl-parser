@@ -10,25 +10,12 @@ import type { Token } from "./token.ts";
 export class ImplicitArrayDimension extends AbstractArrayDimension {
   constructor(
     openBracketPunctuator: RequiredNode<Token>,
-    public readonly rangeStart: OptionalNode<
-      | AbstractExpression
-      | Identifier
-      | NumberLiteral
-    >,
+    public readonly rangeStart: OptionalNode<AbstractExpression | Identifier | NumberLiteral>,
     public readonly rangeOperator: OptionalNode<Token>,
-    public readonly rangeEnd: OptionalNode<
-      | AbstractExpression
-      | Identifier
-      | NumberLiteral
-    >,
+    public readonly rangeEnd: OptionalNode<AbstractExpression | Identifier | NumberLiteral>,
     closeBracketPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      ArrayDimensionKind.IMPLICIT,
-      openBracketPunctuator,
-      closeBracketPunctuator,
-      children,
-    );
+    super(ArrayDimensionKind.IMPLICIT, openBracketPunctuator, closeBracketPunctuator, children);
   }
 }

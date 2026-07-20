@@ -40,21 +40,13 @@ function collectAllIdentifiers(node: AbstractNode): string[] {
   return identifiers;
 }
 
-function checkMaxClassSizePositiveInteger(
-  declaration: ClassDeclaration,
-): CheckResult[] {
+function checkMaxClassSizePositiveInteger(declaration: ClassDeclaration): CheckResult[] {
   const results: CheckResult[] = [];
 
-  if (
-    declaration.expandableModifier &&
-    isExpandableModifier(declaration.expandableModifier)
-  ) {
+  if (declaration.expandableModifier && isExpandableModifier(declaration.expandableModifier)) {
     const maxClassSize = declaration.expandableModifier.maxClassSize;
     if (maxClassSize && isNumberLiteral(maxClassSize)) {
-      if (
-        maxClassSize.value <= 0 ||
-        maxClassSize.numberLiteralKind !== NumberLiteralKind.INTEGER
-      ) {
+      if (maxClassSize.value <= 0 || maxClassSize.numberLiteralKind !== NumberLiteralKind.INTEGER) {
         results.push({
           message: "maxClassSize must be a positive integer",
           location: maxClassSize.startToken!.getLocation(),
@@ -66,15 +58,14 @@ function checkMaxClassSizePositiveInteger(
   return results;
 }
 
-function checkExpandableCannotBeAbstract(
-  declaration: ClassDeclaration,
-): CheckResult[] {
+function checkExpandableCannotBeAbstract(declaration: ClassDeclaration): CheckResult[] {
   const results: CheckResult[] = [];
 
   if (
     declaration.expandableModifier &&
     isExpandableModifier(declaration.expandableModifier) &&
-    declaration.abstractKeyword && isToken(declaration.abstractKeyword)
+    declaration.abstractKeyword &&
+    isToken(declaration.abstractKeyword)
   ) {
     results.push({
       message:
@@ -113,15 +104,10 @@ function checkParameterReferencedWithinClass(
       continue;
     }
     const parameter = param as Parameter;
-    const identifier = getRequiredIdentifier(
-      parameter.identifier,
-      parameter,
-      strict,
-    );
+    const identifier = getRequiredIdentifier(parameter.identifier, parameter, strict);
     if (identifier && !classBodyIdentifiers.has(identifier.name)) {
       results.push({
-        message:
-          "A parameter in a parameter list must be referenced within the class declaration.",
+        message: "A parameter in a parameter list must be referenced within the class declaration.",
         location: identifier.startToken!.getLocation(),
       });
     }
@@ -146,9 +132,7 @@ function checkClassIdNotInValidRangeOfBaseClass(
     return results;
   }
 
-  const baseClassSymbol = symbolTable.lookupClass(
-    extendsModifier.identifier.name,
-  );
+  const baseClassSymbol = symbolTable.lookupClass(extendsModifier.identifier.name);
 
   if (!baseClassSymbol) {
     return results;
@@ -167,56 +151,34 @@ function checkClassIdNotInValidRangeOfBaseClass(
   const baseBitModifier = baseClass.bitModifier;
   const thisBitModifier = declaration.bitModifier;
 
-  if (
-    (baseBitModifier.classId as AbstractClassId).classIdKind ===
-      ClassIdKind.RANGE
-  ) {
+  if ((baseBitModifier.classId as AbstractClassId).classIdKind === ClassIdKind.RANGE) {
     const baseRange = baseBitModifier.classId as ClassIdRange;
     const baseStartClassId = baseRange.startClassId as ClassId;
     const baseEndClassId = baseRange.endClassId as ClassId;
-    const baseMin = isNumberLiteral(baseStartClassId.value)
-      ? baseStartClassId.value.value
-      : null;
-    const baseMax = isNumberLiteral(baseEndClassId.value)
-      ? baseEndClassId.value.value
-      : null;
+    const baseMin = isNumberLiteral(baseStartClassId.value) ? baseStartClassId.value.value : null;
+    const baseMax = isNumberLiteral(baseEndClassId.value) ? baseEndClassId.value.value : null;
 
     if (baseMin !== null && baseMax !== null) {
-      if (
-        (thisBitModifier.classId as AbstractClassId).classIdKind ===
-          ClassIdKind.SINGLE
-      ) {
+      if ((thisBitModifier.classId as AbstractClassId).classIdKind === ClassIdKind.SINGLE) {
         const thisClassId = thisBitModifier.classId as ClassId;
-        const thisValue = isNumberLiteral(thisClassId.value)
-          ? thisClassId.value.value
-          : null;
-        if (
-          thisValue !== null && (thisValue < baseMin || thisValue > baseMax)
-        ) {
+        const thisValue = isNumberLiteral(thisClassId.value) ? thisClassId.value.value : null;
+        if (thisValue !== null && (thisValue < baseMin || thisValue > baseMax)) {
           results.push({
             message:
               "The specified classId is not within the range of valid classIds specified in the base class.",
             location: thisBitModifier.startToken!.getLocation(),
           });
         }
-      } else if (
-        (thisBitModifier.classId as AbstractClassId).classIdKind ===
-          ClassIdKind.RANGE
-      ) {
+      } else if ((thisBitModifier.classId as AbstractClassId).classIdKind === ClassIdKind.RANGE) {
         const thisRange = thisBitModifier.classId as ClassIdRange;
         const thisStartClassId = thisRange.startClassId as ClassId;
         const thisEndClassId = thisRange.endClassId as ClassId;
         const thisMin = isNumberLiteral(thisStartClassId.value)
           ? thisStartClassId.value.value
           : null;
-        const thisMax = isNumberLiteral(thisEndClassId.value)
-          ? thisEndClassId.value.value
-          : null;
+        const thisMax = isNumberLiteral(thisEndClassId.value) ? thisEndClassId.value.value : null;
 
-        if (
-          (thisMin !== null) && (thisMax !== null) &&
-          ((thisMin < baseMin) || (thisMax > baseMax))
-        ) {
+        if (thisMin !== null && thisMax !== null && (thisMin < baseMin || thisMax > baseMax)) {
           results.push({
             message:
               "The specified classId is not within the range of valid classIds specified in the base class.",
@@ -230,9 +192,7 @@ function checkClassIdNotInValidRangeOfBaseClass(
   return results;
 }
 
-function checkCannotExtendItself(
-  declaration: ClassDeclaration,
-): CheckResult[] {
+function checkCannotExtendItself(declaration: ClassDeclaration): CheckResult[] {
   const results: CheckResult[] = [];
 
   if (!isExtendsModifier(declaration.extendsModifier)) {
@@ -241,10 +201,7 @@ function checkCannotExtendItself(
 
   const extendsModifier = declaration.extendsModifier;
 
-  if (
-    !isIdentifier(extendsModifier.identifier) ||
-    !isIdentifier(declaration.identifier)
-  ) {
+  if (!isIdentifier(extendsModifier.identifier) || !isIdentifier(declaration.identifier)) {
     return results;
   }
 
@@ -258,9 +215,7 @@ function checkCannotExtendItself(
   return results;
 }
 
-function checkCannotRecursivelyContainItself(
-  declaration: ClassDeclaration,
-): CheckResult[] {
+function checkCannotRecursivelyContainItself(declaration: ClassDeclaration): CheckResult[] {
   const results: CheckResult[] = [];
 
   if (!isIdentifier(declaration.identifier)) {
@@ -277,10 +232,7 @@ function checkCannotRecursivelyContainItself(
           StatementKind.CLASS_DEFINITION
       ) {
         const classDef = statement as ClassDefinition;
-        if (
-          isIdentifier(classDef.classIdentifier) &&
-          classDef.classIdentifier.name === className
-        ) {
+        if (isIdentifier(classDef.classIdentifier) && classDef.classIdentifier.name === className) {
           return true;
         }
       }
@@ -318,9 +270,7 @@ function checkExpandableCannotExtendExpandable(
     return results;
   }
 
-  const baseClassSymbol = symbolTable.lookupClass(
-    extendsModifier.identifier.name,
-  );
+  const baseClassSymbol = symbolTable.lookupClass(extendsModifier.identifier.name);
 
   if (!baseClassSymbol) {
     return results;
@@ -365,10 +315,7 @@ function checkAlignmentMustMatchBaseClass(
 
   if (isAlignedModifier(declaration.alignedModifier)) {
     if (isAlignedModifier(baseClass.alignedModifier)) {
-      if (
-        declaration.alignedModifier.alignment !==
-          baseClass.alignedModifier.alignment
-      ) {
+      if (declaration.alignedModifier.alignment !== baseClass.alignedModifier.alignment) {
         results.push({
           message:
             "The alignment of a class which extends another must not differ from the alignment of the base class.",
@@ -402,14 +349,10 @@ export const checkClassDeclaration: Check = {
     results.push(...checkMaxClassSizePositiveInteger(declaration));
     results.push(...checkExpandableCannotBeAbstract(declaration));
     results.push(...checkParameterReferencedWithinClass(declaration, strict));
-    results.push(
-      ...checkClassIdNotInValidRangeOfBaseClass(declaration, symbolTable),
-    );
+    results.push(...checkClassIdNotInValidRangeOfBaseClass(declaration, symbolTable));
     results.push(...checkCannotExtendItself(declaration));
     results.push(...checkCannotRecursivelyContainItself(declaration));
-    results.push(
-      ...checkExpandableCannotExtendExpandable(declaration, symbolTable),
-    );
+    results.push(...checkExpandableCannotExtendExpandable(declaration, symbolTable));
     results.push(...checkAlignmentMustMatchBaseClass(declaration, symbolTable));
 
     return results;

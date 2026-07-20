@@ -4,15 +4,10 @@ import type { AbstractExpression } from "../../node/abstract-expression.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 import type { Token } from "../../node/token.ts";
-import {
-  fetchOneToManyCommaSeparatedList,
-  fetchRequiredNode,
-} from "../util/fetch-node.ts";
+import { fetchOneToManyCommaSeparatedList, fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildParameterValueList(
-  buildContext: BuildContext,
-): ParameterValueList {
+export function buildParameterValueList(buildContext: BuildContext): ParameterValueList {
   const children: Array<AbstractNode> = [];
 
   const openParenthesisPunctuator = fetchRequiredNode<Token>(
@@ -22,13 +17,10 @@ export function buildParameterValueList(
   );
   children.push(openParenthesisPunctuator);
 
-  const { nodes: values, commaPunctuators } = fetchOneToManyCommaSeparatedList<
-    AbstractExpression
-  >(buildContext, [
-    NodeKind.EXPRESSION,
-    NodeKind.IDENTIFIER,
-    NodeKind.NUMBER_LITERAL,
-  ]);
+  const { nodes: values, commaPunctuators } = fetchOneToManyCommaSeparatedList<AbstractExpression>(
+    buildContext,
+    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
+  );
 
   // now push each output value and comma punctuator to children
   for (let i = 0; i < values.length; i++) {

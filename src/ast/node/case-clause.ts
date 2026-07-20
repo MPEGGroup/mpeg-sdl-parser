@@ -1,8 +1,4 @@
-import type {
-  OptionalNode,
-  RequiredNode,
-  ZeroToManyList,
-} from "../util/types.ts";
+import type { OptionalNode, RequiredNode, ZeroToManyList } from "../util/types.ts";
 import { AbstractCompositeNode } from "./abstract-composite-node.ts";
 import type { AbstractNode } from "./abstract-node.ts";
 import type { AbstractStatement } from "./abstract-statement.ts";
@@ -22,9 +18,6 @@ export class CaseClause extends AbstractCompositeNode {
     public readonly closeBracePunctuator: OptionalNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.CASE_CLAUSE,
-      children,
-    );
+    super(NodeKind.CASE_CLAUSE, children);
   }
 }

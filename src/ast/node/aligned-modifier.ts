@@ -13,9 +13,6 @@ export class AlignedModifier extends AbstractCompositeNode {
     public readonly alignment: number,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.ALIGNED_MODIFIER,
-      children,
-    );
+    super(NodeKind.ALIGNED_MODIFIER, children);
   }
 }

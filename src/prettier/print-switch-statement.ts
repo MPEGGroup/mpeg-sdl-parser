@@ -1,8 +1,5 @@
 import { AstPath, type Doc } from "prettier";
-import {
-  addIndentedStatements,
-  addNonBreakingWhitespace,
-} from "./util/print-utils.ts";
+import { addIndentedStatements, addNonBreakingWhitespace } from "./util/print-utils.ts";
 import type { AbstractNode } from "../ast/node/abstract-node.ts";
 import type { SwitchStatement } from "../ast/node/switch-statement.ts";
 
@@ -26,15 +23,10 @@ export function printSwitchStatement(
 
   const casesDoc: Doc = [];
 
-  casesDoc.push(
-    ...path.map(print, "caseClauses"),
-  );
+  casesDoc.push(...path.map(print, "caseClauses"));
 
   if (switchStatement.defaultClause !== undefined) {
-    casesDoc.push(path.call(
-      print,
-      "defaultClause" as keyof SwitchStatement["defaultClause"],
-    ));
+    casesDoc.push(path.call(print, "defaultClause" as keyof SwitchStatement["defaultClause"]));
   }
 
   return addIndentedStatements(

@@ -8,15 +8,9 @@ import { fetchOptionalNode, fetchRequiredNode } from "../util/fetch-node.ts";
 import { isToken, type OptionalNode } from "../../util/types.ts";
 import type { BuildContext } from "../util/build-context.ts";
 
-export function buildAlignedModifier(
-  buildContext: BuildContext,
-): AlignedModifier {
+export function buildAlignedModifier(buildContext: BuildContext): AlignedModifier {
   const children: Array<AbstractNode> = [];
-  const alignedKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.ALIGNED,
-  );
+  const alignedKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.ALIGNED);
   children.push(alignedKeyword);
 
   const openParenthesisPunctuator = fetchOptionalNode<Token>(
@@ -33,17 +27,13 @@ export function buildAlignedModifier(
   if (openParenthesisPunctuator) {
     children.push(openParenthesisPunctuator);
 
-    bitCountModifierToken = fetchOptionalNode<Token>(
-      buildContext,
-      NodeKind.TOKEN,
-      [
-        TokenKind.ALIGNMENT_BIT_COUNT_8,
-        TokenKind.ALIGNMENT_BIT_COUNT_16,
-        TokenKind.ALIGNMENT_BIT_COUNT_32,
-        TokenKind.ALIGNMENT_BIT_COUNT_64,
-        TokenKind.ALIGNMENT_BIT_COUNT_128,
-      ],
-    );
+    bitCountModifierToken = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, [
+      TokenKind.ALIGNMENT_BIT_COUNT_8,
+      TokenKind.ALIGNMENT_BIT_COUNT_16,
+      TokenKind.ALIGNMENT_BIT_COUNT_32,
+      TokenKind.ALIGNMENT_BIT_COUNT_64,
+      TokenKind.ALIGNMENT_BIT_COUNT_128,
+    ]);
     if (bitCountModifierToken) {
       children.push(bitCountModifierToken);
 

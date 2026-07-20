@@ -17,21 +17,14 @@ export function printAlignedModifier(
     doc.push(
       path.call(
         print,
-        "openParenthesisPunctuator" as keyof AlignedModifier[
-          "openParenthesisPunctuator"
-        ],
+        "openParenthesisPunctuator" as keyof AlignedModifier["openParenthesisPunctuator"],
       ),
     );
   }
 
   if (alignedModifier.bitCountModifierToken) {
     doc.push(
-      path.call(
-        print,
-        "bitCountModifierToken" as keyof AlignedModifier[
-          "bitCountModifierToken"
-        ],
-      ),
+      path.call(print, "bitCountModifierToken" as keyof AlignedModifier["bitCountModifierToken"]),
     );
   }
 
@@ -39,9 +32,7 @@ export function printAlignedModifier(
     doc.push(
       path.call(
         print,
-        "closeParenthesisPunctuator" as keyof AlignedModifier[
-          "closeParenthesisPunctuator"
-        ],
+        "closeParenthesisPunctuator" as keyof AlignedModifier["closeParenthesisPunctuator"],
       ),
     );
   }

@@ -36,9 +36,7 @@ function printMultipleCharacterNumberLiteral(
         currentLiterals.push(path.call(print, "literals", index));
 
         // avoid empty multiple character number literals after the first one
-        if (
-          (multipleCharacterNumberLiteralsDoc.length === 0) || containsContent
-        ) {
+        if (multipleCharacterNumberLiteralsDoc.length === 0 || containsContent) {
           multipleCharacterNumberLiteralsDoc.push(currentLiterals);
         }
 
@@ -53,10 +51,7 @@ function printMultipleCharacterNumberLiteral(
     }
   });
 
-  return join(
-    " ",
-    multipleCharacterNumberLiteralsDoc,
-  );
+  return join(" ", multipleCharacterNumberLiteralsDoc);
 }
 export function printNumberLiteral(
   path: AstPath<NumberLiteral>,

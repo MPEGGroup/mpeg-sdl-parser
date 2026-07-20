@@ -18,16 +18,10 @@ export const partialArrayDimensionRules = [
   },
   ...expressionTypes.map((expressionType) => ({
     previous: expressionType,
-    expected: [
-      TokenTypeId.CloseBracket,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.CloseBracket, ...binaryOperatorTypes],
   })),
   ...expressionTypes.map((expressionType) => ({
     previous: [expressionType, TokenTypeId.CloseBracket],
-    expected: [
-      TokenTypeId.CloseBracket,
-      ...binaryOperatorTypes,
-    ],
+    expected: [TokenTypeId.CloseBracket, ...binaryOperatorTypes],
   })),
 ];

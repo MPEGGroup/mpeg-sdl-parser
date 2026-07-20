@@ -8,9 +8,7 @@ import { TokenKind } from "../../node/enum/token-kind.ts";
 import { isToken } from "../../util/types.ts";
 import { BinaryOperatorKind } from "../../node/enum/binary-operator-kind.ts";
 
-function getBinaryOperatorKind(
-  token: Token,
-): BinaryOperatorKind | undefined {
+function getBinaryOperatorKind(token: Token): BinaryOperatorKind | undefined {
   const tokenKind = token.tokenKind;
 
   switch (tokenKind) {
@@ -55,41 +53,36 @@ function getBinaryOperatorKind(
   }
 }
 
-export function buildBinaryExpression(
-  buildContext: BuildContext,
-): BinaryExpression {
+export function buildBinaryExpression(buildContext: BuildContext): BinaryExpression {
   const children: Array<AbstractNode> = [];
 
-  const leftOperand = fetchRequiredNode<Token>(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-  );
+  const leftOperand = fetchRequiredNode<Token>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+    NodeKind.NUMBER_LITERAL,
+  ]);
   children.push(leftOperand);
 
-  const binaryOperator = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    [
-      TokenKind.ASSIGNMENT,
-      TokenKind.ADDITION,
-      TokenKind.SUBTRACTION,
-      TokenKind.MULTIPLICATION,
-      TokenKind.DIVISION,
-      TokenKind.MODULUS,
-      TokenKind.BITWISE_SHIFT_LEFT,
-      TokenKind.BITWISE_SHIFT_RIGHT,
-      TokenKind.RELATIONAL_LESS_THAN,
-      TokenKind.RELATIONAL_LESS_THAN_OR_EQUAL,
-      TokenKind.RELATIONAL_GREATER_THAN,
-      TokenKind.RELATIONAL_GREATER_THAN_OR_EQUAL,
-      TokenKind.RELATIONAL_EQUAL,
-      TokenKind.RELATIONAL_NOT_EQUAL,
-      TokenKind.BITWISE_AND,
-      TokenKind.BITWISE_OR,
-      TokenKind.LOGICAL_AND,
-      TokenKind.LOGICAL_OR,
-    ],
-  );
+  const binaryOperator = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, [
+    TokenKind.ASSIGNMENT,
+    TokenKind.ADDITION,
+    TokenKind.SUBTRACTION,
+    TokenKind.MULTIPLICATION,
+    TokenKind.DIVISION,
+    TokenKind.MODULUS,
+    TokenKind.BITWISE_SHIFT_LEFT,
+    TokenKind.BITWISE_SHIFT_RIGHT,
+    TokenKind.RELATIONAL_LESS_THAN,
+    TokenKind.RELATIONAL_LESS_THAN_OR_EQUAL,
+    TokenKind.RELATIONAL_GREATER_THAN,
+    TokenKind.RELATIONAL_GREATER_THAN_OR_EQUAL,
+    TokenKind.RELATIONAL_EQUAL,
+    TokenKind.RELATIONAL_NOT_EQUAL,
+    TokenKind.BITWISE_AND,
+    TokenKind.BITWISE_OR,
+    TokenKind.LOGICAL_AND,
+    TokenKind.LOGICAL_OR,
+  ]);
   children.push(binaryOperator);
 
   let binaryOperatorKind: BinaryOperatorKind | undefined;
@@ -97,10 +90,11 @@ export function buildBinaryExpression(
     binaryOperatorKind = getBinaryOperatorKind(binaryOperator);
   }
 
-  const rightOperand = fetchRequiredNode<Token>(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-  );
+  const rightOperand = fetchRequiredNode<Token>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+    NodeKind.NUMBER_LITERAL,
+  ]);
   children.push(rightOperand);
 
   return new BinaryExpression(

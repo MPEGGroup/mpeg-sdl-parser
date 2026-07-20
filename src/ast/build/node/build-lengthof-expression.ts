@@ -7,9 +7,7 @@ import type { Token } from "../../node/token.ts";
 import { fetchRequiredNode } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 
-export function buildLengthofExpression(
-  buildContext: BuildContext,
-): LengthofExpression {
+export function buildLengthofExpression(buildContext: BuildContext): LengthofExpression {
   const lengthOfKeyword = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
@@ -20,10 +18,10 @@ export function buildLengthofExpression(
     NodeKind.TOKEN,
     TokenKind.OPEN_PARENTHESIS,
   );
-  const operand = fetchRequiredNode<AbstractExpression | Identifier>(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER],
-  );
+  const operand = fetchRequiredNode<AbstractExpression | Identifier>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+  ]);
   const closedParenthesisPunctuator = fetchRequiredNode<Token>(
     buildContext,
     NodeKind.TOKEN,
@@ -35,11 +33,6 @@ export function buildLengthofExpression(
     openParenthesisPunctuator,
     operand,
     closedParenthesisPunctuator,
-    [
-      lengthOfKeyword,
-      openParenthesisPunctuator,
-      operand,
-      closedParenthesisPunctuator,
-    ],
+    [lengthOfKeyword, openParenthesisPunctuator, operand, closedParenthesisPunctuator],
   );
 }

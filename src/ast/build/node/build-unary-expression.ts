@@ -18,14 +18,10 @@ export function buildUnaryExpression(
 ): AbstractExpression | Identifier | NumberLiteral {
   const children: Array<AbstractNode> = [];
 
-  const unaryOperator = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    [
-      TokenKind.UNARY_PLUS,
-      TokenKind.UNARY_NEGATION,
-    ],
-  );
+  const unaryOperator = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, [
+    TokenKind.UNARY_PLUS,
+    TokenKind.UNARY_NEGATION,
+  ]);
 
   if (unaryOperator) {
     children.push(unaryOperator);
@@ -41,12 +37,11 @@ export function buildUnaryExpression(
     children.push(openParenthesisPunctuator);
   }
 
-  const operand = fetchRequiredNode<
-    AbstractExpression | Identifier | NumberLiteral
-  >(
-    buildContext,
-    [NodeKind.EXPRESSION, NodeKind.IDENTIFIER, NodeKind.NUMBER_LITERAL],
-  );
+  const operand = fetchRequiredNode<AbstractExpression | Identifier | NumberLiteral>(buildContext, [
+    NodeKind.EXPRESSION,
+    NodeKind.IDENTIFIER,
+    NodeKind.NUMBER_LITERAL,
+  ]);
 
   children.push(operand);
 
@@ -86,11 +81,10 @@ export function buildUnaryExpression(
     children.push(classMemberAccess);
   }
 
-  const postfixOperator = fetchOptionalNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    [TokenKind.POSTFIX_INCREMENT, TokenKind.POSTFIX_DECREMENT],
-  );
+  const postfixOperator = fetchOptionalNode<Token>(buildContext, NodeKind.TOKEN, [
+    TokenKind.POSTFIX_INCREMENT,
+    TokenKind.POSTFIX_DECREMENT,
+  ]);
 
   if (postfixOperator) {
     children.push(postfixOperator);

@@ -7,11 +7,7 @@ import type { Check, CheckResult } from "./check.ts";
 
 export const checkSpecification: Check = {
   nodeKind: NodeKind.SPECIFICATION,
-  checkFunc: function (
-    node: Specification,
-    _symbolTable,
-    _strict,
-  ): CheckResult[] {
+  checkFunc: function (node: Specification, _symbolTable, _strict): CheckResult[] {
     const results: CheckResult[] = [];
 
     for (const child of node.children) {
@@ -21,17 +17,13 @@ export const checkSpecification: Check = {
 
       const statement = child;
 
-      if (
-        statement.statementKind ===
-          StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION
-      ) {
+      if (statement.statementKind === StatementKind.COMPUTED_ELEMENTARY_TYPE_DEFINITION) {
         const definition = statement as ComputedElementaryTypeDefinition;
         if (definition.constKeyword === undefined) {
           results.push({
             message:
               "The only items that may be present in global scope are: constant computed elementary variable definitions, map declarations, class declarations.",
-            location: child.startToken?.getLocation() ||
-              child.leadingTrivia?.[0]?.location!,
+            location: child.getLocation(),
           });
         }
       } else if (statement.statementKind === StatementKind.MAP_DECLARATION) {
@@ -42,8 +34,7 @@ export const checkSpecification: Check = {
         results.push({
           message:
             "The only items that may be present in global scope are: constant computed elementary variable definitions, map declarations, class declarations.",
-          location: child.startToken?.getLocation() ||
-            child.leadingTrivia?.[0]?.location!,
+          location: child.getLocation(),
         });
       }
     }

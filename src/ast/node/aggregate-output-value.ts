@@ -4,11 +4,7 @@ import { NodeKind } from "./enum/node-kind.ts";
 import type { NumberLiteral } from "./number-literal.ts";
 import type { ElementaryTypeOutputValue } from "./elementary-type-output-value.ts";
 import type { Token } from "./token.ts";
-import type {
-  OneToManyList,
-  RequiredNode,
-  ZeroToManyList,
-} from "../util/types.ts";
+import type { OneToManyList, RequiredNode, ZeroToManyList } from "../util/types.ts";
 
 export class AggregateOutputValue extends AbstractCompositeNode {
   constructor(
@@ -20,9 +16,6 @@ export class AggregateOutputValue extends AbstractCompositeNode {
     public readonly closeBracePunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      NodeKind.AGGREGATE_OUTPUT_VALUE,
-      children,
-    );
+    super(NodeKind.AGGREGATE_OUTPUT_VALUE, children);
   }
 }

@@ -18,8 +18,7 @@ const logger = getLogger("consumePrimitive");
 
 export function consumePrimitive(buildContext: BuildContext): AbstractNode {
   const { cursor } = buildContext;
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
   const token = buildToken(buildContext);
 
   let node: AbstractNode;
@@ -44,12 +43,11 @@ export function consumePrimitive(buildContext: BuildContext): AbstractNode {
       node = buildFloatingPointLiteral(token);
       break;
     default:
-      throw new InternalScannerError(
-        `Unsupported primitive type: ${cursor.type.name}`,
-      );
+      throw new InternalScannerError(`Unsupported primitive type: ${cursor.type.name}`);
   }
   logger.debug(
-    currentState.indent + "consumed primitive node: " +
+    currentState.indent +
+      "consumed primitive node: " +
       NodeKind[node.nodeKind] +
       " " +
       token.text.replaceAll("\n", "\\n"),

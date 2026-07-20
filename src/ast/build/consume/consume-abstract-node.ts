@@ -34,9 +34,7 @@ export enum NodeScenario {
   EMPTY_AST_NODE,
 }
 
-function determineNodeScenario(
-  buildContext: BuildContext,
-): NodeScenario {
+function determineNodeScenario(buildContext: BuildContext): NodeScenario {
   const { cursor, text, lenient } = buildContext;
   const isError = cursor.type.isError;
 
@@ -93,12 +91,9 @@ function determineNodeScenario(
 /*
  * Iterate through the syntax tree and consume parse tree tokens to create an AST node.
  */
-export function consumeAbstractNode(
-  buildContext: BuildContext,
-): AbstractNode | undefined {
+export function consumeAbstractNode(buildContext: BuildContext): AbstractNode | undefined {
   const { cursor } = buildContext;
-  const currentState =
-    buildContext.stateStack[buildContext.stateStack.length - 1];
+  const currentState = buildContext.stateStack[buildContext.stateStack.length - 1];
 
   // Get any leading trivia for the node
   const leadingTrivia = consumeTrivia(buildContext, false);
@@ -107,9 +102,7 @@ export function consumeAbstractNode(
   if (currentState.isEndOfSiblings) {
     if (leadingTrivia.length > 0) {
       if (buildContext.unconsumedTrivia) {
-        throw new InternalScannerError(
-          `Expected no unconsumed trivia, but found some.`,
-        );
+        throw new InternalScannerError(`Expected no unconsumed trivia, but found some.`);
       }
       buildContext.unconsumedTrivia = leadingTrivia;
     }
@@ -120,7 +113,9 @@ export function consumeAbstractNode(
   const nodeScenario = determineNodeScenario(buildContext);
 
   logger.debug(
-    currentState.indent + "consuming node: " + cursor.name +
+    currentState.indent +
+      "consuming node: " +
+      cursor.name +
       ` (scenario: ${NodeScenario[nodeScenario]})`,
   );
 
@@ -191,7 +186,9 @@ export function consumeAbstractNode(
   }
 
   logger.debug(
-    currentState.indent + "current node: " + cursor.name +
+    currentState.indent +
+      "current node: " +
+      cursor.name +
       (currentState.isEndOfSiblings ? ": end of siblings" : ""),
   );
 

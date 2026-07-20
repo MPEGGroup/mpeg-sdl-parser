@@ -7,15 +7,8 @@ import type { ZeroToManyList } from "../util/types.ts";
 
 export class Specification extends AbstractCompositeNode {
   constructor(
-    globals: ZeroToManyList<
-      | ComputedElementaryTypeDefinition
-      | MapDeclaration
-      | ClassDeclaration
-    >,
+    globals: ZeroToManyList<ComputedElementaryTypeDefinition | MapDeclaration | ClassDeclaration>,
   ) {
-    super(
-      NodeKind.SPECIFICATION,
-      globals,
-    );
+    super(NodeKind.SPECIFICATION, globals);
   }
 }

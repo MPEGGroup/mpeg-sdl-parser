@@ -9,8 +9,7 @@ export abstract class AbstractNode {
   constructor(
     public readonly nodeKind: NodeKind,
     public readonly isComposite: boolean,
-  ) {
-  }
+  ) {}
 
   abstract getLocation(): Location;
 }

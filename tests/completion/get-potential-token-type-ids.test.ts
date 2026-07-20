@@ -6,10 +6,7 @@ import * as TokenTypeId from "../../src/lezer/parser.terms.ts";
 
 describe("getPotentialTokenTypeIds Tests", () => {
   test("Test missing length attribute expected token type scenario", () => {
-    testPotentialTokenTypeIdsScenario(
-      "class A { bit b; }",
-      [TokenTypeId.LengthAttribute],
-    );
+    testPotentialTokenTypeIdsScenario("class A { bit b; }", [TokenTypeId.LengthAttribute]);
   });
 
   test("Test duplicate identifier expected token type scenario", () => {

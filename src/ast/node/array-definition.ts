@@ -1,8 +1,4 @@
-import type {
-  OptionalNode,
-  RequiredNode,
-  ZeroToManyList,
-} from "../util/types.ts";
+import type { OptionalNode, RequiredNode, ZeroToManyList } from "../util/types.ts";
 import { AbstractArrayDefinition } from "./abstract-array-definition.ts";
 import type { AbstractNode } from "./abstract-node.ts";
 import type { AlignedModifier } from "./aligned-modifier.ts";
@@ -24,21 +20,11 @@ export class ArrayDefinition extends AbstractArrayDefinition {
     public readonly lengthAttribute: OptionalNode<LengthAttribute>,
     public readonly classIdentifier: OptionalNode<Identifier>,
     public readonly identifier: RequiredNode<Identifier>,
-    public readonly implicitArrayDimension: OptionalNode<
-      ImplicitArrayDimension
-    >,
-    public readonly dimensions: ZeroToManyList<
-      | ExplicitArrayDimension
-      | PartialArrayDimension
-    >,
+    public readonly implicitArrayDimension: OptionalNode<ImplicitArrayDimension>,
+    public readonly dimensions: ZeroToManyList<ExplicitArrayDimension | PartialArrayDimension>,
     semicolonPunctuator: RequiredNode<Token>,
     children: Array<AbstractNode>,
   ) {
-    super(
-      StatementKind.ARRAY_DEFINITION,
-      identifier,
-      semicolonPunctuator,
-      children,
-    );
+    super(StatementKind.ARRAY_DEFINITION, identifier, semicolonPunctuator, children);
   }
 }

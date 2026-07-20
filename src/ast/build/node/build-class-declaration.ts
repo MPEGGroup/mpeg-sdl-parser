@@ -9,17 +9,11 @@ import type { ExpandableModifier } from "../../node/expandable-modifier.ts";
 import type { AlignedModifier } from "../../node/aligned-modifier.ts";
 import type { BuildContext } from "../util/build-context.ts";
 import type { Token } from "../../node/token.ts";
-import {
-  fetchOptionalNode,
-  fetchRequiredNode,
-  fetchZeroToManyList,
-} from "../util/fetch-node.ts";
+import { fetchOptionalNode, fetchRequiredNode, fetchZeroToManyList } from "../util/fetch-node.ts";
 import { TokenKind } from "../../node/enum/token-kind.ts";
 import type { AbstractNode } from "../../node/abstract-node.ts";
 
-export function buildClassDeclaration(
-  buildContext: BuildContext,
-): ClassDeclaration {
+export function buildClassDeclaration(buildContext: BuildContext): ClassDeclaration {
   const children: Array<AbstractNode> = [];
   const alignedModifier = fetchOptionalNode<AlignedModifier>(
     buildContext,
@@ -46,25 +40,15 @@ export function buildClassDeclaration(
   if (abstractKeyword) {
     children.push(abstractKeyword);
   }
-  const classKeyword = fetchRequiredNode<Token>(
-    buildContext,
-    NodeKind.TOKEN,
-    TokenKind.CLASS,
-  );
+  const classKeyword = fetchRequiredNode<Token>(buildContext, NodeKind.TOKEN, TokenKind.CLASS);
 
   children.push(classKeyword);
 
-  const identifier = fetchRequiredNode<Identifier>(
-    buildContext,
-    NodeKind.IDENTIFIER,
-  );
+  const identifier = fetchRequiredNode<Identifier>(buildContext, NodeKind.IDENTIFIER);
 
   children.push(identifier);
 
-  const parameterList = fetchOptionalNode<ParameterList>(
-    buildContext,
-    NodeKind.PARAMETER_LIST,
-  );
+  const parameterList = fetchOptionalNode<ParameterList>(buildContext, NodeKind.PARAMETER_LIST);
 
   if (parameterList) {
     children.push(parameterList);
@@ -77,10 +61,7 @@ export function buildClassDeclaration(
   if (extendsModifier) {
     children.push(extendsModifier);
   }
-  const bitModifier = fetchOptionalNode<BitModifier>(
-    buildContext,
-    NodeKind.BIT_MODIFIER,
-  );
+  const bitModifier = fetchOptionalNode<BitModifier>(buildContext, NodeKind.BIT_MODIFIER);
 
   if (bitModifier) {
     children.push(bitModifier);
@@ -93,10 +74,7 @@ export function buildClassDeclaration(
 
   children.push(openBracePunctuator);
 
-  const statements = fetchZeroToManyList<AbstractStatement>(
-    buildContext,
-    NodeKind.STATEMENT,
-  );
+  const statements = fetchZeroToManyList<AbstractStatement>(buildContext, NodeKind.STATEMENT);
 
   children.push(...statements);
 
