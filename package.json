@@ -1,6 +1,6 @@
 {
   "name": "@mpeggroup/mpeg-sdl-parser",
-  "version": "4.1.6",
+  "version": "4.1.7",
   "description": "ISO/IEC 14496-34 Syntactic Description Language (MPEG SDL) parser implemented in TypeScript",
   "keywords": [
     "bun",
