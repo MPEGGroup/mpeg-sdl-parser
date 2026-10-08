@@ -42,7 +42,7 @@
     "generate": "lezer-generator --typeScript --output src/lezer/parser ./grammar/sdl.lezer.grammar"
   },
   "dependencies": {
-    "@codemirror/language": "6.12.4",
+    "@codemirror/language": "6.13.1",
     "@codemirror/state": "6.5.4",
     "@lezer/common": "1.5.0",
     "@lezer/generator": "1.8.1",
